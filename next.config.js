@@ -1,12 +1,13 @@
 const env = require(`./environments/${process.env.MODE}`);
 const path = require("path");
 
-module.exports = {
+module.exports ={
   basePath: env.basePath,
   sassOptions: {
     includePaths: [path.join(__dirname, "styles")],
-    trailingSlash: true,
+   
   },
+  trailingSlash: true,
   env: {
     mode: process.env.MODE,
   },

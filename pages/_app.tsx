@@ -5,6 +5,7 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import { createMuiTheme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import red from "@material-ui/core/colors/red";
+import useLocalStorage from "../components/useLocalStorage";
 
 const env: Env = require(`../environments/${process.env.mode}`);
 const ThemeConfig = createMuiTheme({
@@ -26,6 +27,7 @@ const ThemeConfig = createMuiTheme({
 
 function MyApp({ Component, pageProps }) {
   const [openNav, setOpenNav] = React.useState(true);
+  const [userLogin, setUserLogin] = useLocalStorage("userData");
 
   React.useEffect(() => {
     const jssStyles = document.querySelector("#jss-server-side");
@@ -44,6 +46,10 @@ function MyApp({ Component, pageProps }) {
           openNav={openNav}
           setOpenNav={e => {
             setOpenNav(e);
+          }}
+          userLogin={userLogin}
+          setUserLogin={data => {
+            setUserLogin(data);
           }}
         />
       </ThemeProvider>
