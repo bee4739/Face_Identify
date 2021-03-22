@@ -144,7 +144,7 @@ export default function DashboardTheme(props) {
             noWrap
             className={classes.title}
           >
-            Face Recognition System in Class Room
+            Face Recognition System
           </Typography>
           <IconButton color="inherit">
             <Badge badgeContent={4} color="secondary">
