@@ -63,7 +63,7 @@ export default function Teacher(props) {
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title" id="exampleModalLabel">
-                  เพิ่มข้อมูลรายวิชา
+                  เพิ่มข้อมูลรายวิชาk
                 </h5>
                 <button
                   type="button"
