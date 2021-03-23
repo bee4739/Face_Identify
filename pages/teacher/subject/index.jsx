@@ -55,7 +55,7 @@ export default function Teacher(props) {
         <div
           className="modal fade"
           id="AddSub"
-          tabindex="-1"
+          tabIndex="-1"
           aria-labelledby="exampleModalLabel"
           aria-hidden="true"
         >
@@ -63,7 +63,7 @@ export default function Teacher(props) {
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title" id="exampleModalLabel">
-                  เพิ่มข้อมูลรายวิชาk
+                  เพิ่มข้อมูลรายวิชา
                 </h5>
                 <button
                   type="button"
