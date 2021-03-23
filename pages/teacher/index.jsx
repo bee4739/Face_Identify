@@ -5,7 +5,9 @@ import TeacherTheme from "../../components/TeacherTheme";
 export default function Teacher(props) {
   const router = useRouter();
 
-  React.useEffect(() => {}, []);
+  React.useEffect(() => {
+    router.replace("/teacher/subject");
+  }, []);
 
   return (
     <TeacherTheme {...props}>
