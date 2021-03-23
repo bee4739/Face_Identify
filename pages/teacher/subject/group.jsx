@@ -64,7 +64,7 @@ export default function Teacher(props) {
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title" id="exampleModalLabel">
-                  เพิ่มข้อมูลรายวิชา
+                  เพิ่มข้อมูลกลุ่มเรียน
                 </h5>
                 <button
                   type="button"
@@ -78,19 +78,19 @@ export default function Teacher(props) {
               <div className="modal-body">
                 <div className="row">
                   <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
+                    <label>รหัสกลุ่มเรียน : </label>
+                  </div>
+                  <div className="col-sm-8 mb-2 mt-2 align-middle text-left">
+                    <input type="text" className="form-control"></input>
+                  </div>
+                  <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
                     <label>รหัสวิชา : </label>
                   </div>
                   <div className="col-sm-8 mb-2 mt-2 align-middle text-left">
                     <input type="text" className="form-control"></input>
                   </div>
                   <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
-                    <label>ชื่อวิชาภาษาไทย : </label>
-                  </div>
-                  <div className="col-sm-8 mb-2 mt-2 align-middle text-left">
-                    <input type="text" className="form-control"></input>
-                  </div>
-                  <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
-                    <label>ชื่อวิชาภาษาอังกฤษ : </label>
+                    <label>รหัสปีการศึกษา : </label>
                   </div>
                   <div className="col-sm-8 mb-2 mt-2 align-middle text-left">
                     <input type="text" className="form-control"></input>
@@ -118,9 +118,9 @@ export default function Teacher(props) {
             <thead>
               <tr>
                 <th scope="col"></th>
+                <th scope="col">รหัสกลุ่มเรียน</th>
                 <th scope="col">รหัสวิชา</th>
-                <th scope="col">ชื่อวิชาภาษาไทย</th>
-                <th scope="col">ชื่อวิชาภาษาอังกฤษ</th>
+                <th scope="col">รหัสปีการศึกษา</th>
                 <th scope="col">จัดการ</th>
               </tr>
             </thead>
@@ -131,9 +131,9 @@ export default function Teacher(props) {
                 <td>Otto</td>
                 <td>@mdo</td>
                 <td>
-                  <Link href="/teacher/subject/group">
+                  <Link href="/teacher/subject/check">
                     <button type="button" className="btn btn-warning">
-                      กลุ่มเรียน
+                      เช็คชื่อ
                     </button>
                   </Link>
                 </td>
