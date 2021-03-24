@@ -22,6 +22,8 @@ import Link from "next/link";
 import SubjectIcon from "@material-ui/icons/Subject";
 import EditIcon from "@material-ui/icons/Edit";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import EventAvailableIcon from "@material-ui/icons/EventAvailable";
+import DescriptionIcon from "@material-ui/icons/Description";
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -171,7 +173,25 @@ export default function TeacherTheme(props) {
                 <ListItemIcon>
                   <SubjectIcon />
                 </ListItemIcon>
-                <ListItemText primary="รายวิชา" />
+                <ListItemText primary="กลุ่มเรียน" />
+              </ListItem>
+            </Link>
+
+            <Link href="/changepassword">
+              <ListItem button>
+                <ListItemIcon>
+                  <EventAvailableIcon />
+                </ListItemIcon>
+                <ListItemText primary="ตารางสอน" />
+              </ListItem>
+            </Link>
+
+            <Link href="/changepassword">
+              <ListItem button>
+                <ListItemIcon>
+                  <DescriptionIcon />
+                </ListItemIcon>
+                <ListItemText primary="สรุปผลเช็คชื่อ" />
               </ListItem>
             </Link>
 
