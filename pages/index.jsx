@@ -6,7 +6,10 @@ export default function Home(props) {
 
   React.useEffect(() => {
     if (props.userLogin != null) {
-      if (true) {
+      console.log();
+      if (props.userLogin["level"] == 0) {
+        router.replace("/admin");
+      } else if (props.userLogin["level"] == 1) {
         router.replace("/teacher");
       } else {
         router.replace("/student");

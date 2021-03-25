@@ -2,10 +2,12 @@ import React from "react";
 import { useRouter } from "next/router";
 import StudentTheme from "../../components/StudentTheme";
 
-export default function Teacher(props) {
+export default function Student(props) {
   const router = useRouter();
 
-  React.useEffect(() => {}, []);
+  React.useEffect(() => {
+    router.replace("/student/study_group");
+  }, []);
 
   return (
     <StudentTheme {...props}>

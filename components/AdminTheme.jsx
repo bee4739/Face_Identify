@@ -18,13 +18,11 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import Link from "next/link";
-import SubjectIcon from "@material-ui/icons/Subject";
-import EditIcon from "@material-ui/icons/Edit";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import EventAvailableIcon from "@material-ui/icons/EventAvailable";
-import DescriptionIcon from "@material-ui/icons/Description";
+import DashboardIcon from "@material-ui/icons/Dashboard";
 import GroupIcon from "@material-ui/icons/Group";
+import DateRangeIcon from "@material-ui/icons/DateRange";
+import MenuBookIcon from "@material-ui/icons/MenuBook";
+import Link from "next/link";
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -32,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
   },
   toolbar: {
-    paddingRight: 24,
+    paddingRight: 24, // keep right padding when drawer closed
     backgroundColor: "#ff3366",
   },
   toolbarIcon: {
@@ -107,7 +105,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function TeacherTheme(props) {
+export default function AdminTheme(props) {
   const classes = useStyles();
 
   const handleDrawerOpen = () => {
@@ -147,6 +145,7 @@ export default function TeacherTheme(props) {
           >
             Face Recognition System in Class Room
           </Typography>
+          <IconButton color="inherit"></IconButton>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -161,15 +160,31 @@ export default function TeacherTheme(props) {
       >
         <div className={classes.toolbarIcon}>
           <IconButton onClick={handleDrawerClose}>
-            <ListItemIcon>
-              <ChevronLeftIcon />
-            </ListItemIcon>
+            <ChevronLeftIcon />
           </IconButton>
         </div>
-
+        <Divider />
         <List>
           <div>
-            <Link href="/teacher/study_group">
+            <Link href="/admin/year">
+              <ListItem button>
+                <ListItemIcon>
+                  <DateRangeIcon />
+                </ListItemIcon>
+                <ListItemText primary="ปีการศึกษา" />
+              </ListItem>
+            </Link>
+
+            <Link href="/admin/subject">
+              <ListItem button>
+                <ListItemIcon>
+                  <MenuBookIcon />
+                </ListItemIcon>
+                <ListItemText primary="รายวิชา" />
+              </ListItem>
+            </Link>
+
+            <Link href="/admin/study_group">
               <ListItem button>
                 <ListItemIcon>
                   <GroupIcon />
@@ -178,36 +193,9 @@ export default function TeacherTheme(props) {
               </ListItem>
             </Link>
 
-            <Link href="/teacher/schedule/attend">
-              <ListItem button>
-                <ListItemIcon>
-                  <EventAvailableIcon />
-                </ListItemIcon>
-                <ListItemText primary="ตารางสอน" />
-              </ListItem>
-            </Link>
-
-            <Link href="/teacher/results_check">
-              <ListItem button>
-                <ListItemIcon>
-                  <DescriptionIcon />
-                </ListItemIcon>
-                <ListItemText primary="สรุปผลเช็คชื่อ" />
-              </ListItem>
-            </Link>
-
-            <Link href="/changepassword">
-              <ListItem button>
-                <ListItemIcon>
-                  <EditIcon />
-                </ListItemIcon>
-                <ListItemText primary="เปลี่ยนรหัสผ่าน" />
-              </ListItem>
-            </Link>
-
             <ListItem button>
               <ListItemIcon>
-                <ExitToAppIcon />
+                <DashboardIcon />
               </ListItemIcon>
               <ListItemText primary="ออกจากระบบ" />
             </ListItem>

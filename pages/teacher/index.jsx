@@ -6,7 +6,7 @@ export default function Teacher(props) {
   const router = useRouter();
 
   React.useEffect(() => {
-    router.replace("/teacher/subject");
+    router.replace("/teacher/study_group");
   }, []);
 
   return (
