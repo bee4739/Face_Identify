@@ -42,17 +42,31 @@ export default function Teacher(props) {
     <TeacherTheme {...props}>
       <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
         <div className="row">
-          <div className="col-sm-6 mb-2 mt-2 align-middle text-right">
-            <label>ปีการศึกษา : </label>
+          <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
+            ปีการศึกษา :
           </div>
-          <div className="col-sm-4 mb-2 mt-2 align-middle text-left">
-            <input type="text" className="form-control"></input>
+          <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
+            <div className={classes.d}>
+              <select class="form-control form-control-sm">
+                <option>เลือกปีการศึกษา</option>
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+              </select>
+            </div>
           </div>
-          <div className="col-sm-6 mb-2 mt-2 align-middle text-right">
-            <label>ภาคเรียน : </label>
+          <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
+            ภาคเรียน :
           </div>
-          <div className="col-sm-4 mb-2 mt-2 align-middle text-left">
-            <input type="text" className="form-control"></input>
+          <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
+            <div className={classes.d}>
+              <select class="form-control form-control-sm">
+                <option>เลือกภาคเรียน</option>
+                <option>ภาคเรียนที่ 1</option>
+                <option>ภาคเรียนที่ 2</option>
+                <option>ภาคเรียนฤดูร้อน</option>
+              </select>
+            </div>
           </div>
         </div>
         <div className={classes.button}>

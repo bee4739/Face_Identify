@@ -3,28 +3,24 @@ import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Drawer from "@material-ui/core/Drawer";
-import Box from "@material-ui/core/Box";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
-import Badge from "@material-ui/core/Badge";
 import Container from "@material-ui/core/Container";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import NotificationsIcon from "@material-ui/icons/Notifications";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Link from "next/link";
-import SubjectIcon from "@material-ui/icons/Subject";
 import EditIcon from "@material-ui/icons/Edit";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import EventAvailableIcon from "@material-ui/icons/EventAvailable";
 import DescriptionIcon from "@material-ui/icons/Description";
 import GroupIcon from "@material-ui/icons/Group";
+
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -145,7 +141,7 @@ export default function TeacherTheme(props) {
             noWrap
             className={classes.title}
           >
-            Face Recognition System in Class Room
+            Face Recognition System for Personal Identification in Class Room
           </Typography>
         </Toolbar>
       </AppBar>

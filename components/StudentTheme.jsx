@@ -139,7 +139,7 @@ export default function StudentTheme(props) {
             noWrap
             className={classes.title}
           >
-            Face Recognition System in Class Room
+            Face Recognition System for Personal Identification in Class Room
           </Typography>
         </Toolbar>
       </AppBar>

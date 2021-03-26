@@ -143,7 +143,7 @@ export default function AdminTheme(props) {
             noWrap
             className={classes.title}
           >
-            Face Recognition System in Class Room
+            Face Recognition System for Personal Identification in Class Room
           </Typography>
           <IconButton color="inherit"></IconButton>
         </Toolbar>
@@ -181,15 +181,6 @@ export default function AdminTheme(props) {
                   <MenuBookIcon />
                 </ListItemIcon>
                 <ListItemText primary="รายวิชา" />
-              </ListItem>
-            </Link>
-
-            <Link href="/admin/study_group">
-              <ListItem button>
-                <ListItemIcon>
-                  <GroupIcon />
-                </ListItemIcon>
-                <ListItemText primary="กลุ่มเรียน" />
               </ListItem>
             </Link>
 

@@ -5,6 +5,7 @@ import { useForm, Controller } from "react-hook-form";
 import AdminTheme from "../../components/AdminTheme";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
+import AddIcon from "@material-ui/icons/Add";
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -50,6 +51,7 @@ export default function Admin(props) {
             data-toggle="modal"
             data-target="#AddSub"
           >
+            <AddIcon />
             เพิ่มปีการศึกษา
           </button>
         </div>
@@ -78,41 +80,59 @@ export default function Admin(props) {
               </div>
               <div className="modal-body">
                 <div className="row">
-                  <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
+                  <div className="col-sm-5 mb-2 mt-2 align-middle text-right">
                     <label>ปีการศึกษา : </label>
                   </div>
-                  <div className="col-sm-8 mb-2 mt-2 align-middle text-left">
+                  <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
                     <input type="text" className="form-control"></input>
                   </div>
-                  <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
+                  <div className="col-sm-5 mb-2 mt-2 align-middle text-right">
                     <label>ภาคเรียน : </label>
                   </div>
-                  <div className="col-sm-8 mb-2 mt-2 align-middle text-left">
-                    <input type="text" className="form-control"></input>
+                  <div className="col-sm-6 mt-2 align-middle text-left">
+                    <div class="form-group">
+                      <select class="form-control" id="addTerm">
+                        <option>ภาคเรียนที่ 1</option>
+                        <option>ภาคเรียนที่ 2</option>
+                        <option>ภาคฤดูร้อน</option>
+                      </select>
+                    </div>
                   </div>
-                  <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
+                  <div className="col-sm-5 mb-2 mt-2 align-middle text-right">
                     <label>วันเริ่มต้นปีการศึกษา : </label>
                   </div>
-                  <div className="col-sm-8 mb-2 mt-2 align-middle text-left">
-                    <input type="text" className="form-control"></input>
+                  <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
+                    <input type="date" className="form-control"></input>
                   </div>
-                  <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
+                  <div className="col-sm-5 mb-2 mt-2 align-middle text-right">
                     <label>วันสิ้นสุดปีการศึกษา : </label>
                   </div>
-                  <div className="col-sm-8 mb-2 mt-2 align-middle text-left">
-                    <input type="text" className="form-control"></input>
+                  <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
+                    <input type="date" className="form-control"></input>
                   </div>
-                  <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
-                    <label>Final : </label>
+                  <div className="col-sm-5 mb-2 mt-2 align-middle text-right">
+                    <label>เริ่มต้นวันสอบกลางภาค : </label>
                   </div>
-                  <div className="col-sm-8 mb-2 mt-2 align-middle text-left">
-                    <input type="text" className="form-control"></input>
+                  <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
+                    <input type="date" className="form-control"></input>
                   </div>
-                  <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
-                    <label>Midterm : </label>
+                  <div className="col-sm-5 mb-2 mt-2 align-middle text-right">
+                    <label>สิ้นสุดวันสอบกลางภาค : </label>
                   </div>
-                  <div className="col-sm-8 mb-2 mt-2 align-middle text-left">
-                    <input type="text" className="form-control"></input>
+                  <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
+                    <input type="date" className="form-control"></input>
+                  </div>
+                  <div className="col-sm-5 mb-2 mt-2 align-middle text-right">
+                    <label>เริ่มต้นวันสอบปลายภาค : </label>
+                  </div>
+                  <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
+                    <input type="date" className="form-control"></input>
+                  </div>
+                  <div className="col-sm-5 mb-2 mt-2 align-middle text-right">
+                    <label>สิ้นสุดวันสอบปลายภาค : </label>
+                  </div>
+                  <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
+                    <input type="date" className="form-control"></input>
                   </div>
                 </div>
               </div>
@@ -141,8 +161,8 @@ export default function Admin(props) {
                 <th scope="col">ภาคเรียน</th>
                 <th scope="col">วันเริ่มต้นปีการศึกษา</th>
                 <th scope="col">วันสิ้นสุดปีการศึกษา</th>
-                <th scope="col">Final</th>
-                <th scope="col">Midterm</th>
+                <th scope="col">วันสอบกลางภาค</th>
+                <th scope="col">วันสอบปลายภาค</th>
                 <th scope="col">จัดการ</th>
               </tr>
             </thead>

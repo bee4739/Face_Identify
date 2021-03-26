@@ -81,27 +81,67 @@ export default function Teacher(props) {
               <div className="modal-body">
                 <div className="row">
                   <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
-                    <label>วิชา : </label>
+                    วิชา :
                   </div>
-                  <div className="col-sm-8 mb-2 mt-2 align-middle text-left">
-                    <input type="text" className="form-control"></input>
+                  <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
+                    <div className={classes.d}>
+                      <select class="form-control form-control-sm">
+                        <option>เลือกวิชา</option>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                      </select>
+                    </div>
                   </div>
                   <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
                     <label>กลุ่มเรียน : </label>
                   </div>
-                  <div className="col-sm-8 mb-2 mt-2 align-middle text-left">
+                  <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="ตัวอย่าง CPE.60231A
+                      
+                      
+                      "
+                    ></input>
+                  </div>
+                  <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
+                    <label>วันที่สอน : </label>
+                  </div>
+                  <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
                     <input type="text" className="form-control"></input>
                   </div>
                   <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
-                    <label>ภาคเรียน : </label>
+                    ภาคเรียน :
                   </div>
-                  <div className="col-sm-8 mb-2 mt-2 align-middle text-left">
-                    <input type="text" className="form-control"></input>
+                  <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
+                    <div className={classes.d}>
+                      <select class="form-control form-control-sm">
+                        <option>เลือกภาคเรียน</option>
+                        <option>ภาคเรียนที่ 1</option>
+                        <option>ภาคเรียนที่ 2</option>
+                        <option>ภาคเรียนฤดูร้อน</option>
+                      </select>
+                    </div>
                   </div>
                   <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
-                    <label>ปีการศึกษา : </label>
+                    ปีการศึกษา :
                   </div>
-                  <div className="col-sm-8 mb-2 mt-2 align-middle text-left">
+                  <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
+                    <div className={classes.d}>
+                      <select class="form-control form-control-sm">
+                        <option>เลือกปีการศึกษา</option>
+                        <option>Small 1</option>
+                        <option>Small 2</option>
+                        <option>Small 3</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
+                    <label>รหัสกลุ่มเรียน : </label>
+                  </div>
+                  <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
                     <input type="text" className="form-control"></input>
                   </div>
                 </div>

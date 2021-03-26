@@ -53,7 +53,7 @@ export default function student(props) {
           <div className="col-sm-5 mb-2 mt-2 align-middle text-right">
             กลุ่มเรียน
           </div>
-          <div className="col-sm-7 mb-2 mt-2 align-middle text-left">
+          <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
             <div className={classes.d}>
               <select class="form-control form-control-sm">
                 <option>Small select</option>
@@ -66,7 +66,7 @@ export default function student(props) {
           <div className="col-sm-5 mb-2 mt-2 align-middle text-right">
             <label>รหัสเข้ากลุ่มเรียน</label>
           </div>
-          <div className="col-sm-7 mb-2 mt-2 text-left">
+          <div className="col-sm-6 mb-2 mt-2 text-left">
             <div className={classes.t}>
               <input type="text" className="form-control"></input>
             </div>

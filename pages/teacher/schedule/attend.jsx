@@ -6,6 +6,11 @@ import { useForm, Controller } from "react-hook-form";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import AddIcon from "@material-ui/icons/Add";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
+
+import { Component } from "react";
+import { DayPilotMonth } from "daypilot-pro-react";
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -81,39 +86,34 @@ export default function Teacher(props) {
               <div className="modal-body">
                 <div className="row">
                   <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
-                    <label>วิชา : </label>
+                    วิชาและกลุ่มเรียน :
                   </div>
-                  <div className="col-sm-8 mb-2 mt-2 align-middle text-left">
-                    <input type="text" className="form-control"></input>
-                  </div>
-                  <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
-                    <label>กลุ่มเรียน : </label>
-                  </div>
-                  <div className="col-sm-8 mb-2 mt-2 align-middle text-left">
-                    <input type="text" className="form-control"></input>
+                  <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
+                    <div className={classes.d}>
+                      <select class="form-control form-control-sm">
+                        <option>เลือกวิชาและกลุ่มเรียน</option>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                      </select>
+                    </div>
                   </div>
                   <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
                     <label>เวลาเริ่ม : </label>
                   </div>
-                  <div className="col-sm-8 mb-2 mt-2 align-middle text-left">
-                    <input type="text" className="form-control"></input>
+                  <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
+                    <input type="date" className="form-control"></input>
                   </div>
                   <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
-                    <label>เวลาสินสุด : </label>
+                    <label>เวลาสิ้นสุด : </label>
                   </div>
-                  <div className="col-sm-8 mb-2 mt-2 align-middle text-left">
-                    <input type="text" className="form-control"></input>
+                  <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
+                    <input type="date" className="form-control"></input>
                   </div>
                   <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
                     <label>ประเภทวิชา : </label>
                   </div>
-                  <div className="col-sm-8 mb-2 mt-2 align-middle text-left">
-                    <input type="text" className="form-control"></input>
-                  </div>
-                  <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
-                    <label>รหัสกลุ่มเรียน : </label>
-                  </div>
-                  <div className="col-sm-8 mb-2 mt-2 align-middle text-left">
+                  <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
                     <input type="text" className="form-control"></input>
                   </div>
                 </div>
@@ -139,7 +139,7 @@ export default function Teacher(props) {
             type="button"
             className="btn btn-info mb-2 mt-2"
             data-toggle="modal"
-            data-target="#AddSub"
+            data-target="#compensate"
           >
             สอนชดเชย
           </button>
@@ -147,7 +147,7 @@ export default function Teacher(props) {
 
         <div
           className="modal fade"
-          id="AddSub"
+          id="compensate"
           tabIndex="-1"
           aria-labelledby="exampleModalLabel"
           aria-hidden="true"
@@ -170,40 +170,22 @@ export default function Teacher(props) {
               <div className="modal-body">
                 <div className="row">
                   <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
-                    <label>วิชา : </label>
+                    <label>เลือกวันที่ : </label>
                   </div>
-                  <div className="col-sm-8 mb-2 mt-2 align-middle text-left">
-                    <input type="text" className="form-control"></input>
-                  </div>
-                  <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
-                    <label>กลุ่มเรียน : </label>
-                  </div>
-                  <div className="col-sm-8 mb-2 mt-2 align-middle text-left">
-                    <input type="text" className="form-control"></input>
+                  <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
+                    <input type="date" className="form-control"></input>
                   </div>
                   <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
                     <label>เวลาเริ่ม : </label>
                   </div>
-                  <div className="col-sm-8 mb-2 mt-2 align-middle text-left">
-                    <input type="text" className="form-control"></input>
+                  <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
+                    <input type="time" className="form-control"></input>
                   </div>
                   <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
-                    <label>เวลาสินสุด : </label>
+                    <label>เวลาสิ้นสุด : </label>
                   </div>
-                  <div className="col-sm-8 mb-2 mt-2 align-middle text-left">
-                    <input type="text" className="form-control"></input>
-                  </div>
-                  <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
-                    <label>ประเภทวิชา : </label>
-                  </div>
-                  <div className="col-sm-8 mb-2 mt-2 align-middle text-left">
-                    <input type="text" className="form-control"></input>
-                  </div>
-                  <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
-                    <label>รหัสกลุ่มเรียน : </label>
-                  </div>
-                  <div className="col-sm-8 mb-2 mt-2 align-middle text-left">
-                    <input type="text" className="form-control"></input>
+                  <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
+                    <input type="time" className="form-control"></input>
                   </div>
                 </div>
               </div>
@@ -222,37 +204,8 @@ export default function Teacher(props) {
             </div>
           </div>
         </div>
-
-        <div className="col-sm-12  mt-4 align-middle">
-          <table className="table table-striped align-middle text-center">
-            <thead>
-              <tr>
-                <th scope="col"></th>
-                <th scope="col">วิชา</th>
-                <th scope="col">กลุ่มเรียน</th>
-                <th scope="col">ภาคเรียน</th>
-                <th scope="col">ปีการศึกษา</th>
-                <th scope="col">จัดการ</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>
-                  <button type="button" className="btn btn-warning mr-2">
-                    <EditIcon />
-                  </button>
-                  <button type="button" className="btn btn-danger">
-                    <DeleteIcon />
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <div>
+          <DayPilotMonth />
         </div>
       </form>
     </TeacherTheme>
