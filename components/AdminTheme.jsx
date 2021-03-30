@@ -116,6 +116,11 @@ export default function AdminTheme(props) {
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
+  const logout = () => {
+    window.localStorage.clear();
+    window.location.replace("/login");
+  };
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -184,7 +189,7 @@ export default function AdminTheme(props) {
               </ListItem>
             </Link>
 
-            <ListItem button>
+            <ListItem button onClick={logout}>
               <ListItemIcon>
                 <DashboardIcon />
               </ListItemIcon>

@@ -112,6 +112,11 @@ export default function TeacherTheme(props) {
   const handleDrawerClose = () => {
     props.setOpenNav(false);
   };
+  const logout = () => {
+    window.localStorage.clear();
+    window.location.replace("/login");
+  };
+
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
   return (
@@ -192,16 +197,7 @@ export default function TeacherTheme(props) {
               </ListItem>
             </Link>
 
-            <Link href="/changepassword">
-              <ListItem button>
-                <ListItemIcon>
-                  <EditIcon />
-                </ListItemIcon>
-                <ListItemText primary="เปลี่ยนรหัสผ่าน" />
-              </ListItem>
-            </Link>
-
-            <ListItem button>
+            <ListItem button onClick={logout}>
               <ListItemIcon>
                 <ExitToAppIcon />
               </ListItemIcon>

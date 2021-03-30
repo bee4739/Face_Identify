@@ -112,6 +112,11 @@ export default function StudentTheme(props) {
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
+  const logout = () => {
+    window.localStorage.clear();
+    window.location.replace("/login");
+  };
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -181,7 +186,7 @@ export default function StudentTheme(props) {
               </ListItem>
             </Link>
 
-            <ListItem button>
+            <ListItem button onClick={logout}>
               <ListItemIcon>
                 <ExitToAppIcon />
               </ListItemIcon>
