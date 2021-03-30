@@ -3,14 +3,13 @@ import { useRouter } from "next/router";
 import TeacherTheme from "../../../components/TeacherTheme";
 import { makeStyles } from "@material-ui/core/styles";
 import { useForm, Controller } from "react-hook-form";
-import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
 import AddIcon from "@material-ui/icons/Add";
-import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import Calendar from "react-calendar";
+import moment from "moment";
+import "../../../node_modules/react-big-calendar/lib/css/react-big-calendar.css";
 
-import { Component } from "react";
-import { DayPilotMonth } from "daypilot-pro-react";
+// BigCalendar.momentLocalizer(moment);
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -43,6 +42,25 @@ export default function Teacher(props) {
         console.log(reason);
       });
   };
+
+  // const todayDate = moment().toDate();
+  // const events = [
+  //   {
+  //     title: "Visit to San Francisco",
+  //     start: moment().toDate(),
+  //     end: moment().add(5, "day").toDate(),
+  //   },
+  //   {
+  //     title: "Meeting with Investors",
+  //     start: moment().add(8, "day").toDate(),
+  //     end: moment().add(11, "day").toDate(),
+  //   },
+  //   {
+  //     title: "Sports day at office",
+  //     start: moment().add(13, "day").toDate(),
+  //     end: moment().add(15, "day").toDate(),
+  //   },
+  // ];
 
   React.useEffect(() => {}, []);
 
@@ -99,16 +117,34 @@ export default function Teacher(props) {
                     </div>
                   </div>
                   <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
+                    เลือกวันที่ :
+                  </div>
+                  <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
+                    <div className={classes.d}>
+                      <select class="form-control form-control-sm">
+                        <option>เลือกวันที่</option>
+                        <option>วันจันทร์</option>
+                        <option>วันอังคาร</option>
+                        <option>วันพุธ</option>
+                        <option>วันพฤหัสบดี</option>
+                        <option>วันศุกร์</option>
+                        <option>วันเสาร์</option>
+                        <option>วันอาทิตย์</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
                     <label>เวลาเริ่ม : </label>
                   </div>
                   <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
-                    <input type="date" className="form-control"></input>
+                    <input type="time" className="form-control"></input>
                   </div>
                   <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
                     <label>เวลาสิ้นสุด : </label>
                   </div>
                   <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
-                    <input type="date" className="form-control"></input>
+                    <input type="time" className="form-control"></input>
                   </div>
                   <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
                     <label>ประเภทวิชา : </label>
@@ -204,8 +240,8 @@ export default function Teacher(props) {
             </div>
           </div>
         </div>
-        <div>
-          <DayPilotMonth />
+        <div className="text-center">
+          <Calendar />
         </div>
       </form>
     </TeacherTheme>
