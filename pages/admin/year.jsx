@@ -6,15 +6,17 @@ import AdminTheme from "../../components/AdminTheme";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import AddIcon from "@material-ui/icons/Add";
+import TextField from "@material-ui/core/TextField";
+import axios from "axios";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   button: {
-    textAlign: "right",
+    textAlign: "right"
   },
   form: {
     width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
-  },
+    marginTop: theme.spacing(1)
+  }
 }));
 
 export default function Admin(props) {
@@ -22,21 +24,16 @@ export default function Admin(props) {
   const router = useRouter();
   const { control, handleSubmit } = useForm();
 
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     axios
-      .post(`${props.env.api_url}/login`, JSON.stringify(data))
-      .then((value) => {
+      .post(`${props.env.api_url}/insertYear`, JSON.stringify(data))
+      .then(value => {
         console.log(value.data);
-        if (value.data.success) {
-          props.setUserLogin(value.data.data);
-          router.replace("/");
-        } else {
-          alert(value.data.message);
-        }
       })
-      .catch((reason) => {
+      .catch(reason => {
         console.log(reason);
       });
+    window.location.reload();
   };
 
   React.useEffect(() => {}, []);
@@ -80,71 +77,189 @@ export default function Admin(props) {
               </div>
               <div className="modal-body">
                 <div className="row">
-                  <div className="col-sm-5 mb-2 mt-2 align-middle text-right">
+                  <div className="col-sm-5 mt-3 align-middle text-right">
                     <label>ปีการศึกษา : </label>
                   </div>
-                  <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
-                    <input type="text" className="form-control"></input>
+                  <div className="col-sm-6 mb-3 align-middle text-left">
+                    <Controller
+                      name="Year"
+                      control={control}
+                      defaultValue=""
+                      render={({ onChange, value }) => (
+                        <TextField
+                          variant="outlined"
+                          margin="normal"
+                          required
+                          fullWidth
+                          label="ปีการศึกษา"
+                          onChange={onChange}
+                          value={value}
+                          type="text"
+                        />
+                      )}
+                    />
                   </div>
-                  <div className="col-sm-5 mb-2 mt-2 align-middle text-right">
+                  <div className="col-sm-5 align-middle text-right">
                     <label>ภาคเรียน : </label>
                   </div>
-                  <div className="col-sm-6 mt-2 align-middle text-left">
-                    <div class="form-group">
-                      <select class="form-control" id="addTerm">
-                        <option>ภาคเรียนที่ 1</option>
-                        <option>ภาคเรียนที่ 2</option>
-                        <option>ภาคฤดูร้อน</option>
-                      </select>
-                    </div>
+                  <div className="col-sm-6 mb-2 align-middle text-left">
+                    <Controller
+                      name="Term"
+                      control={control}
+                      defaultValue=""
+                      render={({ onChange, value }) => (
+                        <select
+                          className="form-control"
+                          id="addTerm"
+                          onChange={onChange}
+                          value={value}
+                          required
+                        >
+                          <option>เลือกภาคการศึกษา...</option>
+                          <option>ภาคเรียนที่ 1</option>
+                          <option>ภาคเรียนที่ 2</option>
+                          <option>ภาคฤดูร้อน</option>
+                        </select>
+                      )}
+                    />
                   </div>
-                  <div className="col-sm-5 mb-2 mt-2 align-middle text-right">
+                  <div className="col-sm-5 mt-3 align-middle text-right">
                     <label>วันเริ่มต้นปีการศึกษา : </label>
                   </div>
-                  <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
-                    <input type="date" className="form-control"></input>
+                  <div className="col-sm-6 align-middle text-left">
+                    <Controller
+                      name="Start_SchYear"
+                      control={control}
+                      defaultValue=""
+                      render={({ onChange, value }) => (
+                        <TextField
+                          variant="outlined"
+                          margin="normal"
+                          required
+                          fullWidth
+                          onChange={onChange}
+                          value={value}
+                          type="date"
+                        />
+                      )}
+                    />
                   </div>
-                  <div className="col-sm-5 mb-2 mt-2 align-middle text-right">
+                  <div className="col-sm-5 mt-3 align-middle text-right">
                     <label>วันสิ้นสุดปีการศึกษา : </label>
                   </div>
-                  <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
-                    <input type="date" className="form-control"></input>
+                  <div className="col-sm-6 align-middle text-left">
+                    <Controller
+                      name="End_SchYear"
+                      control={control}
+                      defaultValue=""
+                      render={({ onChange, value }) => (
+                        <TextField
+                          variant="outlined"
+                          margin="normal"
+                          required
+                          fullWidth
+                          onChange={onChange}
+                          value={value}
+                          type="date"
+                        />
+                      )}
+                    />
                   </div>
-                  <div className="col-sm-5 mb-2 mt-2 align-middle text-right">
+                  <div className="col-sm-5 mt-3 align-middle text-right">
                     <label>เริ่มต้นวันสอบกลางภาค : </label>
                   </div>
-                  <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
-                    <input type="date" className="form-control"></input>
+                  <div className="col-sm-6 align-middle text-left">
+                    <Controller
+                      name="Start_Midterm"
+                      control={control}
+                      defaultValue=""
+                      render={({ onChange, value }) => (
+                        <TextField
+                          variant="outlined"
+                          margin="normal"
+                          required
+                          fullWidth
+                          onChange={onChange}
+                          value={value}
+                          type="date"
+                        />
+                      )}
+                    />
                   </div>
-                  <div className="col-sm-5 mb-2 mt-2 align-middle text-right">
+                  <div className="col-sm-5 mt-3 align-middle text-right">
                     <label>สิ้นสุดวันสอบกลางภาค : </label>
                   </div>
-                  <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
-                    <input type="date" className="form-control"></input>
+                  <div className="col-sm-6 align-middle text-left">
+                    <Controller
+                      name="End_Midterm"
+                      control={control}
+                      defaultValue=""
+                      render={({ onChange, value }) => (
+                        <TextField
+                          variant="outlined"
+                          margin="normal"
+                          required
+                          fullWidth
+                          onChange={onChange}
+                          value={value}
+                          type="date"
+                        />
+                      )}
+                    />
                   </div>
-                  <div className="col-sm-5 mb-2 mt-2 align-middle text-right">
+                  <div className="col-sm-5 mt-3 align-middle text-right">
                     <label>เริ่มต้นวันสอบปลายภาค : </label>
                   </div>
-                  <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
-                    <input type="date" className="form-control"></input>
+                  <div className="col-sm-6 align-middle text-left">
+                    <Controller
+                      name="Start_Final"
+                      control={control}
+                      defaultValue=""
+                      render={({ onChange, value }) => (
+                        <TextField
+                          variant="outlined"
+                          margin="normal"
+                          required
+                          fullWidth
+                          onChange={onChange}
+                          value={value}
+                          type="date"
+                        />
+                      )}
+                    />
                   </div>
-                  <div className="col-sm-5 mb-2 mt-2 align-middle text-right">
+                  <div className="col-sm-5 mt-3 align-middle text-right">
                     <label>สิ้นสุดวันสอบปลายภาค : </label>
                   </div>
-                  <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
-                    <input type="date" className="form-control"></input>
+                  <div className="col-sm-6 align-middle text-left">
+                    <Controller
+                      name="End_Final"
+                      control={control}
+                      defaultValue=""
+                      render={({ onChange, value }) => (
+                        <TextField
+                          variant="outlined"
+                          margin="normal"
+                          required
+                          fullWidth
+                          onChange={onChange}
+                          value={value}
+                          type="date"
+                        />
+                      )}
+                    />
                   </div>
                 </div>
               </div>
               <div className="modal-footer">
                 <button
-                  type="button"
+                  type="close"
                   className="btn btn-danger"
                   data-dismiss="modal"
                 >
                   ยกเลิก
                 </button>
-                <button type="button" className="btn btn-success">
+                <button type="submit" className="btn btn-success">
                   เพิ่ม
                 </button>
               </div>
