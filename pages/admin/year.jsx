@@ -8,6 +8,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import AddIcon from "@material-ui/icons/Add";
 import TextField from "@material-ui/core/TextField";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -36,7 +37,20 @@ export default function Admin(props) {
     window.location.reload();
   };
 
-  React.useEffect(() => {}, []);
+  const [data, setData] = useState([]);
+  const getData = async () => {
+    try {
+      const resp = await axios.post(
+        "http://localhost/face_identify/api/index.php/getYear"
+      );
+      console.log(resp.data.result);
+      setData(resp.data.result);
+    } catch (error) {}
+  };
+
+  React.useEffect(() => {
+    getData();
+  }, []);
 
   return (
     <AdminTheme {...props}>
@@ -277,34 +291,44 @@ export default function Admin(props) {
           <table className="table table-striped align-middle text-center">
             <thead>
               <tr>
-                <th scope="col"></th>
-                <th scope="col">ปีการศึกษา</th>
-                <th scope="col">ภาคเรียน</th>
-                <th scope="col">วันเริ่มต้นปีการศึกษา</th>
-                <th scope="col">วันสิ้นสุดปีการศึกษา</th>
-                <th scope="col">วันสอบกลางภาค</th>
-                <th scope="col">วันสอบปลายภาค</th>
-                <th scope="col">จัดการ</th>
+                <th>ปีการศึกษา</th>
+                <th>ภาคเรียน</th>
+                <th>วันเริ่มต้นปีการศึกษา</th>
+                <th>วันสิ้นสุดปีการศึกษา</th>
+                <th>วันสอบกลางภาค</th>
+                <th>วันสอบปลายภาค</th>
+                <th>จัดการ</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>
-                  <button type="button" className="btn btn-warning mr-2">
-                    <EditIcon />
-                  </button>
-                  <button type="button" className="btn btn-danger">
-                    <DeleteIcon />
-                  </button>
-                </td>
-              </tr>
+              {process.env.api_url}
+              {data.map((variable, index) => {
+                return (
+                  <tr key={variable.Year_ID}>
+                    <td>{variable.Year}</td>
+                    <td>{variable.Term}</td>
+                    <td>{variable.Start_SchYear}</td>
+                    <td>{variable.End_SchYear}</td>
+                    <td>
+                      {variable.Start_Midterm}
+                      &nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;
+                      {variable.End_Midterm}
+                    </td>
+                    <td>
+                      {variable.Start_Final}
+                      &nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;{variable.End_Final}
+                    </td>
+                    <td>
+                      <button type="button" className="btn btn-warning mr-2">
+                        <EditIcon />
+                      </button>
+                      <button type="button" className="btn btn-danger">
+                        <DeleteIcon />
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

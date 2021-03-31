@@ -8,6 +8,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import AddIcon from "@material-ui/icons/Add";
 import axios from "axios";
 import TextField from "@material-ui/core/TextField";
+import { useEffect, useState } from "react";
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -36,7 +37,20 @@ export default function Admin(props) {
     window.location.reload();
   };
 
-  React.useEffect(() => {}, []);
+  const [data, setData] = useState([]);
+  const getData = async () => {
+    try {
+      const resp = await axios.post(
+        "http://localhost/face_identify/api/index.php/getSubject"
+      );
+      console.log(resp.data.result);
+      setData(resp.data.result);
+    } catch (error) {}
+  };
+
+  React.useEffect(() => {
+    getData();
+  }, []);
 
   return (
     <AdminTheme {...props}>
@@ -214,34 +228,38 @@ export default function Admin(props) {
           <table className="table table-striped align-middle text-center">
             <thead>
               <tr>
-                <th scope="col"></th>
-                <th scope="col">รหัสวิชา</th>
-                <th scope="col">ชื่อวิชาภาษาไทย</th>
-                <th scope="col">ชื่อวิชาภาษาอังกฤษ</th>
-                <th scope="col">ทฤษฎี (จำนวนชั่วโมง)</th>
-                <th scope="col">ปฏิบัติ (จำนวนชั่วโมง)</th>
-                <th scope="col">จัดการ</th>
+                <th>รหัสวิชา</th>
+                <th>ชื่อวิชาภาษาไทย</th>
+                <th>ชื่อวิชาภาษาอังกฤษ</th>
+                <th>ทฤษฎี (จำนวนชั่วโมง)</th>
+                <th>ปฏิบัติ (จำนวนชั่วโมง)</th>
+                <th>จัดการ</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>
-                  <button type="button" className="btn btn-warning mr-2">
-                    <EditIcon />
-                  </button>
-                  <button type="button" className="btn btn-danger">
-                    <DeleteIcon />
-                  </button>
-                </td>
-              </tr>
+              {process.env.api_url}
+              {data.map((variable, index) => {
+                return (
+                  <tr key={variable.Subject_PK}>
+                    <td>{variable.Subject_ID}</td>
+                    <td>{variable.Subject_NameTH}</td>
+                    <td>{variable.Subject_NameEN}</td>
+                    <td>{variable.Subject_Theory}</td>
+                    <td>{variable.Subject_Practice}</td>
+                    <td>
+                      <button type="button" className="btn btn-warning mr-2">
+                        <EditIcon />
+                      </button>
+                      <button type="button" className="btn btn-danger">
+                        <DeleteIcon />
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
+          <div></div>
         </div>
       </form>
     </AdminTheme>
