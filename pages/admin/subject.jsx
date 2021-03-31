@@ -6,15 +6,17 @@ import AdminTheme from "../../components/AdminTheme";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import AddIcon from "@material-ui/icons/Add";
+import axios from "axios";
+import TextField from "@material-ui/core/TextField";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   button: {
-    textAlign: "right",
+    textAlign: "right"
   },
   form: {
     width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
-  },
+    marginTop: theme.spacing(1)
+  }
 }));
 
 export default function Admin(props) {
@@ -22,21 +24,16 @@ export default function Admin(props) {
   const router = useRouter();
   const { control, handleSubmit } = useForm();
 
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     axios
-      .post(`${props.env.api_url}/login`, JSON.stringify(data))
-      .then((value) => {
+      .post(`${props.env.api_url}/insertSubject`, JSON.stringify(data))
+      .then(value => {
         console.log(value.data);
-        if (value.data.success) {
-          props.setUserLogin(value.data.data);
-          router.replace("/");
-        } else {
-          alert(value.data.message);
-        }
       })
-      .catch((reason) => {
+      .catch(reason => {
         console.log(reason);
       });
+    window.location.reload();
   };
 
   React.useEffect(() => {}, []);
@@ -80,56 +77,120 @@ export default function Admin(props) {
               </div>
               <div className="modal-body">
                 <div className="row">
-                  <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
+                  <div className="col-sm-4 mb-2 mt-3 align-middle text-right">
                     <label>รหัสวิชา : </label>
                   </div>
-                  <div className="col-sm-7 mb-2 mt-2 align-middle text-left">
-                    <input type="text" className="form-control"></input>
+                  <div className="col-sm-7 mb-2 align-middle text-left">
+                    <Controller
+                      name="Subject_ID"
+                      control={control}
+                      defaultValue=""
+                      render={({ onChange, value }) => (
+                        <TextField
+                          variant="outlined"
+                          size="small"
+                          margin="normal"
+                          required
+                          fullWidth
+                          label="รหัสวิชา"
+                          onChange={onChange}
+                          value={value}
+                          type="text"
+                        />
+                      )}
+                    />
                   </div>
-                  <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
+                  <div className="col-sm-4 mb-2 mt-3 align-middle text-right">
                     <label>ชื่อวิชาภาษาไทย : </label>
                   </div>
-                  <div className="col-sm-7 mb-2 mt-2 align-middle text-left">
-                    <input type="text" className="form-control"></input>
+                  <div className="col-sm-7 mb-2 align-middle text-left">
+                    <Controller
+                      name="Subject_NameTH"
+                      control={control}
+                      defaultValue=""
+                      render={({ onChange, value }) => (
+                        <TextField
+                          variant="outlined"
+                          size="small"
+                          margin="normal"
+                          required
+                          fullWidth
+                          label="ชื่อวิชาภาษาไทย"
+                          onChange={onChange}
+                          value={value}
+                          type="text"
+                        />
+                      )}
+                    />
                   </div>
-                  <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
+                  <div className="col-sm-4 mb-2 mt-3 align-middle text-right">
                     <label>ชื่อวิชาภาษาอังกฤษ : </label>
                   </div>
-                  <div className="col-sm-7 mb-2 mt-2 align-middle text-left">
-                    <input type="text" className="form-control"></input>
+                  <div className="col-sm-7 mb-2 align-middle text-left">
+                    <Controller
+                      name="Subject_NameEN"
+                      control={control}
+                      defaultValue=""
+                      render={({ onChange, value }) => (
+                        <TextField
+                          variant="outlined"
+                          size="small"
+                          margin="normal"
+                          required
+                          fullWidth
+                          label="ชื่อวิชาภาษาอังกฤษ"
+                          onChange={onChange}
+                          value={value}
+                          type="text"
+                        />
+                      )}
+                    />
                   </div>
-                  <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="type_sub"
-                      id="theory"
-                      value="theory"
-                      checked
-                    ></input>
-                    <label>ทฤษฎี </label>
+                  <div className="col-sm-4 mb-2 mt-3 align-middle text-right">
+                    <label>วิชาทฤษฎี : </label>
                   </div>
-                  <div className="col-sm-3 mb-2 mt-2 align-middle text-left">
-                    <label>จำนวนชั่วโมง : </label>
+                  <div className="col-sm-7 mb-2 align-middle text-left">
+                    <Controller
+                      name="Subject_Theory"
+                      control={control}
+                      defaultValue=""
+                      render={({ onChange, value }) => (
+                        <TextField
+                          variant="outlined"
+                          size="small"
+                          margin="normal"
+                          required
+                          fullWidth
+                          label="จำนวนชั่วโมงวิชาทฤษฎี"
+                          onChange={onChange}
+                          value={value}
+                          type="text"
+                        />
+                      )}
+                    />
                   </div>
-                  <div className="col-sm-4 mb-2 mt-2 align-middle text-left">
-                    <input type="text" className="form-control"></input>
+                  <div className="col-sm-4 mb-2 mt-3 align-middle text-right">
+                    <label>วิชาปฏิบัติ : </label>
                   </div>
-                  <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="type_sub"
-                      id="practice"
-                      value="practice"
-                    ></input>
-                    <label>ปฏิบัติ </label>
-                  </div>
-                  <div className="col-sm-3 mb-2 mt-2 align-middle text-left">
-                    <label>จำนวนชั่วโมง : </label>
-                  </div>
-                  <div className="col-sm-4 mb-2 mt-2 align-middle text-left">
-                    <input type="text" className="form-control"></input>
+                  <div className="col-sm-7 mb-2 align-middle text-left">
+                    <Controller
+                      name="Subject_Practice"
+                      control={control}
+                      defaultValue=""
+                      render={({ onChange, value }) => (
+                        <TextField
+                          variant="outlined"
+                          size="small"
+                          margin="normal"
+                          required
+                          fullWidth
+                          label="จำนวนชั่วโมงวิชาปฏิบัติ"
+                          onChange={onChange}
+                          value={value}
+                          type="text"
+                        />
+                      )}
+                    />
                   </div>
                 </div>
               </div>
@@ -141,7 +202,7 @@ export default function Admin(props) {
                 >
                   ยกเลิก
                 </button>
-                <button type="button" className="btn btn-success">
+                <button type="submit" className="btn btn-success">
                   เพิ่ม
                 </button>
               </div>

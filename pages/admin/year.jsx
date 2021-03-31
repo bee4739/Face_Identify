@@ -80,7 +80,7 @@ export default function Admin(props) {
                   <div className="col-sm-5 mt-3 align-middle text-right">
                     <label>ปีการศึกษา : </label>
                   </div>
-                  <div className="col-sm-6 mb-3 align-middle text-left">
+                  <div className="col-sm-6 mb-2 align-middle text-left">
                     <Controller
                       name="Year"
                       control={control}
@@ -88,6 +88,7 @@ export default function Admin(props) {
                       render={({ onChange, value }) => (
                         <TextField
                           variant="outlined"
+                          size="small"
                           margin="normal"
                           required
                           fullWidth
@@ -99,23 +100,22 @@ export default function Admin(props) {
                       )}
                     />
                   </div>
-                  <div className="col-sm-5 align-middle text-right">
+                  <div className="col-sm-5 mt-2 align-middle text-right">
                     <label>ภาคเรียน : </label>
                   </div>
-                  <div className="col-sm-6 mb-2 align-middle text-left">
+                  <div className="col-sm-6 mt-2 mb-2 align-middle text-left">
                     <Controller
                       name="Term"
                       control={control}
                       defaultValue=""
+                      variant="outlined"
                       render={({ onChange, value }) => (
                         <select
                           className="form-control"
                           id="addTerm"
                           onChange={onChange}
                           value={value}
-                          required
                         >
-                          <option>เลือกภาคการศึกษา...</option>
                           <option>ภาคเรียนที่ 1</option>
                           <option>ภาคเรียนที่ 2</option>
                           <option>ภาคฤดูร้อน</option>
@@ -134,6 +134,7 @@ export default function Admin(props) {
                       render={({ onChange, value }) => (
                         <TextField
                           variant="outlined"
+                          size="small"
                           margin="normal"
                           required
                           fullWidth
@@ -155,6 +156,7 @@ export default function Admin(props) {
                       render={({ onChange, value }) => (
                         <TextField
                           variant="outlined"
+                          size="small"
                           margin="normal"
                           required
                           fullWidth
@@ -176,6 +178,7 @@ export default function Admin(props) {
                       render={({ onChange, value }) => (
                         <TextField
                           variant="outlined"
+                          size="small"
                           margin="normal"
                           required
                           fullWidth
@@ -197,6 +200,7 @@ export default function Admin(props) {
                       render={({ onChange, value }) => (
                         <TextField
                           variant="outlined"
+                          size="small"
                           margin="normal"
                           required
                           fullWidth
@@ -218,6 +222,7 @@ export default function Admin(props) {
                       render={({ onChange, value }) => (
                         <TextField
                           variant="outlined"
+                          size="small"
                           margin="normal"
                           required
                           fullWidth
@@ -239,6 +244,7 @@ export default function Admin(props) {
                       render={({ onChange, value }) => (
                         <TextField
                           variant="outlined"
+                          size="small"
                           margin="normal"
                           required
                           fullWidth
