@@ -37,6 +37,18 @@ export default function Admin(props) {
     window.location.reload();
   };
 
+  const onDel = data => {
+    axios
+      .post(`${props.env.api_url}/delYear`, JSON.stringify(data))
+      .then(value => {
+        console.log(value.data);
+      })
+      .catch(reason => {
+        console.log(reason);
+      });
+    window.location.reload();
+  };
+
   const [data, setData] = useState([]);
   const getData = async () => {
     try {
@@ -322,7 +334,13 @@ export default function Admin(props) {
                       <button type="button" className="btn btn-warning mr-2">
                         <EditIcon />
                       </button>
-                      <button type="button" className="btn btn-danger">
+                      <button
+                        type="button"
+                        className="btn btn-danger"
+                        onClick={() => {
+                          onDel({ year: variable.Year_ID });
+                        }}
+                      >
                         <DeleteIcon />
                       </button>
                     </td>
