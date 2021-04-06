@@ -6,6 +6,7 @@ import { useForm, Controller } from "react-hook-form";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import AddIcon from "@material-ui/icons/Add";
+import TextField from "@material-ui/core/TextField";
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -80,69 +81,147 @@ export default function Teacher(props) {
               </div>
               <div className="modal-body">
                 <div className="row">
-                  <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
-                    วิชา :
+                  <div className="col-sm-5 mt-2 align-middle text-right">
+                    <label>วิชา : </label>
                   </div>
-                  <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
-                    <div className={classes.d}>
-                      <select class="form-control form-control-sm">
-                        <option>เลือกวิชา</option>
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                      </select>
-                    </div>
+                  <div className="col-sm-6 mt-2 mb-2 align-middle text-left">
+                    <Controller
+                      name="Subject_PK"
+                      defaultValue=""
+                      control={control}
+                      variant="outlined"
+                      render={({ onChange, value }) => (
+                        <select
+                          className="form-control"
+                          id="addTerm"
+                          onChange={onChange}
+                          value={value}
+                        >
+                          <option>เลือกวิชา</option>
+                        </select>
+                      )}
+                    />
                   </div>
-                  <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
+                  <div className="col-sm-5 mt-3 align-middle text-right">
                     <label>กลุ่มเรียน : </label>
                   </div>
-                  <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="ตัวอย่าง CPE.60231A
-                      
-                      
-                      "
-                    ></input>
+                  <div className="col-sm-6 mb-2 align-middle text-left">
+                    <Controller
+                      name="Group_Study"
+                      defaultValue=""
+                      control={control}
+                      render={({ onChange, value }) => (
+                        <TextField
+                          placeholder="ตัวอย่าง CPE.60231A"
+                          variant="outlined"
+                          size="small"
+                          margin="normal"
+                          required
+                          fullWidth
+                          label="กลุ่มเรียน"
+                          onChange={onChange}
+                          value={value}
+                          type="text"
+                        />
+                      )}
+                    />
                   </div>
-                  <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
+
+                  <div className="col-sm-5 mt-2 align-middle text-right">
                     <label>วันที่สอน : </label>
                   </div>
-                  <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
-                    <input type="text" className="form-control"></input>
+                  <div className="col-sm-6 mt-2 mb-2 align-middle text-left">
+                    <Controller
+                      name="Term"
+                      defaultValue=""
+                      control={control}
+                      variant="outlined"
+                      render={({ onChange, value }) => (
+                        <select
+                          className="form-control"
+                          id="addTerm"
+                          onChange={onChange}
+                          value={value}
+                        >
+                          <option>เลือกวันที่สอน</option>
+                          <option>วันจันทร์</option>
+                          <option>วันอังคาร</option>
+                          <option>วันพุธ</option>
+                          <option>วันพฤหัสบดี</option>
+                          <option>วันศุกร์</option>
+                          <option>วันเสาร์</option>
+                          <option>วันอาทิตย์</option>
+                        </select>
+                      )}
+                    />
                   </div>
-                  <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
-                    ภาคเรียน :
+                  <div className="col-sm-5 mt-2 align-middle text-right">
+                    <label>ภาคเรียน : </label>
                   </div>
-                  <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
-                    <div className={classes.d}>
-                      <select class="form-control form-control-sm">
-                        <option>เลือกภาคเรียน</option>
-                        <option>ภาคเรียนที่ 1</option>
-                        <option>ภาคเรียนที่ 2</option>
-                        <option>ภาคเรียนฤดูร้อน</option>
-                      </select>
-                    </div>
+                  <div className="col-sm-6 mt-2 mb-2 align-middle text-left">
+                    <Controller
+                      name="Term"
+                      defaultValue=""
+                      control={control}
+                      variant="outlined"
+                      render={({ onChange, value }) => (
+                        <select
+                          className="form-control"
+                          id="addTerm"
+                          onChange={onChange}
+                          value={value}
+                        >
+                          <option>เลือกภาคการเรียน</option>
+                          <option>ภาคเรียนที่ 1</option>
+                          <option>ภาคเรียนที่ 2</option>
+                          <option>ภาคฤดูร้อน</option>
+                        </select>
+                      )}
+                    />
                   </div>
-                  <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
-                    ปีการศึกษา :
+                  <div className="col-sm-5 mt-2 align-middle text-right">
+                    <label>ปีการศึกษา : </label>
                   </div>
-                  <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
-                    <div className={classes.d}>
-                      <select class="form-control form-control-sm">
-                        <option>เลือกปีการศึกษา</option>
-                        <option>Small 1</option>
-                        <option>Small 2</option>
-                        <option>Small 3</option>
-                      </select>
-                    </div>
+                  <div className="col-sm-6 mt-2 mb-2 align-middle text-left">
+                    <Controller
+                      name="Year_ID"
+                      defaultValue=""
+                      control={control}
+                      variant="outlined"
+                      render={({ onChange, value }) => (
+                        <select
+                          className="form-control"
+                          id="addTerm"
+                          onChange={onChange}
+                          value={value}
+                        >
+                          <option>เลือกปีการศึกษา</option>
+                        </select>
+                      )}
+                    />
                   </div>
-                  <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
+                  <div className="col-sm-5 mt-3 align-middle text-right">
                     <label>รหัสกลุ่มเรียน : </label>
                   </div>
-                  <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
-                    <input type="text" className="form-control"></input>
+                  <div className="col-sm-6 mb-2 align-middle text-left">
+                    <Controller
+                      name="Pass_Group"
+                      defaultValue=""
+                      control={control}
+                      render={({ onChange, value }) => (
+                        <TextField
+                          variant="outlined"
+                          size="small"
+                          margin="normal"
+                          required
+                          fullWidth
+                          label="รหัสกลุ่มเรียน"
+                          onChange={onChange}
+                          value={value}
+                          type="text"
+                        />
+                      )}
+                    />
                   </div>
                 </div>
               </div>
