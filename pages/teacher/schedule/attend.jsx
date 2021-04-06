@@ -4,21 +4,29 @@ import TeacherTheme from "../../../components/TeacherTheme";
 import { makeStyles } from "@material-ui/core/styles";
 import { useForm, Controller } from "react-hook-form";
 import AddIcon from "@material-ui/icons/Add";
-import "react-calendar/dist/Calendar.css";
-import Calendar from "react-calendar";
-import moment from "moment";
-import "../../../node_modules/react-big-calendar/lib/css/react-big-calendar.css";
+// import "react-calendar/dist/Calendar.css";
+// import Calendar from "react-calendar";
+// import moment from "moment";
+// import "../../../node_modules/react-big-calendar/lib/css/react-big-calendar.css";
+import {
+  Inject,
+  ScheduleComponent,
+  Day,
+  Week,
+  WorkWeek,
+  Month
+} from "@syncfusion/ej2-react-schedule";
 
 // BigCalendar.momentLocalizer(moment);
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   button: {
-    textAlign: "right",
+    textAlign: "right"
   },
   form: {
     width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
-  },
+    marginTop: theme.spacing(1)
+  }
 }));
 
 export default function Teacher(props) {
@@ -26,10 +34,10 @@ export default function Teacher(props) {
   const router = useRouter();
   const { control, handleSubmit } = useForm();
 
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     axios
       .post(`${props.env.api_url}/login`, JSON.stringify(data))
-      .then((value) => {
+      .then(value => {
         console.log(value.data);
         if (value.data.success) {
           props.setUserLogin(value.data.data);
@@ -38,7 +46,7 @@ export default function Teacher(props) {
           alert(value.data.message);
         }
       })
-      .catch((reason) => {
+      .catch(reason => {
         console.log(reason);
       });
   };
@@ -240,8 +248,18 @@ export default function Teacher(props) {
             </div>
           </div>
         </div>
-        <div className="text-center">
+        {/* <div className="text-center">
           <Calendar />
+        </div> */}
+        <div>
+          <ScheduleComponent
+          // height="auto"
+          // currentView="Month"
+          // eventSettings={{ dataSource: this.state.data }}
+          // rowAutoHeight={true}
+          >
+            <Inject services={[Day, Week, WorkWeek, Month]} />
+          </ScheduleComponent>
         </div>
       </form>
     </TeacherTheme>

@@ -7,14 +7,14 @@ import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import AddIcon from "@material-ui/icons/Add";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   button: {
-    textAlign: "right",
+    textAlign: "right"
   },
   form: {
     width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
-  },
+    marginTop: theme.spacing(1)
+  }
 }));
 
 export default function Teacher(props) {
@@ -22,10 +22,10 @@ export default function Teacher(props) {
   const router = useRouter();
   const { control, handleSubmit } = useForm();
 
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     axios
       .post(`${props.env.api_url}/login`, JSON.stringify(data))
-      .then((value) => {
+      .then(value => {
         console.log(value.data);
         if (value.data.success) {
           props.setUserLogin(value.data.data);
@@ -34,7 +34,7 @@ export default function Teacher(props) {
           alert(value.data.message);
         }
       })
-      .catch((reason) => {
+      .catch(reason => {
         console.log(reason);
       });
   };

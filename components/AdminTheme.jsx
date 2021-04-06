@@ -19,6 +19,7 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import DateRangeIcon from "@material-ui/icons/DateRange";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import Link from "next/link";
+
 const drawerWidth = 240;
 
 const useStyles = makeStyles(theme => ({
@@ -83,7 +84,7 @@ const useStyles = makeStyles(theme => ({
   appBarSpacer: theme.mixins.toolbar,
   content: {
     flexGrow: 1,
-    height: "100vh",
+    height: "95vh",
     overflow: "auto"
   },
   container: {

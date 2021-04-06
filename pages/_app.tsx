@@ -6,8 +6,8 @@ import { createMuiTheme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import red from "@material-ui/core/colors/red";
 import useLocalStorage from "../components/useLocalStorage";
-
-
+import Footer from "../components/Footer";
+import "../styles/Calendar.css";
 
 const env: Env = require(`../environments/${process.env.mode}`);
 const ThemeConfig = createMuiTheme({
@@ -40,6 +40,9 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <React.Fragment>
+      <head>
+        <title>Face Recognition System</title>
+      </head>
       <ThemeProvider theme={ThemeConfig}>
         <CssBaseline />
         <Component
@@ -53,7 +56,8 @@ function MyApp({ Component, pageProps }) {
           setUserLogin={data => {
             setUserLogin(data);
           }}
-        />
+        />{" "}
+        <Footer />
       </ThemeProvider>
     </React.Fragment>
   );
