@@ -62,20 +62,24 @@ export default function Admin(props) {
       });
     window.location.reload();
   };
-  const [data, setData] = useState([]);
+
   const [varY, setvarY] = useState({});
-  const getData = async () => {
-    try {
-      const resp = await axios.post(
-        "http://localhost/face_identify/api/index.php/getSubject"
-      );
-      console.log(resp.data.result);
-      setData(resp.data.result);
-    } catch (error) {}
+
+  const [data, setData] = useState([]);
+  const getSubject = data => {
+    axios
+      .post(`${props.env.api_url}/getSubject`, JSON.stringify(data))
+      .then(value => {
+        console.log(value.data);
+        setData(value.data.result);
+      })
+      .catch(reason => {
+        console.log(reason);
+      });
   };
 
   React.useEffect(() => {
-    getData();
+    getSubject();
   }, []);
 
   return (

@@ -7,6 +7,8 @@ import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import AddIcon from "@material-ui/icons/Add";
 import TextField from "@material-ui/core/TextField";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -23,24 +25,62 @@ export default function Teacher(props) {
   const router = useRouter();
   const { control, handleSubmit } = useForm();
 
-  const onSubmit = data => {
+  const [data, setData] = useState([]);
+  const getSubject = data => {
     axios
-      .post(`${props.env.api_url}/login`, JSON.stringify(data))
+      .post(`${props.env.api_url}/dropdownSubject`, JSON.stringify(data))
       .then(value => {
-        console.log(value.data);
-        if (value.data.success) {
-          props.setUserLogin(value.data.data);
-          router.replace("/");
-        } else {
-          alert(value.data.message);
-        }
+        console.log("data", value.data.result);
+        setData(value.data.result);
       })
       .catch(reason => {
         console.log(reason);
       });
   };
 
-  React.useEffect(() => {}, []);
+  const [year, setYear] = useState([]);
+  const getYear = data => {
+    axios
+      .post(`${props.env.api_url}/dropdownYear`, JSON.stringify(data))
+      .then(value => {
+        console.log("data", value.data.result);
+        setYear(value.data.result);
+      })
+      .catch(reason => {
+        console.log(reason);
+      });
+  };
+
+  const onSubmit = data => {
+    axios
+      .post(`${props.env.api_url}/insertStudyGroup`, JSON.stringify(data))
+      .then(value => {
+        console.log(value.data);
+      })
+      .catch(reason => {
+        console.log(reason);
+      });
+    window.location.reload();
+  };
+
+  const [studyGroup, setStudyGroup] = useState([]);
+  const getStudyGroup = data => {
+    axios
+      .post(`${props.env.api_url}/getStudyGroup`, JSON.stringify(data))
+      .then(value => {
+        console.log("data", value.data.result);
+        setStudyGroup(value.data.result);
+      })
+      .catch(reason => {
+        console.log(reason);
+      });
+  };
+
+  useEffect(() => {
+    getSubject();
+    getYear();
+    getStudyGroup();
+  }, []);
 
   return (
     <TeacherTheme {...props}>
@@ -86,18 +126,25 @@ export default function Teacher(props) {
                   </div>
                   <div className="col-sm-6 mt-2 mb-2 align-middle text-left">
                     <Controller
-                      name="Subject_PK"
+                      name="Subject_ID "
                       defaultValue=""
                       control={control}
                       variant="outlined"
                       render={({ onChange, value }) => (
                         <select
                           className="form-control"
-                          id="addTerm"
+                          id="addSubject"
                           onChange={onChange}
                           value={value}
                         >
-                          <option>เลือกวิชา</option>
+                          {process.env.api_url}
+                          {data.map((variable, index) => {
+                            return (
+                              <option key={variable.Subject_PK}>
+                                {variable.Subject_ID}-{variable.Subject_NameTH}
+                              </option>
+                            );
+                          })}
                         </select>
                       )}
                     />
@@ -126,65 +173,12 @@ export default function Teacher(props) {
                       )}
                     />
                   </div>
-
-                  <div className="col-sm-5 mt-2 align-middle text-right">
-                    <label>วันที่สอน : </label>
-                  </div>
-                  <div className="col-sm-6 mt-2 mb-2 align-middle text-left">
-                    <Controller
-                      name="Term"
-                      defaultValue=""
-                      control={control}
-                      variant="outlined"
-                      render={({ onChange, value }) => (
-                        <select
-                          className="form-control"
-                          id="addTerm"
-                          onChange={onChange}
-                          value={value}
-                        >
-                          <option>เลือกวันที่สอน</option>
-                          <option>วันจันทร์</option>
-                          <option>วันอังคาร</option>
-                          <option>วันพุธ</option>
-                          <option>วันพฤหัสบดี</option>
-                          <option>วันศุกร์</option>
-                          <option>วันเสาร์</option>
-                          <option>วันอาทิตย์</option>
-                        </select>
-                      )}
-                    />
-                  </div>
-                  <div className="col-sm-5 mt-2 align-middle text-right">
-                    <label>ภาคเรียน : </label>
-                  </div>
-                  <div className="col-sm-6 mt-2 mb-2 align-middle text-left">
-                    <Controller
-                      name="Term"
-                      defaultValue=""
-                      control={control}
-                      variant="outlined"
-                      render={({ onChange, value }) => (
-                        <select
-                          className="form-control"
-                          id="addTerm"
-                          onChange={onChange}
-                          value={value}
-                        >
-                          <option>เลือกภาคการเรียน</option>
-                          <option>ภาคเรียนที่ 1</option>
-                          <option>ภาคเรียนที่ 2</option>
-                          <option>ภาคฤดูร้อน</option>
-                        </select>
-                      )}
-                    />
-                  </div>
                   <div className="col-sm-5 mt-2 align-middle text-right">
                     <label>ปีการศึกษา : </label>
                   </div>
                   <div className="col-sm-6 mt-2 mb-2 align-middle text-left">
                     <Controller
-                      name="Year_ID"
+                      name="Term "
                       defaultValue=""
                       control={control}
                       variant="outlined"
@@ -195,11 +189,18 @@ export default function Teacher(props) {
                           onChange={onChange}
                           value={value}
                         >
-                          <option>เลือกปีการศึกษา</option>
+                          {year.map((variable, index) => {
+                            return (
+                              <option key={variable.Year_ID}>
+                                {variable.Year}/{variable.Term}
+                              </option>
+                            );
+                          })}
                         </select>
                       )}
                     />
                   </div>
+
                   <div className="col-sm-5 mt-3 align-middle text-right">
                     <label>รหัสกลุ่มเรียน : </label>
                   </div>
@@ -218,7 +219,7 @@ export default function Teacher(props) {
                           label="รหัสกลุ่มเรียน"
                           onChange={onChange}
                           value={value}
-                          type="text"
+                          type="password"
                         />
                       )}
                     />
@@ -233,7 +234,7 @@ export default function Teacher(props) {
                 >
                   ยกเลิก
                 </button>
-                <button type="button" className="btn btn-success">
+                <button type="submit" className="btn btn-success">
                   เพิ่ม
                 </button>
               </div>
@@ -245,30 +246,38 @@ export default function Teacher(props) {
           <table className="table table-striped align-middle text-center">
             <thead>
               <tr>
-                <th scope="col"></th>
-                <th scope="col">วิชา</th>
+                <th scope="col">รหัสวิชา - ชื่อวิชา</th>
                 <th scope="col">กลุ่มเรียน</th>
-                <th scope="col">ภาคเรียน</th>
-                <th scope="col">ปีการศึกษา</th>
+                <th scope="col">ปีการศึกษา / ภาคเรียน</th>
                 <th scope="col">จัดการ</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>
-                  <button type="button" className="btn btn-warning mr-2">
-                    <EditIcon />
-                  </button>
-                  <button type="button" className="btn btn-danger">
-                    <DeleteIcon />
-                  </button>
-                </td>
-              </tr>
+              {studyGroup.map((variable, index) => {
+                return (
+                  <tr key={variable.Class_ID}>
+                    <td>
+                      {variable.Subject_ID}
+                      &nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;
+                      {variable.Subject_NameTH}
+                    </td>
+                    <td>{variable.Group_Study}</td>
+                    <td>
+                      {variable.Year}
+                      &nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;
+                      {variable.Term}
+                    </td>
+                    <td>
+                      <button type="button" className="btn btn-warning mr-2">
+                        <EditIcon />
+                      </button>
+                      <button type="button" className="btn btn-danger">
+                        <DeleteIcon />
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

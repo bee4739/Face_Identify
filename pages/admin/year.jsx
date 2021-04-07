@@ -63,20 +63,23 @@ export default function Admin(props) {
     window.location.reload();
   };
 
-  const [data, setData] = useState([]);
   const [varY, setvarY] = useState({});
-  const getData = async () => {
-    try {
-      const resp = await axios.post(
-        "http://localhost/face_identify/api/index.php/getYear"
-      );
-      console.log(resp.data.result);
-      setData(resp.data.result);
-    } catch (error) {}
+
+  const [data, setData] = useState([]);
+  const getYear = data => {
+    axios
+      .post(`${props.env.api_url}/getYear`, JSON.stringify(data))
+      .then(value => {
+        console.log("data", value.data.result);
+        setData(value.data.result);
+      })
+      .catch(reason => {
+        console.log(reason);
+      });
   };
 
   React.useEffect(() => {
-    getData();
+    getYear();
   }, []);
 
   return (
