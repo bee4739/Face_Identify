@@ -35,6 +35,7 @@ export default function Admin(props) {
         console.log(reason);
       });
     window.location.reload();
+    alert("เพิ่มข้อมูลสำเร็จ");
   };
 
   const onUpdate = data => {
@@ -49,6 +50,7 @@ export default function Admin(props) {
         console.log(reason);
       });
     window.location.reload();
+    alert("แก้ไขข้อมูลสำเร็จ");
   };
 
   const onDel = data => {
@@ -61,6 +63,7 @@ export default function Admin(props) {
         console.log(reason);
       });
     window.location.reload();
+    alert("ลบข้อมูลสำเร็จ");
   };
 
   const [varY, setvarY] = useState({});

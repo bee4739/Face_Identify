@@ -40,9 +40,6 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <React.Fragment>
-      <head>
-        <title>Face Recognition System</title>
-      </head>
       <ThemeProvider theme={ThemeConfig}>
         <CssBaseline />
         <Component

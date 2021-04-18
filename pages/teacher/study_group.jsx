@@ -17,21 +17,30 @@ const useStyles = makeStyles(theme => ({
   form: {
     width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(1)
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2)
   }
 }));
 
 export default function Teacher(props) {
   const classes = useStyles();
+
   const router = useRouter();
+
   const { control, handleSubmit } = useForm();
 
-  const [data, setData] = useState([]);
+  const [subject, setSubject] = useState([]);
   const getSubject = data => {
     axios
       .post(`${props.env.api_url}/dropdownSubject`, JSON.stringify(data))
       .then(value => {
-        console.log("data", value.data.result);
-        setData(value.data.result);
+        setSubject(value.data.result);
+        console.log("ssss", value.data.result);
       })
       .catch(reason => {
         console.log(reason);
@@ -43,8 +52,8 @@ export default function Teacher(props) {
     axios
       .post(`${props.env.api_url}/dropdownYear`, JSON.stringify(data))
       .then(value => {
-        console.log("data", value.data.result);
         setYear(value.data.result);
+        console.log("yyyy", value.data.result);
       })
       .catch(reason => {
         console.log(reason);
@@ -52,15 +61,17 @@ export default function Teacher(props) {
   };
 
   const onSubmit = data => {
+    console.log(data);
     axios
       .post(`${props.env.api_url}/insertStudyGroup`, JSON.stringify(data))
       .then(value => {
-        console.log(value.data);
+        console.log("oooo", value.data);
       })
       .catch(reason => {
         console.log(reason);
       });
     window.location.reload();
+    alert("เพิ่มข้อมูลเรียนสำเร็จ");
   };
 
   const [studyGroup, setStudyGroup] = useState([]);
@@ -126,22 +137,31 @@ export default function Teacher(props) {
                   </div>
                   <div className="col-sm-6 mt-2 mb-2 align-middle text-left">
                     <Controller
-                      name="Subject_ID "
+                      name="Subject_ID"
                       defaultValue=""
                       control={control}
                       variant="outlined"
                       render={({ onChange, value }) => (
+                        // <select options={{options}} />
                         <select
                           className="form-control"
                           id="addSubject"
+                          // onChange={onChange}
                           onChange={onChange}
                           value={value}
                         >
-                          {process.env.api_url}
-                          {data.map((variable, index) => {
+                          {subject.map((variable, index) => {
                             return (
-                              <option key={variable.Subject_PK}>
-                                {variable.Subject_ID}-{variable.Subject_NameTH}
+                              <option
+                                // key={variable.Subject_PK}
+                                key={index}
+                                // value={`${variable.Subject_ID},${variable.Subject_NameTH}`}
+                                value={variable.Subject_PK}
+                                // value={`${variable.Subject_PK}`}
+                              >
+                                {variable.Subject_ID}
+                                &nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;
+                                {variable.Subject_NameTH}
                               </option>
                             );
                           })}
@@ -178,7 +198,7 @@ export default function Teacher(props) {
                   </div>
                   <div className="col-sm-6 mt-2 mb-2 align-middle text-left">
                     <Controller
-                      name="Term "
+                      name="Term"
                       defaultValue=""
                       control={control}
                       variant="outlined"
@@ -191,8 +211,14 @@ export default function Teacher(props) {
                         >
                           {year.map((variable, index) => {
                             return (
-                              <option key={variable.Year_ID}>
-                                {variable.Year}/{variable.Term}
+                              <option
+                                key={index}
+                                value={variable.Year_ID}
+                                // value={`${variable.Year_ID}`}
+                              >
+                                {variable.Year}
+                                &nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;
+                                {variable.Term}
                               </option>
                             );
                           })}
@@ -255,7 +281,7 @@ export default function Teacher(props) {
             <tbody>
               {studyGroup.map((variable, index) => {
                 return (
-                  <tr key={variable.Class_ID}>
+                  <tr key={index}>
                     <td>
                       {variable.Subject_ID}
                       &nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;
