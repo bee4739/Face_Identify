@@ -74,6 +74,19 @@ export default function Teacher(props) {
     alert("เพิ่มข้อมูลเรียนสำเร็จ");
   };
 
+  const onDel = data => {
+    axios
+      .post(`${props.env.api_url}/delStudyGroup`, JSON.stringify(data))
+      .then(value => {
+        console.log(value.data);
+      })
+      .catch(reason => {
+        console.log(reason);
+      });
+    window.location.reload();
+    alert("ลบข้อมูลสำเร็จ");
+  };
+
   const [studyGroup, setStudyGroup] = useState([]);
   const getStudyGroup = data => {
     axios
@@ -297,7 +310,13 @@ export default function Teacher(props) {
                       <button type="button" className="btn btn-warning mr-2">
                         <EditIcon />
                       </button>
-                      <button type="button" className="btn btn-danger">
+                      <button
+                        type="button"
+                        className="btn btn-danger"
+                        onClick={() => {
+                          onDel({ Class_ID: variable.Class_ID });
+                        }}
+                      >
                         <DeleteIcon />
                       </button>
                     </td>
