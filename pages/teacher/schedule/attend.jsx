@@ -4,6 +4,7 @@ import TeacherTheme from "../../../components/TeacherTheme";
 import { makeStyles } from "@material-ui/core/styles";
 import { useForm, Controller } from "react-hook-form";
 import AddIcon from "@material-ui/icons/Add";
+import TextField from "@material-ui/core/TextField";
 // import "react-calendar/dist/Calendar.css";
 // import Calendar from "react-calendar";
 // import moment from "moment";
@@ -16,8 +17,9 @@ import {
   WorkWeek,
   Month
 } from "@syncfusion/ej2-react-schedule";
-
 // BigCalendar.momentLocalizer(moment);
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -34,21 +36,30 @@ export default function Teacher(props) {
   const router = useRouter();
   const { control, handleSubmit } = useForm();
 
-  const onSubmit = data => {
+  const [sub, setSub] = useState([]);
+  const getSubject = data => {
     axios
-      .post(`${props.env.api_url}/login`, JSON.stringify(data))
+      .post(`${props.env.api_url}/dropdownSubSchedule`, JSON.stringify(data))
       .then(value => {
-        console.log(value.data);
-        if (value.data.success) {
-          props.setUserLogin(value.data.data);
-          router.replace("/");
-        } else {
-          alert(value.data.message);
-        }
+        setSub(value.data.result);
+        console.log("ssss", value.data.result);
       })
       .catch(reason => {
         console.log(reason);
       });
+  };
+
+  const onSubmit = data => {
+    axios
+      .post(`${props.env.api_url}/insertScheduleAttend`, JSON.stringify(data))
+      .then(value => {
+        console.log(value.data);
+      })
+      .catch(reason => {
+        console.log(reason);
+      });
+    window.location.reload();
+    alert("เพิ่มข้อมูลสำเร็จ");
   };
 
   // const todayDate = moment().toDate();
@@ -70,7 +81,9 @@ export default function Teacher(props) {
   //   },
   // ];
 
-  React.useEffect(() => {}, []);
+  React.useEffect(() => {
+    getSubject();
+  }, []);
 
   return (
     <TeacherTheme {...props}>
@@ -114,51 +127,137 @@ export default function Teacher(props) {
                   <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
                     วิชาและกลุ่มเรียน :
                   </div>
-                  <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
-                    <div className={classes.d}>
-                      <select class="form-control form-control-sm">
-                        <option>เลือกวิชาและกลุ่มเรียน</option>
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                      </select>
-                    </div>
+                  <div className="col-sm-6 mt-2 mb-2 align-middle text-left">
+                    <Controller
+                      name="Class_ID"
+                      defaultValue=""
+                      control={control}
+                      variant="outlined"
+                      render={({ onChange, value }) => (
+                        <select
+                          className="form-control"
+                          id="addSub"
+                          onChange={onChange}
+                          value={value}
+                        >
+                          <option value="" disabled="disabled">
+                            กรุณาเลือกกลุ่มเรียน...
+                          </option>
+                          {sub.map((variable, index) => {
+                            return (
+                              <option key={index} value={variable.Class_ID}>
+                                {variable.Subject_ID}
+                                &nbsp;-&nbsp;
+                                {variable.Subject_NameTH}
+                                &nbsp;&nbsp;&nbsp; (กลุ่มเรียน&nbsp;
+                                {variable.Group_Study})
+                              </option>
+                            );
+                          })}
+                        </select>
+                      )}
+                    />
                   </div>
                   <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
                     เลือกวันที่ :
                   </div>
-                  <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
-                    <div className={classes.d}>
-                      <select class="form-control form-control-sm">
-                        <option>เลือกวันที่</option>
-                        <option>วันจันทร์</option>
-                        <option>วันอังคาร</option>
-                        <option>วันพุธ</option>
-                        <option>วันพฤหัสบดี</option>
-                        <option>วันศุกร์</option>
-                        <option>วันเสาร์</option>
-                        <option>วันอาทิตย์</option>
-                      </select>
-                    </div>
+                  <div className="col-sm-6 mt-2 mb-2 align-middle text-left">
+                    <Controller
+                      name="Day"
+                      defaultValue=""
+                      control={control}
+                      variant="outlined"
+                      render={({ onChange, value }) => (
+                        <select
+                          className="form-control"
+                          id="addTerm"
+                          onChange={onChange}
+                          value={value}
+                        >
+                          <option value="" disabled="disabled">
+                            กรุณาเลือกวันที่...
+                          </option>
+                          <option>วันจันทร์</option>
+                          <option>วันอังคาร</option>
+                          <option>วันพุธ</option>
+                          <option>วันพฤหัสบดี</option>
+                          <option>วันศุกร์</option>
+                          <option>วันเสาร์</option>
+                          <option>วันอาทิตย์</option>
+                        </select>
+                      )}
+                    />
                   </div>
-
                   <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
                     <label>เวลาเริ่ม : </label>
                   </div>
-                  <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
-                    <input type="time" className="form-control"></input>
+                  <div className="col-sm-6 align-middle text-left">
+                    <Controller
+                      name="Start_Time"
+                      defaultValue=""
+                      control={control}
+                      render={({ onChange, value }) => (
+                        <TextField
+                          variant="outlined"
+                          size="small"
+                          margin="normal"
+                          required
+                          fullWidth
+                          onChange={onChange}
+                          value={value}
+                          type="time"
+                        />
+                      )}
+                    />
                   </div>
                   <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
                     <label>เวลาสิ้นสุด : </label>
                   </div>
-                  <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
-                    <input type="time" className="form-control"></input>
+                  <div className="col-sm-6 align-middle text-left">
+                    <Controller
+                      name="End_Time"
+                      defaultValue=""
+                      control={control}
+                      render={({ onChange, value }) => (
+                        <TextField
+                          variant="outlined"
+                          size="small"
+                          margin="normal"
+                          required
+                          fullWidth
+                          onChange={onChange}
+                          value={value}
+                          type="time"
+                        />
+                      )}
+                    />
                   </div>
                   <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
                     <label>ประเภทวิชา : </label>
                   </div>
                   <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
-                    <input type="text" className="form-control"></input>
+                    <div className={classes.d}>
+                      <Controller
+                        name="Subject_Type"
+                        defaultValue=""
+                        control={control}
+                        variant="outlined"
+                        render={({ onChange, value }) => (
+                          <select
+                            className="form-control"
+                            id="addSubType"
+                            onChange={onChange}
+                            value={value}
+                          >
+                            <option value="" disabled="disabled">
+                              กรุณาเลือกประเภทวิชา...
+                            </option>
+                            <option>ทฤษฎี</option>
+                            <option>ปฏิบัติ</option>
+                          </select>
+                        )}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -170,7 +269,7 @@ export default function Teacher(props) {
                 >
                   ยกเลิก
                 </button>
-                <button type="button" className="btn btn-success">
+                <button type="submit" className="btn btn-success">
                   เพิ่ม
                 </button>
               </div>

@@ -180,6 +180,9 @@ export default function Teacher(props) {
                           onChange={onChange}
                           value={value}
                         >
+                          <option value="" disabled="disabled">
+                            กรุณาเลือกรายวิชา...
+                          </option>
                           {subject.map((variable, index) => {
                             return (
                               <option
@@ -239,6 +242,9 @@ export default function Teacher(props) {
                           onChange={onChange}
                           value={value}
                         >
+                          <option value="" disabled="disabled">
+                            กรุณาเลือกปีการศึกษา...
+                          </option>
                           {year.map((variable, index) => {
                             return (
                               <option
