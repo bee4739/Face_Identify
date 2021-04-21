@@ -15,20 +15,21 @@ import {
   Day,
   Week,
   WorkWeek,
-  Month
+  Month,
 } from "@syncfusion/ej2-react-schedule";
+
 // BigCalendar.momentLocalizer(moment);
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   button: {
-    textAlign: "right"
+    textAlign: "right",
   },
   form: {
     width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1)
-  }
+    marginTop: theme.spacing(1),
+  },
 }));
 
 export default function Teacher(props) {
@@ -39,25 +40,71 @@ export default function Teacher(props) {
   const { control, handleSubmit } = useForm();
 
   const [sub, setSub] = useState([]);
-  const getSubject = data => {
+  const [dayList, setDayList] = useState([]);
+  const [dateSelect, setDateSelect] = useState(null);
+  const getDay = () => {
     axios
-      .post(`${props.env.api_url}/dropdownSubSchedule`, JSON.stringify(data))
-      .then(value => {
-        setSub(value.data.result);
-        console.log("ssss", value.data.result);
+      .post(`${props.env.api_url}/getDay`)
+      .then((value) => {
+        if (value.data.rowCount > 0) {
+          let backup = [];
+          value.data.result.forEach((e, i) => {
+            let start = new Date(`${e.Start_SchYear}`);
+            let end = new Date(`${e.End_SchYear}`);
+
+            for (let i = start.getTime(); i < end.getTime(); i += 86400000) {
+              if (`${new Date(i).getDay()}` === `${e.Day}`) {
+                start = new Date(i);
+                break;
+              }
+            }
+
+            for (
+              let i = start.getTime();
+              i < end.getTime();
+              i += 86400000 * 7
+            ) {
+              backup.push({
+                Id: backup.length + 1,
+                Subject: e.Term,
+                StartTime: new Date(i),
+                EndTime: new Date(i),
+                IsAllDay: true,
+                Priority: "High",
+                data: "hello",
+              });
+            }
+          });
+
+          setDayList(backup);
+        } else {
+          setDayList([]);
+        }
       })
-      .catch(reason => {
+      .catch((reason) => {
         console.log(reason);
       });
   };
 
-  const onSubmit = data => {
+  const getSubject = (data) => {
+    axios
+      .post(`${props.env.api_url}/dropdownSubSchedule`, JSON.stringify(data))
+      .then((value) => {
+        setSub(value.data.result);
+        console.log("ssss", value.data.result);
+      })
+      .catch((reason) => {
+        console.log(reason);
+      });
+  };
+
+  const onSubmit = (data) => {
     axios
       .post(`${props.env.api_url}/insertScheduleAttend`, JSON.stringify(data))
-      .then(value => {
+      .then((value) => {
         console.log(value.data);
       })
-      .catch(reason => {
+      .catch((reason) => {
         console.log(reason);
       });
     window.location.reload();
@@ -85,6 +132,7 @@ export default function Teacher(props) {
 
   React.useEffect(() => {
     getSubject();
+    getDay();
   }, []);
 
   return (
@@ -179,13 +227,13 @@ export default function Teacher(props) {
                           <option value="" disabled="disabled">
                             กรุณาเลือกวันที่...
                           </option>
-                          <option>วันจันทร์</option>
-                          <option>วันอังคาร</option>
-                          <option>วันพุธ</option>
-                          <option>วันพฤหัสบดี</option>
-                          <option>วันศุกร์</option>
-                          <option>วันเสาร์</option>
-                          <option>วันอาทิตย์</option>
+                          <option value={0}>วันอาทิตย์</option>
+                          <option value={1}>วันจันทร์</option>
+                          <option value={2}>วันอังคาร</option>
+                          <option value={3}>วันพุธ</option>
+                          <option value={4}>วันพฤหัสบดี</option>
+                          <option value={5}>วันศุกร์</option>
+                          <option value={6}>วันเสาร์</option>
                         </select>
                       )}
                     />
@@ -354,15 +402,28 @@ export default function Teacher(props) {
         </div> */}
         <div>
           <ScheduleComponent
-          // height="auto"
-          // currentView="Month"
-          // eventSettings={{ dataSource: this.state.data }}
-          // rowAutoHeight={true}
+            // height="auto"
+            currentView="Month"
+            eventSettings={{
+              dataSource: dayList,
+            }}
+            // rowAutoHeight={true}
+            readonly={true}
+            showQuickInfo={false}
+            select={(e) => {
+              setDateSelect(e.data);
+            }}
           >
             <Inject services={[Day, Week, WorkWeek, Month]} />
           </ScheduleComponent>
         </div>
       </form>
+
+      {((date) => {
+        if (date) {
+          return <div>{JSON.stringify(dateSelect)}</div>;
+        }
+      })(dateSelect)}
     </TeacherTheme>
   );
 }
