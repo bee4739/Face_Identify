@@ -32,6 +32,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function Teacher(props) {
+  console.log(props.userLogin);
+
   const classes = useStyles();
   const router = useRouter();
   const { control, handleSubmit } = useForm();

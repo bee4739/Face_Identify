@@ -19,6 +19,9 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import EventAvailableIcon from "@material-ui/icons/EventAvailable";
 import DescriptionIcon from "@material-ui/icons/Description";
 import GroupIcon from "@material-ui/icons/Group";
+import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
+import CheckIcon from "@material-ui/icons/Check";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 
 const drawerWidth = 240;
 
@@ -99,6 +102,9 @@ const useStyles = makeStyles(theme => ({
   },
   fixedHeight: {
     height: 240
+  },
+  userN: {
+    textAlign: "right"
   }
 }));
 
@@ -147,6 +153,12 @@ export default function TeacherTheme(props) {
           >
             Face Recognition System for Personal Identification in Class Room
           </Typography>
+          <div className={classes.userN}>
+            Hello! <br />
+            <AccountCircleIcon />
+            &nbsp;
+            {props.userLogin ? props.userLogin.Username : ""}
+          </div>
         </Toolbar>
       </AppBar>
       <Drawer

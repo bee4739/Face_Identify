@@ -63,6 +63,7 @@ export default function Teacher(props) {
   };
 
   const onSubmit = data => {
+    data = { ...data, User_ID: props.userLogin.User_ID };
     console.log(data);
     axios
       .post(`${props.env.api_url}/insertStudyGroup`, JSON.stringify(data))
@@ -91,6 +92,7 @@ export default function Teacher(props) {
 
   const [studyGroup, setStudyGroup] = useState([]);
   const getStudyGroup = data => {
+    data = { ...data, Username: props.userLogin.User_ID };
     axios
       .post(`${props.env.api_url}/getStudyGroup`, JSON.stringify(data))
       .then(value => {
