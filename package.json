@@ -30,7 +30,7 @@
     "styled-components": "^5.2.1",
     "styled-jsx": "^3.4.4",
     "styled-jsx-plugin-sass": "^1.0.0",
-    "sweetalert2": "^10.14.0"
+    "sweetalert2": "^10.16.6"
   },
   "devDependencies": {
     "@types/node": "^14.14.25",

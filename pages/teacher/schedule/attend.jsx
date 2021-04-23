@@ -15,21 +15,34 @@ import {
   Day,
   Week,
   WorkWeek,
-  Month,
+  Month
 } from "@syncfusion/ej2-react-schedule";
-
 // BigCalendar.momentLocalizer(moment);
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Swal from "sweetalert2";
+import DeleteIcon from "@material-ui/icons/Delete";
+import EditIcon from "@material-ui/icons/Edit";
+import HowToRegIcon from "@material-ui/icons/HowToReg";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   button: {
-    textAlign: "right",
+    textAlign: "right"
   },
   form: {
     width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
+    marginTop: theme.spacing(1)
   },
+  dataCarlendar: {
+    textAlign: "center",
+    backgroundColor: "#FFCCCC"
+  },
+  buttond: {
+    width: "100px"
+  },
+  low: {
+    backgroundColor: "#FFFFCC"
+  }
 }));
 
 export default function Teacher(props) {
@@ -45,7 +58,7 @@ export default function Teacher(props) {
   const getDay = () => {
     axios
       .post(`${props.env.api_url}/getDay`)
-      .then((value) => {
+      .then(value => {
         if (value.data.rowCount > 0) {
           let backup = [];
           value.data.result.forEach((e, i) => {
@@ -66,12 +79,17 @@ export default function Teacher(props) {
             ) {
               backup.push({
                 Id: backup.length + 1,
-                Subject: e.Term,
+                Subject: e.Group_Study,
                 StartTime: new Date(i),
                 EndTime: new Date(i),
                 IsAllDay: true,
                 Priority: "High",
-                data: "hello",
+                data1: e.Subject_ID,
+                data2: e.Subject_NameTH,
+                data3: e.Group_Study,
+                data4: e.Start_Time,
+                data5: e.End_Time,
+                data6: e.Subject_Type
               });
             }
           });
@@ -81,30 +99,30 @@ export default function Teacher(props) {
           setDayList([]);
         }
       })
-      .catch((reason) => {
+      .catch(reason => {
         console.log(reason);
       });
   };
 
-  const getSubject = (data) => {
+  const getSubject = data => {
     axios
       .post(`${props.env.api_url}/dropdownSubSchedule`, JSON.stringify(data))
-      .then((value) => {
+      .then(value => {
         setSub(value.data.result);
         console.log("ssss", value.data.result);
       })
-      .catch((reason) => {
+      .catch(reason => {
         console.log(reason);
       });
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     axios
       .post(`${props.env.api_url}/insertScheduleAttend`, JSON.stringify(data))
-      .then((value) => {
+      .then(value => {
         console.log(value.data);
       })
-      .catch((reason) => {
+      .catch(reason => {
         console.log(reason);
       });
     window.location.reload();
@@ -400,17 +418,17 @@ export default function Teacher(props) {
         {/* <div className="text-center">
           <Calendar />
         </div> */}
-        <div>
+        <div className="mb-4">
           <ScheduleComponent
             // height="auto"
             currentView="Month"
             eventSettings={{
-              dataSource: dayList,
+              dataSource: dayList
             }}
             // rowAutoHeight={true}
             readonly={true}
             showQuickInfo={false}
-            select={(e) => {
+            select={e => {
               setDateSelect(e.data);
             }}
           >
@@ -419,9 +437,108 @@ export default function Teacher(props) {
         </div>
       </form>
 
-      {((date) => {
+      {(date => {
         if (date) {
-          return <div>{JSON.stringify(dateSelect)}</div>;
+          // Swal.fire({
+          //   icon: "error",
+          //   title: "ควย"
+          //   // text:
+          //   //   "วิชา : " +
+          //   //   dateSelect.data1 +
+          //   //   " - " +
+          //   //   dateSelect.data2 +
+          //   //   "\n" +
+          //   //   "กลุ่มเรียน : " +
+          //   //   dateSelect.data3 +
+          //   //   "\n" +
+          //   //   "เวลาเริ่มต้น : " +
+          //   //   dateSelect.data4 +
+          //   //   "\n" +
+          //   //   "เวลาสิ้นสุด : " +
+          //   //   dateSelect.data5 +
+          //   //   "\n" +
+          //   //   "ประเภทวิชา : " +
+          //   //   dateSelect.data6
+          // });
+          return (
+            <div>
+              {/* <div className={classes.left}>
+                รหัสวิชา : {dateSelect.data1}
+                <br />
+                ชื่อวิชา : {dateSelect.data2}
+                <br />
+                กลุ่มเรียน : {dateSelect.data3}
+                <br />
+                เวลาเริ่ม : {dateSelect.data4}
+                <br />
+                เวลาสิ้นสุด : {dateSelect.data5}
+                <br />
+                ประเภทวิชา : {dateSelect.data6}
+              </div>
+              <div className={classes.right}>
+                <button type="button" class="btn btn-primary">
+                  Primary
+                </button>
+                <button type="button" class="btn btn-secondary">
+                  Secondary
+                </button>
+                <button type="button" class="btn btn-success">
+                  Success
+                </button>
+              </div> */}
+
+              <table class="table">
+                <thead>
+                  <tr className={classes.dataCarlendar}>
+                    <th width="5%"></th>
+                    <th width="50%">ข้อมูลรายวิชา</th>
+                    <th colSpan="3" width="40%">
+                      จัดการข้อมูล
+                    </th>
+                    <th width="5%"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className={classes.low}>
+                    <td></td>
+                    <td>
+                      รหัสวิชา : {dateSelect.data1}
+                      <br />
+                      ชื่อวิชา : {dateSelect.data2}
+                      <br />
+                      กลุ่มเรียน : {dateSelect.data3}
+                      <br />
+                      เวลาเริ่ม : {dateSelect.data4}
+                      <br />
+                      เวลาสิ้นสุด : {dateSelect.data5}
+                      <br />
+                      ประเภทวิชา : {dateSelect.data6}
+                    </td>
+                    <td style={{ verticalAlign: "middle" }}>
+                      <button type="button" className="btn btn-success">
+                        <HowToRegIcon />
+                        &nbsp;เช็คชื่อ
+                      </button>
+                    </td>
+                    <td style={{ verticalAlign: "middle" }}>
+                      <button type="button" className="btn btn-warning">
+                        <EditIcon />
+                        &nbsp;แก้ไข&nbsp;
+                      </button>
+                    </td>
+                    <td style={{ verticalAlign: "middle" }}>
+                      <button type="button" className="btn btn-danger">
+                        &nbsp;&nbsp;&nbsp;
+                        <DeleteIcon />
+                        &nbsp;ลบ&nbsp;&nbsp;&nbsp;
+                      </button>
+                    </td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          );
         }
       })(dateSelect)}
     </TeacherTheme>

@@ -9,6 +9,7 @@ import AddIcon from "@material-ui/icons/Add";
 import TextField from "@material-ui/core/TextField";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -34,37 +35,70 @@ export default function Admin(props) {
       .catch(reason => {
         console.log(reason);
       });
+    // alert("เพิ่มข้อมูลสำเร็จ");
     window.location.reload();
-    alert("เพิ่มข้อมูลสำเร็จ");
   };
 
   const onUpdate = data => {
     data = { ...data, Year_ID: varY.Year_ID };
     // console.log(data);
-    axios
-      .post(`${props.env.api_url}/editYear`, JSON.stringify(data))
-      .then(value => {
-        console.log(value.data);
-      })
-      .catch(reason => {
-        console.log(reason);
-      });
-    window.location.reload();
-    alert("แก้ไขข้อมูลสำเร็จ");
+    Swal.fire({
+      title: "บันทึกการแก้ไข?",
+      showDenyButton: true,
+      showCancelButton: true,
+      confirmButtonText: `บันทึก`,
+      denyButtonText: `ไม่บันทึก`,
+      cancelButtonText: `ยกเลิก`
+    }).then(result => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        axios
+          .post(`${props.env.api_url}/editYear`, JSON.stringify(data))
+          .then(value => {
+            console.log(value.data);
+            Swal.fire("บันทึกสำเร็จ!", "", "success");
+            window.location.reload();
+            // setTimeout(window.location.reload(), 5000);
+          })
+          .catch(reason => {
+            console.log(reason);
+          });
+      } else if (result.isDenied) {
+        Swal.fire("ไม่บันทึกการแก้ไข", "", "info");
+        window.location.reload();
+      }
+    });
+    // window.location.reload();
   };
 
   const onDel = data => {
-    axios
-      .post(`${props.env.api_url}/delYear`, JSON.stringify(data))
-      .then(value => {
-        console.log(value.data);
-      })
-      .catch(reason => {
-        console.log(reason);
-      });
-      
-    window.location.reload();
-    alert("ลบข้อมูลสำเร็จ");
+    Swal.fire({
+      title: "ยืนยันการลบ?",
+      showDenyButton: false,
+      showCancelButton: true,
+      confirmButtonText: `ตกลง`,
+      denyButtonText: `ไม่บันทัก`
+    }).then(result => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        axios
+          .post(`${props.env.api_url}/delYear`, JSON.stringify(data))
+          .then(value => {
+            console.log(value.data);
+            Swal.fire("ลบสำเร็จ!", "", "success");
+            window.location.reload();
+          })
+          .catch(reason => {
+            console.log(reason);
+          });
+      } else if (result.isDenied) {
+        Swal.fire("ไม่บันทึกการแก้ไข", "", "info");
+        window.location.reload();
+      }
+    });
+
+    // window.location.reload();
+    // alert("ลบข้อมูลสำเร็จ");
   };
 
   const [varY, setvarY] = useState({});
@@ -164,7 +198,9 @@ export default function Admin(props) {
                           onChange={onChange}
                           value={value}
                         >
-                          <option value="" disabled="disabled">กรุณาเลือกภาคการเรียน...</option>
+                          <option value="" disabled="disabled">
+                            กรุณาเลือกภาคการเรียน...
+                          </option>
                           <option>ภาคเรียนที่ 1</option>
                           <option>ภาคเรียนที่ 2</option>
                           <option>ภาคฤดูร้อน</option>

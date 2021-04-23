@@ -32,3 +32,6 @@ a {
 .modal-backdrop.show{
   display: none !important;
 }
+.swal2-container{
+  z-index: 20000 !important;
+}
