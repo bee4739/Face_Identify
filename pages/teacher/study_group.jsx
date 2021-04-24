@@ -9,6 +9,7 @@ import AddIcon from "@material-ui/icons/Add";
 import TextField from "@material-ui/core/TextField";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -69,25 +70,103 @@ export default function Teacher(props) {
       .post(`${props.env.api_url}/insertStudyGroup`, JSON.stringify(data))
       .then(value => {
         console.log("oooo", value.data);
+        Swal.fire({
+          title: "เพิ่มข้อมูลสำเร็จ",
+          text: "",
+          icon: "success",
+          showConfirmButton: false
+        });
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       })
       .catch(reason => {
         console.log(reason);
       });
-    window.location.reload();
-    alert("เพิ่มข้อมูลเรียนสำเร็จ");
+    // window.location.reload();
+    // alert("เพิ่มข้อมูลเรียนสำเร็จ");
   };
 
   const onDel = data => {
-    axios
-      .post(`${props.env.api_url}/delStudyGroup`, JSON.stringify(data))
-      .then(value => {
-        console.log(value.data);
-      })
-      .catch(reason => {
-        console.log(reason);
-      });
-    window.location.reload();
-    alert("ลบข้อมูลสำเร็จ");
+    Swal.fire({
+      title: "ยืนยันการลบ?",
+      text: "",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "ตกลง",
+      cancelButtonText: "ยกเลิก"
+    }).then(result => {
+      if (result.isConfirmed) {
+        axios
+          .post(`${props.env.api_url}/delStudyGroup`, JSON.stringify(data))
+          .then(value => {
+            console.log(value.data);
+            Swal.fire({
+              title: "ลบสำเร็จ!",
+              text: "",
+              icon: "success",
+              showConfirmButton: false
+            });
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          })
+          .catch(reason => {
+            console.log(reason);
+          });
+      }
+    });
+    // window.location.reload();
+    // alert("ลบข้อมูลสำเร็จ");
+  };
+
+  const onUpdate = data => {
+    data = { ...data, Class_ID: def.Class_ID };
+    // console.log(data);
+    Swal.fire({
+      title: "บันทึกการแก้ไข?",
+      showDenyButton: true,
+      showCancelButton: true,
+      confirmButtonText: `บันทึก`,
+      denyButtonText: `ไม่บันทึก`,
+      cancelButtonText: `ยกเลิก`
+    }).then(result => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        axios
+          .post(`${props.env.api_url}/editStudyGroup`, JSON.stringify(data))
+          .then(value => {
+            console.log(value.data);
+            Swal.fire({
+              title: "บันทึกสำเร็จ!",
+              text: "",
+              icon: "success",
+              showConfirmButton: false
+            });
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+            // setTimeout(window.location.reload(), 5000);
+          })
+          .catch(reason => {
+            console.log(reason);
+          });
+      } else if (result.isDenied) {
+        Swal.fire({
+          title: "ไม่บันทึกการแก้ไข",
+          text: "",
+          icon: "info",
+          showConfirmButton: false
+        });
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      }
+    });
+    // window.location.reload();
+    // alert("แก้ไขข้อมูลสำเร็จ");
   };
 
   const [studyGroup, setStudyGroup] = useState([]);
@@ -102,21 +181,6 @@ export default function Teacher(props) {
       .catch(reason => {
         console.log(reason);
       });
-  };
-
-  const onUpdate = data => {
-    data = { ...data, Class_ID: def.Class_ID };
-    // console.log(data);
-    axios
-      .post(`${props.env.api_url}/editStudyGroup`, JSON.stringify(data))
-      .then(value => {
-        console.log(value.data);
-      })
-      .catch(reason => {
-        console.log(reason);
-      });
-    window.location.reload();
-    alert("แก้ไขข้อมูลสำเร็จ");
   };
 
   useEffect(() => {
@@ -492,25 +556,33 @@ export default function Teacher(props) {
         <table className="table table-striped align-middle text-center">
           <thead>
             <tr>
-              <th scope="col">รหัสวิชา - ชื่อวิชา</th>
-              <th scope="col">กลุ่มเรียน</th>
-              <th scope="col">ปีการศึกษา / ภาคเรียน</th>
-              <th scope="col">จัดการ</th>
+              <th scope="col" style={{ verticalAlign: "middle" }}>
+                รหัสวิชา - ชื่อวิชา
+              </th>
+              <th scope="col" style={{ verticalAlign: "middle" }}>
+                กลุ่มเรียน
+              </th>
+              <th scope="col" style={{ verticalAlign: "middle" }}>
+                ปีการศึกษา / ภาคเรียน
+              </th>
+              <th scope="col" width="15%" style={{ verticalAlign: "middle" }}>
+                จัดการ
+              </th>
             </tr>
           </thead>
           <tbody>
             {studyGroup.map((variable, index) => {
               return (
                 <tr key={index}>
-                  <td>
+                  <td style={{ textAlign: "left" }}>
                     {variable.Subject_ID}
-                    &nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;-&nbsp;&nbsp;
                     {variable.Subject_NameTH}
                   </td>
                   <td>{variable.Group_Study}</td>
                   <td>
                     {variable.Year}
-                    &nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;/&nbsp;&nbsp;
                     {variable.Term}
                   </td>
                   <td>

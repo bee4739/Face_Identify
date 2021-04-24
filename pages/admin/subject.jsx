@@ -9,6 +9,7 @@ import AddIcon from "@material-ui/icons/Add";
 import axios from "axios";
 import TextField from "@material-ui/core/TextField";
 import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -30,40 +31,103 @@ export default function Admin(props) {
       .post(`${props.env.api_url}/insertSubject`, JSON.stringify(data))
       .then(value => {
         console.log(value.data);
+        Swal.fire({
+          title: "เพิ่มข้อมูลสำเร็จ!",
+          text: "",
+          icon: "success",
+          showConfirmButton: false
+        });
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       })
       .catch(reason => {
         console.log(reason);
       });
-    window.location.reload();
-    alert("เพิ่มข้อมูลสำเร็จ");
+    // window.location.reload();
+    // alert("เพิ่มข้อมูลสำเร็จ");
   };
 
   const onUpdate = data => {
     data = { ...data, Subject_PK: varY.Subject_PK };
     // console.log(data);
-    axios
-      .post(`${props.env.api_url}/editSubject`, JSON.stringify(data))
-      .then(value => {
-        console.log(value.data);
-      })
-      .catch(reason => {
-        console.log(reason);
-      });
-    window.location.reload();
-    alert("แก้ไขข้อมูลสำเร็จ");
+    Swal.fire({
+      title: "บันทึกการแก้ไข?",
+      showDenyButton: true,
+      showCancelButton: true,
+      confirmButtonText: `บันทึก`,
+      denyButtonText: `ไม่บันทึก`,
+      cancelButtonText: `ยกเลิก`
+    }).then(result => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        axios
+          .post(`${props.env.api_url}/editSubject`, JSON.stringify(data))
+          .then(value => {
+            console.log(value.data);
+            Swal.fire({
+              title: "บันทึกสำเร็จ!",
+              text: "",
+              icon: "success",
+              showConfirmButton: false
+            });
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+            // setTimeout(window.location.reload(), 5000);
+          })
+          .catch(reason => {
+            console.log(reason);
+          });
+      } else if (result.isDenied) {
+        Swal.fire({
+          title: "ไม่บันทึกการแก้ไข",
+          text: "",
+          icon: "info",
+          showConfirmButton: false
+        });
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      }
+    });
+    // window.location.reload();
+    // alert("แก้ไขข้อมูลสำเร็จ");
   };
 
   const onDel = data => {
-    axios
-      .post(`${props.env.api_url}/delSubject`, JSON.stringify(data))
-      .then(value => {
-        console.log(value.data);
-      })
-      .catch(reason => {
-        console.log(reason);
-      });
-    window.location.reload();
-    alert("ลบข้อมูลสำเร็จ");
+    Swal.fire({
+      title: "ยืนยันการลบ?",
+      text: "",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "ตกลง",
+      cancelButtonText: "ยกเลิก"
+    }).then(result => {
+      if (result.isConfirmed) {
+        axios
+          .post(`${props.env.api_url}/delSubject`, JSON.stringify(data))
+          .then(value => {
+            console.log(value.data);
+            Swal.fire({
+              title: "ลบสำเร็จ!",
+              text: "",
+              icon: "success",
+              showConfirmButton: false
+            });
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          })
+          .catch(reason => {
+            console.log(reason);
+          });
+      }
+    });
+    // window.location.reload();
+    // alert("ลบข้อมูลสำเร็จ");
   };
 
   const [varY, setvarY] = useState({});
@@ -452,12 +516,24 @@ export default function Admin(props) {
         <table className="table table-striped align-middle text-center">
           <thead>
             <tr>
-              <th>รหัสวิชา</th>
-              <th>ชื่อวิชาภาษาไทย</th>
-              <th>ชื่อวิชาภาษาอังกฤษ</th>
-              <th>ทฤษฎี (จำนวนชั่วโมง)</th>
-              <th>ปฏิบัติ (จำนวนชั่วโมง)</th>
-              <th>จัดการ</th>
+              <th width="15%" style={{ verticalAlign: "middle" }}>
+                รหัสวิชา
+              </th>
+              <th style={{ verticalAlign: "middle" }}>ชื่อวิชาภาษาไทย</th>
+              <th style={{ verticalAlign: "middle" }}>ชื่อวิชาภาษาอังกฤษ</th>
+              <th width="13%" style={{ verticalAlign: "middle" }}>
+                ทฤษฎี
+                <br />
+                (จำนวนชั่วโมง)
+              </th>
+              <th width="13%" style={{ verticalAlign: "middle" }}>
+                ปฏิบัติ
+                <br />
+                (จำนวนชั่วโมง)
+              </th>
+              <th width="15%" style={{ verticalAlign: "middle" }}>
+                จัดการ
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -465,9 +541,13 @@ export default function Admin(props) {
             {data.map((variable, index) => {
               return (
                 <tr key={variable.Subject_PK}>
-                  <td>{variable.Subject_ID}</td>
-                  <td>{variable.Subject_NameTH}</td>
-                  <td>{variable.Subject_NameEN}</td>
+                  <td style={{ textAlign: "left" }}>{variable.Subject_ID}</td>
+                  <td style={{ textAlign: "left" }}>
+                    {variable.Subject_NameTH}
+                  </td>
+                  <td style={{ textAlign: "left" }}>
+                    {variable.Subject_NameEN}
+                  </td>
                   <td>{variable.Subject_Theory}</td>
                   <td>{variable.Subject_Practice}</td>
                   <td>

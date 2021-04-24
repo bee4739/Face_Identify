@@ -31,12 +31,20 @@ export default function Admin(props) {
       .post(`${props.env.api_url}/insertYear`, JSON.stringify(data))
       .then(value => {
         console.log(value.data);
+        Swal.fire({
+          title: "เพิ่มข้อมูลสำเร็จ!",
+          text: "",
+          icon: "success",
+          showConfirmButton: false
+        });
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       })
       .catch(reason => {
         console.log(reason);
       });
     // alert("เพิ่มข้อมูลสำเร็จ");
-    window.location.reload();
   };
 
   const onUpdate = data => {
@@ -56,16 +64,30 @@ export default function Admin(props) {
           .post(`${props.env.api_url}/editYear`, JSON.stringify(data))
           .then(value => {
             console.log(value.data);
-            Swal.fire("บันทึกสำเร็จ!", "", "success");
-            window.location.reload();
+            Swal.fire({
+              title: "บันทึกสำเร็จ!",
+              text: "",
+              icon: "success",
+              showConfirmButton: false
+            });
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
             // setTimeout(window.location.reload(), 5000);
           })
           .catch(reason => {
             console.log(reason);
           });
       } else if (result.isDenied) {
-        Swal.fire("ไม่บันทึกการแก้ไข", "", "info");
-        window.location.reload();
+        Swal.fire({
+          title: "ไม่บันทึกการแก้ไข",
+          text: "",
+          icon: "info",
+          showConfirmButton: false
+        });
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       }
     });
     // window.location.reload();
@@ -74,29 +96,34 @@ export default function Admin(props) {
   const onDel = data => {
     Swal.fire({
       title: "ยืนยันการลบ?",
-      showDenyButton: false,
+      text: "",
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonText: `ตกลง`,
-      denyButtonText: `ไม่บันทัก`
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "ตกลง",
+      cancelButtonText: "ยกเลิก"
     }).then(result => {
-      /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
         axios
           .post(`${props.env.api_url}/delYear`, JSON.stringify(data))
           .then(value => {
             console.log(value.data);
-            Swal.fire("ลบสำเร็จ!", "", "success");
-            window.location.reload();
+            Swal.fire({
+              title: "ลบสำเร็จ!",
+              text: "",
+              icon: "success",
+              showConfirmButton: false
+            });
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
           })
           .catch(reason => {
             console.log(reason);
           });
-      } else if (result.isDenied) {
-        Swal.fire("ไม่บันทึกการแก้ไข", "", "info");
-        window.location.reload();
       }
     });
-
     // window.location.reload();
     // alert("ลบข้อมูลสำเร็จ");
   };
@@ -620,13 +647,16 @@ export default function Admin(props) {
         <table className="table table-striped align-middle text-center">
           <thead>
             <tr>
-              <th>ปีการศึกษา</th>
-              <th>ภาคเรียน</th>
-              <th>วันเริ่มต้นปีการศึกษา</th>
-              <th>วันสิ้นสุดปีการศึกษา</th>
-              <th>วันสอบกลางภาค</th>
-              <th>วันสอบปลายภาค</th>
-              <th>จัดการ</th>
+              <th style={{ verticalAlign: "middle" }}>ปีการศึกษา</th>
+              <th style={{ verticalAlign: "middle" }}>ภาคเรียน</th>
+              <th style={{ verticalAlign: "middle" }}>
+                วันเริ่มต้นและวันสิ้นสุดปีการศึกษา
+              </th>
+              <th style={{ verticalAlign: "middle" }}>วันสอบกลางภาค</th>
+              <th style={{ verticalAlign: "middle" }}>วันสอบปลายภาค</th>
+              <th width="15%" style={{ verticalAlign: "middle" }}>
+                จัดการ
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -636,16 +666,18 @@ export default function Admin(props) {
                 <tr key={variable.Year_ID}>
                   <td>{variable.Year}</td>
                   <td>{variable.Term}</td>
-                  <td>{variable.Start_SchYear}</td>
-                  <td>{variable.End_SchYear}</td>
+                  <td>
+                    {variable.Start_SchYear}
+                    &nbsp;&nbsp;-&nbsp;&nbsp;{variable.End_SchYear}
+                  </td>
                   <td>
                     {variable.Start_Midterm}
-                    &nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;-&nbsp;&nbsp;
                     {variable.End_Midterm}
                   </td>
                   <td>
                     {variable.Start_Final}
-                    &nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;{variable.End_Final}
+                    &nbsp;&nbsp;-&nbsp;&nbsp;{variable.End_Final}
                   </td>
                   <td>
                     <button
