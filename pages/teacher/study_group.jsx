@@ -539,7 +539,7 @@ export default function Teacher(props) {
                       >
                         ยกเลิก
                       </button>
-                      <button type="submit" className="btn btn-success">
+                      <button type="submit" className="btn btn-warning">
                         แก้ไข
                       </button>
                     </div>

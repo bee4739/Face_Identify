@@ -625,7 +625,7 @@ export default function Teacher(props) {
                         type="button"
                         className="btn btn-warning"
                         type="button"
-                        className="btn btn-success"
+                        className="btn btn-warning"
                         data-toggle="modal"
                         data-target="#EditSub"
                         onClick={() => {
@@ -851,7 +851,7 @@ export default function Teacher(props) {
                       >
                         ยกเลิก
                       </button>
-                      <button type="submit" className="btn btn-success">
+                      <button type="submit" className="btn btn-warning">
                         แก้ไข
                       </button>
                     </div>
