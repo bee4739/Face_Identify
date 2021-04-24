@@ -35,8 +35,6 @@ export default function Teacher(props) {
 
   const { control, handleSubmit, reset } = useForm();
 
-  const [def, setDef] = useState({});
-
   const [subject, setSubject] = useState([]);
   const getSubject = data => {
     axios
@@ -71,7 +69,7 @@ export default function Teacher(props) {
       .then(value => {
         console.log("oooo", value.data);
         Swal.fire({
-          title: "เพิ่มข้อมูลสำเร็จ",
+          title: "เพิ่มข้อมูลสำเร็จ!",
           text: "",
           icon: "success",
           showConfirmButton: false
@@ -122,6 +120,7 @@ export default function Teacher(props) {
     // alert("ลบข้อมูลสำเร็จ");
   };
 
+  const [def, setDef] = useState({});
   const onUpdate = data => {
     data = { ...data, Class_ID: def.Class_ID };
     // console.log(data);

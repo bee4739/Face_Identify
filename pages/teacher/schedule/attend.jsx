@@ -50,7 +50,7 @@ export default function Teacher(props) {
 
   const classes = useStyles();
   const router = useRouter();
-  const { control, handleSubmit } = useForm();
+  const { control, handleSubmit, reset } = useForm();
 
   const [sub, setSub] = useState([]);
   const [dayList, setDayList] = useState([]);
@@ -89,7 +89,12 @@ export default function Teacher(props) {
                 data3: e.Group_Study,
                 data4: e.Start_Time,
                 data5: e.End_Time,
-                data6: e.Subject_Type
+                data6: e.Subject_Type,
+                data7: e.Schedule_ID,
+                data8: e.Class_ID,
+                data9: e.Day,
+                data10: e.Start_Time,
+                data11: e.End_Time
               });
             }
           });
@@ -121,12 +126,104 @@ export default function Teacher(props) {
       .post(`${props.env.api_url}/insertScheduleAttend`, JSON.stringify(data))
       .then(value => {
         console.log(value.data);
+        Swal.fire({
+          title: "เพิ่มข้อมูลสำเร็จ!",
+          text: "",
+          icon: "success",
+          showConfirmButton: false
+        });
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       })
       .catch(reason => {
         console.log(reason);
       });
-    window.location.reload();
-    alert("เพิ่มข้อมูลสำเร็จ");
+    // window.location.reload();
+    // alert("เพิ่มข้อมูลสำเร็จ");
+  };
+
+  const onDel = data => {
+    Swal.fire({
+      title: "ยืนยันการลบ?",
+      text: "",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "ตกลง",
+      cancelButtonText: "ยกเลิก"
+    }).then(result => {
+      if (result.isConfirmed) {
+        axios
+          .post(`${props.env.api_url}/delScheduleAttend`, JSON.stringify(data))
+          .then(value => {
+            console.log(value.data);
+            Swal.fire({
+              title: "ลบสำเร็จ!",
+              text: "",
+              icon: "success",
+              showConfirmButton: false
+            });
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          })
+          .catch(reason => {
+            console.log(reason);
+          });
+      }
+    });
+    // window.location.reload();
+    // alert("ลบข้อมูลสำเร็จ");
+  };
+
+  const [def, setDef] = useState({});
+  const onUpdate = data => {
+    data = { ...data, Schedule_ID: def.data7 };
+    // console.log(data);
+    Swal.fire({
+      title: "บันทึกการแก้ไข?",
+      showDenyButton: true,
+      showCancelButton: true,
+      confirmButtonText: `บันทึก`,
+      denyButtonText: `ไม่บันทึก`,
+      cancelButtonText: `ยกเลิก`
+    }).then(result => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        axios
+          .post(`${props.env.api_url}/editScheduleAttend`, JSON.stringify(data))
+          .then(value => {
+            console.log(value.data);
+            Swal.fire({
+              title: "บันทึกสำเร็จ!",
+              text: "",
+              icon: "success",
+              showConfirmButton: false
+            });
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+            // setTimeout(window.location.reload(), 5000);
+          })
+          .catch(reason => {
+            console.log(reason);
+          });
+      } else if (result.isDenied) {
+        Swal.fire({
+          title: "ไม่บันทึกการแก้ไข",
+          text: "",
+          icon: "info",
+          showConfirmButton: false
+        });
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      }
+    });
+    // window.location.reload();
+    // alert("แก้ไขข้อมูลสำเร็จ");
   };
 
   // const todayDate = moment().toDate();
@@ -499,6 +596,9 @@ export default function Teacher(props) {
                   </tr>
                 </thead>
                 <tbody>
+                  {/* {scheduleAttend.map((variable, index) => {
+                    return ();
+                  })} */}
                   <tr className={classes.low}>
                     <td></td>
                     <td>
@@ -521,13 +621,33 @@ export default function Teacher(props) {
                       </button>
                     </td>
                     <td style={{ verticalAlign: "middle" }}>
-                      <button type="button" className="btn btn-warning">
+                      <button
+                        type="button"
+                        className="btn btn-warning"
+                        type="button"
+                        className="btn btn-success"
+                        data-toggle="modal"
+                        data-target="#EditSub"
+                        onClick={() => {
+                          setDef(dateSelect);
+                          console.log(dateSelect);
+                          reset({
+                            Class_IDE: dateSelect.data8
+                          });
+                        }}
+                      >
                         <EditIcon />
                         &nbsp;แก้ไข&nbsp;
                       </button>
                     </td>
                     <td style={{ verticalAlign: "middle" }}>
-                      <button type="button" className="btn btn-danger">
+                      <button
+                        type="button"
+                        className="btn btn-danger"
+                        onClick={() => {
+                          onDel({ Schedule_ID: dateSelect.data7 });
+                        }}
+                      >
                         &nbsp;&nbsp;&nbsp;
                         <DeleteIcon />
                         &nbsp;ลบ&nbsp;&nbsp;&nbsp;
@@ -541,6 +661,207 @@ export default function Teacher(props) {
           );
         }
       })(dateSelect)}
+
+      <div
+        className="modal fade"
+        id="EditSub"
+        tabIndex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog">
+          {(() => {
+            if (Object.keys(def).length > 0) {
+              return (
+                <form
+                  className={classes.form}
+                  onSubmit={handleSubmit(onUpdate)}
+                >
+                  <div className="modal-content">
+                    <div className="modal-header">
+                      <h5 className="modal-title" id="exampleModalLabel">
+                        แก้ไขตารางสอน
+                      </h5>
+                      <button
+                        type="button"
+                        className="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                      >
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div className="modal-body">
+                      <div className="row">
+                        <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
+                          วิชาและกลุ่มเรียน :
+                        </div>
+                        <div className="col-sm-6 mt-2 mb-2 align-middle text-left">
+                          <Controller
+                            name="Class_IDE"
+                            defaultValue={
+                              Object.keys(def).length > 0 ? def.data8 : ""
+                            }
+                            control={control}
+                            variant="outlined"
+                            render={({ onChange, value }) => (
+                              <select
+                                className="form-control"
+                                id="addSub"
+                                onChange={onChange}
+                                value={value}
+                              >
+                                <option value="" disabled="disabled">
+                                  กรุณาเลือกกลุ่มเรียน...
+                                </option>
+                                {sub.map((variable, index) => {
+                                  return (
+                                    <option
+                                      key={index}
+                                      value={variable.Class_ID}
+                                    >
+                                      {variable.Subject_ID}
+                                      &nbsp;-&nbsp;
+                                      {variable.Subject_NameTH}
+                                      &nbsp;&nbsp;&nbsp; (กลุ่มเรียน&nbsp;
+                                      {variable.Group_Study})
+                                    </option>
+                                  );
+                                })}
+                              </select>
+                            )}
+                          />
+                        </div>
+                        <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
+                          เลือกวันที่ :
+                        </div>
+                        <div className="col-sm-6 mt-2 mb-2 align-middle text-left">
+                          <Controller
+                            name="DayE"
+                            defaultValue={
+                              Object.keys(def).length > 0 ? def.data9 : ""
+                            }
+                            control={control}
+                            variant="outlined"
+                            render={({ onChange, value }) => (
+                              <select
+                                className="form-control"
+                                id="addTerm"
+                                onChange={onChange}
+                                value={value}
+                              >
+                                <option value="" disabled="disabled">
+                                  กรุณาเลือกวันที่...
+                                </option>
+                                <option value={0}>วันอาทิตย์</option>
+                                <option value={1}>วันจันทร์</option>
+                                <option value={2}>วันอังคาร</option>
+                                <option value={3}>วันพุธ</option>
+                                <option value={4}>วันพฤหัสบดี</option>
+                                <option value={5}>วันศุกร์</option>
+                                <option value={6}>วันเสาร์</option>
+                              </select>
+                            )}
+                          />
+                        </div>
+                        <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
+                          <label>เวลาเริ่ม : </label>
+                        </div>
+                        <div className="col-sm-6 align-middle text-left">
+                          <Controller
+                            name="Start_TimeE"
+                            defaultValue={
+                              Object.keys(def).length > 0 ? def.data10 : ""
+                            }
+                            control={control}
+                            render={({ onChange, value }) => (
+                              <TextField
+                                variant="outlined"
+                                size="small"
+                                margin="normal"
+                                required
+                                fullWidth
+                                onChange={onChange}
+                                value={value}
+                                type="time"
+                              />
+                            )}
+                          />
+                        </div>
+                        <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
+                          <label>เวลาสิ้นสุด : </label>
+                        </div>
+                        <div className="col-sm-6 align-middle text-left">
+                          <Controller
+                            name="End_TimeE"
+                            defaultValue={
+                              Object.keys(def).length > 0 ? def.data11 : ""
+                            }
+                            control={control}
+                            render={({ onChange, value }) => (
+                              <TextField
+                                variant="outlined"
+                                size="small"
+                                margin="normal"
+                                required
+                                fullWidth
+                                onChange={onChange}
+                                value={value}
+                                type="time"
+                              />
+                            )}
+                          />
+                        </div>
+                        <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
+                          <label>ประเภทวิชา : </label>
+                        </div>
+                        <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
+                          <div className={classes.d}>
+                            <Controller
+                              name="Subject_TypeE"
+                              defaultValue={
+                                Object.keys(def).length > 0 ? def.data6 : ""
+                              }
+                              control={control}
+                              variant="outlined"
+                              render={({ onChange, value }) => (
+                                <select
+                                  className="form-control"
+                                  id="addSubType"
+                                  onChange={onChange}
+                                  value={value}
+                                >
+                                  <option value="" disabled="disabled">
+                                    กรุณาเลือกประเภทวิชา...
+                                  </option>
+                                  <option>ทฤษฎี</option>
+                                  <option>ปฏิบัติ</option>
+                                </select>
+                              )}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="modal-footer">
+                      <button
+                        type="button"
+                        className="btn btn-danger"
+                        data-dismiss="modal"
+                      >
+                        ยกเลิก
+                      </button>
+                      <button type="submit" className="btn btn-success">
+                        แก้ไข
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              );
+            }
+          })()}
+        </div>
+      </div>
     </TeacherTheme>
   );
 }
