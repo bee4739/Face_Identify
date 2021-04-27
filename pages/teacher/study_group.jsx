@@ -67,22 +67,87 @@ export default function Teacher(props) {
     axios
       .post(`${props.env.api_url}/insertStudyGroup`, JSON.stringify(data))
       .then(value => {
-        console.log("oooo", value.data);
-        Swal.fire({
-          title: "เพิ่มข้อมูลสำเร็จ!",
-          text: "",
-          icon: "success",
-          showConfirmButton: false
-        });
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
+        if (value.data.isQuery == true) {
+          console.log("oooo", value.data);
+          Swal.fire({
+            title: "เพิ่มข้อมูลสำเร็จ!",
+            text: "",
+            icon: "success",
+            showConfirmButton: false
+          });
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        } else {
+          Swal.fire({
+            title: "เพิ่มข้อมูลไม่สำเร็จ!",
+            text: "กรุณาตรวจสอบข้อมูลให้ถูกต้อง",
+            icon: "error",
+            showConfirmButton: true
+          });
+        }
       })
       .catch(reason => {
         console.log(reason);
       });
     // window.location.reload();
     // alert("เพิ่มข้อมูลเรียนสำเร็จ");
+  };
+
+  const [def, setDef] = useState({});
+  const onUpdate = data => {
+    data = { ...data, Class_ID: def.Class_ID };
+    // console.log(data);
+    Swal.fire({
+      title: "บันทึกการแก้ไข?",
+      showDenyButton: true,
+      showCancelButton: true,
+      confirmButtonText: `บันทึก`,
+      denyButtonText: `ไม่บันทึก`,
+      cancelButtonText: `ยกเลิก`
+    }).then(result => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        axios
+          .post(`${props.env.api_url}/editStudyGroup`, JSON.stringify(data))
+          .then(value => {
+            if (value.data.isQuery == true) {
+              console.log(value.data);
+              Swal.fire({
+                title: "แก้ไขสำเร็จ!",
+                text: "",
+                icon: "success",
+                showConfirmButton: false
+              });
+              setTimeout(() => {
+                window.location.reload();
+              }, 1000);
+            } else {
+              Swal.fire({
+                title: "แก้ไขไม่สำเร็จ!",
+                text: "กรุณาตรวจสอบข้อมูลให้ถูกต้อง",
+                icon: "error",
+                showConfirmButton: true
+              });
+            }
+          })
+          .catch(reason => {
+            console.log(reason);
+          });
+      } else if (result.isDenied) {
+        Swal.fire({
+          title: "ไม่บันทึกการแก้ไข",
+          text: "",
+          icon: "info",
+          showConfirmButton: false
+        });
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      }
+    });
+    // window.location.reload();
+    // alert("แก้ไขข้อมูลสำเร็จ");
   };
 
   const onDel = data => {
@@ -118,54 +183,6 @@ export default function Teacher(props) {
     });
     // window.location.reload();
     // alert("ลบข้อมูลสำเร็จ");
-  };
-
-  const [def, setDef] = useState({});
-  const onUpdate = data => {
-    data = { ...data, Class_ID: def.Class_ID };
-    // console.log(data);
-    Swal.fire({
-      title: "บันทึกการแก้ไข?",
-      showDenyButton: true,
-      showCancelButton: true,
-      confirmButtonText: `บันทึก`,
-      denyButtonText: `ไม่บันทึก`,
-      cancelButtonText: `ยกเลิก`
-    }).then(result => {
-      /* Read more about isConfirmed, isDenied below */
-      if (result.isConfirmed) {
-        axios
-          .post(`${props.env.api_url}/editStudyGroup`, JSON.stringify(data))
-          .then(value => {
-            console.log(value.data);
-            Swal.fire({
-              title: "บันทึกสำเร็จ!",
-              text: "",
-              icon: "success",
-              showConfirmButton: false
-            });
-            setTimeout(() => {
-              window.location.reload();
-            }, 1000);
-            // setTimeout(window.location.reload(), 5000);
-          })
-          .catch(reason => {
-            console.log(reason);
-          });
-      } else if (result.isDenied) {
-        Swal.fire({
-          title: "ไม่บันทึกการแก้ไข",
-          text: "",
-          icon: "info",
-          showConfirmButton: false
-        });
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
-      }
-    });
-    // window.location.reload();
-    // alert("แก้ไขข้อมูลสำเร็จ");
   };
 
   const [studyGroup, setStudyGroup] = useState([]);

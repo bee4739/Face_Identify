@@ -30,16 +30,25 @@ export default function Admin(props) {
     axios
       .post(`${props.env.api_url}/insertSubject`, JSON.stringify(data))
       .then(value => {
-        console.log(value.data);
-        Swal.fire({
-          title: "เพิ่มข้อมูลสำเร็จ!",
-          text: "",
-          icon: "success",
-          showConfirmButton: false
-        });
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
+        if (value.data.isQuery == true) {
+          console.log(value.data);
+          Swal.fire({
+            title: "เพิ่มข้อมูลสำเร็จ!",
+            text: "",
+            icon: "success",
+            showConfirmButton: false
+          });
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        } else {
+          Swal.fire({
+            title: "เพิ่มข้อมูลไม่สำเร็จ!",
+            text: "กรุณาตรวจสอบข้อมูลให้ถูกต้อง",
+            icon: "error",
+            showConfirmButton: true
+          });
+        }
       })
       .catch(reason => {
         console.log(reason);
@@ -64,17 +73,25 @@ export default function Admin(props) {
         axios
           .post(`${props.env.api_url}/editSubject`, JSON.stringify(data))
           .then(value => {
-            console.log(value.data);
-            Swal.fire({
-              title: "บันทึกสำเร็จ!",
-              text: "",
-              icon: "success",
-              showConfirmButton: false
-            });
-            setTimeout(() => {
-              window.location.reload();
-            }, 1000);
-            // setTimeout(window.location.reload(), 5000);
+            if (value.data.isQuery == true) {
+              console.log(value.data);
+              Swal.fire({
+                title: "แก้ไขสำเร็จ!",
+                text: "",
+                icon: "success",
+                showConfirmButton: false
+              });
+              setTimeout(() => {
+                window.location.reload();
+              }, 1000);
+            } else {
+              Swal.fire({
+                title: "แก้ไขไม่สำเร็จ!",
+                text: "กรุณาตรวจสอบข้อมูลให้ถูกต้อง",
+                icon: "error",
+                showConfirmButton: true
+              });
+            }
           })
           .catch(reason => {
             console.log(reason);

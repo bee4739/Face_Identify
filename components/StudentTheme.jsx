@@ -181,7 +181,7 @@ export default function StudentTheme(props) {
                 <ListItemIcon>
                   <ImageIcon />
                 </ListItemIcon>
-                <ListItemText primary="อัฟโหลดรูปภาพ" />
+                <ListItemText primary="อัพโหลดรูปภาพ" />
               </ListItem>
             </Link>
 
