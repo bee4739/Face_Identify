@@ -7,18 +7,10 @@ import { useState, useEffect } from "react";
 import React from "react";
 import { useRouter } from "next/router";
 import StudentTheme from "../../components/StudentTheme";
-import { makeStyles } from "@material-ui/core/styles";
 import { useForm, Controller } from "react-hook-form";
-
-const useStyles = makeStyles(theme => ({
-  form: {
-    width: "50%",
-    marginTop: theme.spacing(1)
-  }
-}));
+import axios from "axios";
 
 export default function student(props) {
-  const classes = useStyles();
   const router = useRouter();
   const { control, handleSubmit } = useForm();
 
@@ -48,15 +40,20 @@ export default function student(props) {
   const [w, setW] = useState(0);
   const [h, setH] = useState(0);
   const [enable, setEnable] = useState(true);
-  function Webcam() {
+
+  const Webcam = () => {
+    const video = document.getElementById("video");
+
     Promise.all([
       faceapi.nets.tinyFaceDetector.loadFromUri("/models"),
       faceapi.nets.faceLandmark68Net.loadFromUri("/models"),
       faceapi.nets.faceRecognitionNet.loadFromUri("/models"),
       faceapi.nets.faceExpressionNet.loadFromUri("/models")
-    ]).then(startVideo);
-    const video = document.getElementById("video");
-    function startVideo() {
+    ]).then(() => {
+      startVideo();
+    });
+
+    const startVideo = () => {
       navigator.getUserMedia(
         {
           video: {
@@ -67,18 +64,15 @@ export default function student(props) {
         stream => (video.srcObject = stream),
         err => console.error(err)
       );
-    }
+    };
 
     video.addEventListener("play", e => {
       e.preventDefault();
-      var selection = document.querySelector("canvas") === null;
-      var sel_z = selection.id === "test";
-      // console.log(sel_z)
-      if (selection) {
+      if (document.getElementById("imageCropPreview") === null) {
         const canvas = faceapi.createCanvasFromMedia(video);
-        canvas.id = "test";
-        document.getElementById("main").appendChild(canvas);
-        const displaySize = { width: video.width, height: video.height };
+        canvas.id = "imageCropPreview";
+        document.getElementById("imageCrop").appendChild(canvas);
+        const displaySize = { width: 300, height: 300 };
         faceapi.matchDimensions(canvas, displaySize);
         setInterval(async () => {
           const detections = await faceapi
@@ -89,88 +83,79 @@ export default function student(props) {
             detections,
             displaySize
           );
-          // console.log(detections);
-          // console.log(resizedDetections);
           canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
           canvas.getContext("2d").drawImage(video, 0, 0);
           faceapi.draw.drawDetections(canvas, resizedDetections);
-          // faceapi.draw.drawFaceLandmarks(canvas, resizedDetections)
-          faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
+          // faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
           if (resizedDetections[0] !== undefined) {
-            setX(resizedDetections[0]["detection"]["_box"]["_x"]);
-            setY(resizedDetections[0]["detection"]["_box"]["_y"]);
-            setW(resizedDetections[0]["detection"]["_box"]["_width"]);
-            setH(resizedDetections[0]["detection"]["_box"]["_height"]);
-
+            // console.log(resizedDetections[0]["detection"]["_box"]);
+            setX(
+              resizedDetections[0]["detection"]["_box"]["_x"] > 39
+                ? resizedDetections[0]["detection"]["_box"]["_x"] - 40
+                : 0
+            );
+            setY(
+              resizedDetections[0]["detection"]["_box"]["_y"] > 59
+                ? resizedDetections[0]["detection"]["_box"]["_y"] - 60
+                : 0
+            );
+            setW(resizedDetections[0]["detection"]["_box"]["_width"] + 80);
+            setH(resizedDetections[0]["detection"]["_box"]["_height"] + 80);
             var x = resizedDetections[0]["detection"]["_score"];
-            if (x >= 0.9) {
-              // document.getElementById('takephoto').disabled = false;
+            if (x >= 0.8) {
               setEnable(false);
             }
           } else {
-            // document.getElementById('takephoto').disabled = true;
             setEnable(true);
           }
         }, 100);
       }
     });
-  }
+  };
+
+  const takePhoto = async () => {
+    var canvas = document.getElementById("video");
+    var tempCanvas = document.createElement("canvas"),
+      tCtx = tempCanvas.getContext("2d");
+    tempCanvas.width = w;
+    tempCanvas.height = h;
+    tCtx.drawImage(canvas, x, y, w, h, 0, 0, w, h);
+    // tempCanvas.toDataURL("image/jpeg")
+    let data = {
+      image: tempCanvas.toDataURL("image/jpeg"),
+      username: props.userLogin.Username
+    };
+
+    axios
+      .post(`${props.env.api_url}/createImage`, JSON.stringify(data))
+      .then(value => {
+        console.log(value.data);
+      })
+      .catch(reason => {
+        console.log(reason);
+      });
+  };
 
   return (
     <StudentTheme {...props}>
-      <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
-        <div className="custom-file mb-3">
-          <input
-            type="file"
-            className="custom-file-input"
-            id="validatedCustomFile"
-            required
-          ></input>
-          <label className="custom-file-label" htmlFor="validatedCustomFile">
-            Choose file...
-          </label>
-          <div className="invalid-feedback">
-            Example invalid custom file feedback
-          </div>
+      <div id="main" style={{ position: "relative", height: "320px" }}>
+        <div style={{ position: "absolute", zIndex: "-1000" }}>
+          <video id="video" height="300" width="300" autoPlay muted />
         </div>
-      </form>
-
-      <div id="main">
-        <video id="video" height="300" width="300" autoPlay muted />
-        <br />
-        <button
-          id="takephoto"
-          disabled={enable}
-          onClick={() => takePhoto("test", x, y, w, h)}
-        >
-          Take Photo
-        </button>
-        <br />
+        <div
+          id="imageCrop"
+          style={{ position: "absolute", zIndex: "1000" }}
+        ></div>
       </div>
+      <button
+        id="takephoto"
+        disabled={enable}
+        onClick={() => takePhoto()}
+        type="button"
+        className="btn btn-primary btn-sm"
+      >
+        ถ่ายรูป
+      </button>
     </StudentTheme>
   );
-
-  function takePhoto(x_val, c_x, c_y, c_w, c_h) {
-    // var canvas = document.getElementById(x_val)
-    // var data = canvas.toDataURL('image/png');
-
-    // var img = document.createElement("img");
-    // img.src = data;
-    // var src = document.querySelector('body')
-    // src.appendChild(img);
-
-    var canvas = document.getElementById(x_val);
-    var tempCanvas = document.createElement("canvas"),
-      tCtx = tempCanvas.getContext("2d");
-
-    tempCanvas.width = c_w;
-    tempCanvas.height = c_h;
-
-    tCtx.drawImage(canvas, c_x, c_y, c_w, c_h, 0, 0, c_w, c_h);
-
-    // write on screen
-    var img = tempCanvas.toDataURL("image/jpeg");
-    console.log(img);
-    document.write('<a href="' + img + '"><img src="' + img + '"/></a>');
-  }
 }
