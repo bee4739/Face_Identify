@@ -24,6 +24,7 @@ import Swal from "sweetalert2";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import HowToRegIcon from "@material-ui/icons/HowToReg";
+import Link from "next/link";
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -632,10 +633,12 @@ export default function Teacher(props) {
                       ประเภทวิชา : {dateSelect.data6}
                     </td>
                     <td style={{ verticalAlign: "middle" }}>
-                      <button type="button" className="btn btn-success">
-                        <HowToRegIcon />
-                        &nbsp;เช็คชื่อ
-                      </button>
+                      <Link href="/teacher/schedule/check">
+                        <button type="button" className="btn btn-success">
+                          <HowToRegIcon />
+                          &nbsp;เช็คชื่อ
+                        </button>
+                      </Link>
                     </td>
                     <td style={{ verticalAlign: "middle" }}>
                       <button

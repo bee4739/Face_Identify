@@ -45,10 +45,14 @@ export default function student(props) {
     const video = document.getElementById("video");
 
     Promise.all([
-      faceapi.nets.tinyFaceDetector.loadFromUri("/models"),
-      faceapi.nets.faceLandmark68Net.loadFromUri("/models"),
-      faceapi.nets.faceRecognitionNet.loadFromUri("/models"),
-      faceapi.nets.faceExpressionNet.loadFromUri("/models")
+      faceapi.nets.tinyFaceDetector.loadFromUri(`${props.env.basePath}/models`),
+      faceapi.nets.faceLandmark68Net.loadFromUri(
+        `${props.env.basePath}/models`
+      ),
+      faceapi.nets.faceRecognitionNet.loadFromUri(
+        `${props.env.basePath}/models`
+      ),
+      faceapi.nets.faceExpressionNet.loadFromUri(`${props.env.basePath}/models`)
     ]).then(() => {
       startVideo();
     });

@@ -117,7 +117,7 @@ export default function TeacherTheme(props) {
   };
   const logout = () => {
     window.localStorage.clear();
-    window.location.replace("/login");
+    window.location.replace(`${props.env.basePath}/login`);
   };
 
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);

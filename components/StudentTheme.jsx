@@ -113,7 +113,7 @@ export default function StudentTheme(props) {
 
   const logout = () => {
     window.localStorage.clear();
-    window.location.replace("/login");
+    window.location.replace(`${props.env.basePath}/login`);
   };
 
   return (
