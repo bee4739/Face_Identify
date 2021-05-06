@@ -451,7 +451,7 @@ export default function Teacher(props) {
                                       // value={`${variable.Subject_PK}`}
                                     >
                                       {variable.Subject_ID}
-                                      &nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;
+                                      &nbsp;-&nbsp;
                                       {variable.Subject_NameTH}
                                     </option>
                                   );
