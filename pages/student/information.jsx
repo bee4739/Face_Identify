@@ -3,36 +3,44 @@
 
 import * as faceapi from "face-api.js";
 import { useState, useEffect } from "react";
-
 import React from "react";
 import { useRouter } from "next/router";
 import StudentTheme from "../../components/StudentTheme";
 import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
+import { makeStyles } from "@material-ui/core/styles";
+import zIndex from "@material-ui/core/styles/zIndex";
+
+const useStyles = makeStyles(theme => ({
+  videoTake: {
+    marginLeft: "350px"
+  },
+  buttonTake: {
+    marginLeft: "480px"
+  },
+  tableImg: {
+    alignItems: "center",
+    textAlign: "left"
+  }
+}));
+
+let imageListArr = [];
 
 export default function student(props) {
+  const classes = useStyles();
   const router = useRouter();
   const { control, handleSubmit } = useForm();
-
-  const onSubmit = data => {
-    axios
-      .post(`${props.env.api_url}/login`, JSON.stringify(data))
-      .then(value => {
-        console.log(value.data);
-        if (value.data.success) {
-          props.setUserLogin(value.data.data);
-          router.replace("/");
-        } else {
-          alert(value.data.message);
-        }
-      })
-      .catch(reason => {
-        console.log(reason);
-      });
-  };
+  const [listImg, setListImg] = useState([]);
 
   useEffect(() => {
     Webcam();
+    for (let i = 1; i < 8; i++) {
+      imageListArr.push({
+        src: `${props.env.imageStudentPath}/${props.userLogin.Username}/${i}.jpg`,
+        index: i
+      });
+    }
+    setListImg(imageListArr);
   }, []);
 
   const [x, setX] = useState(0);
@@ -142,24 +150,96 @@ export default function student(props) {
 
   return (
     <StudentTheme {...props}>
-      <div id="main" style={{ position: "relative", height: "320px" }}>
-        <div style={{ position: "absolute", zIndex: "-1000" }}>
-          <video id="video" height="300" width="300" autoPlay muted />
+      <div className={classes.videoTake}>
+        <div id="main" style={{ position: "relative", height: "320px" }}>
+          <div
+            style={{
+              position: "absolute",
+              zIndex: "-1000"
+            }}
+          >
+            <video id="video" height="300" width="300" autoPlay muted />
+          </div>
+          <div
+            id="imageCrop"
+            style={{ position: "absolute", zIndex: "1000" }}
+          ></div>
         </div>
-        <div
-          id="imageCrop"
-          style={{ position: "absolute", zIndex: "1000" }}
-        ></div>
       </div>
-      <button
-        id="takephoto"
-        disabled={enable}
-        onClick={() => takePhoto()}
-        type="button"
-        className="btn btn-primary btn-sm"
-      >
-        ถ่ายรูป
-      </button>
+      <div className={classes.buttonTake}>
+        <div>
+          <button
+            id="takephoto"
+            disabled={enable}
+            onClick={() => takePhoto()}
+            type="button"
+            className="btn btn-primary btn-sm mb-4"
+          >
+            ถ่ายรูป
+          </button>
+        </div>
+      </div>
+
+      <div className={classes.tableImg}>
+        <table className="table">
+          <tbody>
+            <tr>
+              {listImg.map((e, i) => {
+                return (
+                  <td key={i}>
+                    <div
+                      style={{
+                        width: "100px",
+                        height: "100px",
+                        overflow: "hidden",
+                        boxShadow:
+                          "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
+                      }}
+                      key={i}
+                    >
+                      <div
+                        style={{
+                          position: "relative"
+                        }}
+                        key={i}
+                        onMouseOver={() => {
+                          window.$(`#btnImageDel${i}`).css("display", "block");
+                        }}
+                        onMouseLeave={() => {
+                          window.$(`.btnImageDel`).css("display", "none");
+                        }}
+                      >
+                        <img
+                          src={e.src}
+                          key={i}
+                          alt={`ยังไม่ถ่ายรูปที่ ${e.index}`}
+                          width={"105px"}
+                          style={{ position: "absolute", zIndex: "100" }}
+                        />
+                        <button
+                          type="button"
+                          className="btn btn-light btn-sm text-danger btnImageDel"
+                          id={`btnImageDel${i}`}
+                          style={{
+                            position: "absolute",
+                            right: 5,
+                            top: 65,
+                            zIndex: "200",
+                            padding: "3px 5px",
+                            display: "none"
+                          }}
+                        >
+                          <i className="fas fa-trash-alt"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </td>
+                );
+              })}
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </StudentTheme>
   );
 }

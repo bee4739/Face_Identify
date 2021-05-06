@@ -7,6 +7,7 @@ import AddIcon from "@material-ui/icons/Add";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import TextField from "@material-ui/core/TextField";
+import axios from "axios";
 
 const useStyles = makeStyles(theme => ({
   form: {
@@ -22,7 +23,7 @@ const useStyles = makeStyles(theme => ({
     textAlign: "center"
   },
   button: {
-    textAlign: "center"
+    textAlign: "right"
   }
 }));
 
@@ -89,12 +90,12 @@ export default function student(props) {
               </div>
               <div className="modal-body">
                 <div className="row">
-                  <div className="col-sm-5 mt-2 align-middle text-right">
-                    <label>วิชา : </label>
+                  <div className="col-sm-5 mt-3 align-middle text-right">
+                    <label>กลุ่มเรียน : </label>
                   </div>
                   <div className="col-sm-6 mt-2 mb-2 align-middle text-left">
                     <Controller
-                      name="Subject_PK"
+                      name="Group_Study"
                       defaultValue=""
                       control={control}
                       variant="outlined"
@@ -110,106 +111,8 @@ export default function student(props) {
                       )}
                     />
                   </div>
-                  <div className="col-sm-5 mt-3 align-middle text-right">
-                    <label>กลุ่มเรียน : </label>
-                  </div>
-                  <div className="col-sm-6 mb-2 align-middle text-left">
-                    <Controller
-                      name="Group_Study"
-                      defaultValue=""
-                      control={control}
-                      render={({ onChange, value }) => (
-                        <TextField
-                          placeholder="ตัวอย่าง CPE.60231A"
-                          variant="outlined"
-                          size="small"
-                          margin="normal"
-                          required
-                          fullWidth
-                          label="กลุ่มเรียน"
-                          onChange={onChange}
-                          value={value}
-                          type="text"
-                        />
-                      )}
-                    />
-                  </div>
-
-                  <div className="col-sm-5 mt-2 align-middle text-right">
-                    <label>วันที่สอน : </label>
-                  </div>
-                  <div className="col-sm-6 mt-2 mb-2 align-middle text-left">
-                    <Controller
-                      name="Term"
-                      defaultValue=""
-                      control={control}
-                      variant="outlined"
-                      render={({ onChange, value }) => (
-                        <select
-                          className="form-control"
-                          id="addTerm"
-                          onChange={onChange}
-                          value={value}
-                        >
-                          <option>เลือกวันที่สอน</option>
-                          <option>วันจันทร์</option>
-                          <option>วันอังคาร</option>
-                          <option>วันพุธ</option>
-                          <option>วันพฤหัสบดี</option>
-                          <option>วันศุกร์</option>
-                          <option>วันเสาร์</option>
-                          <option>วันอาทิตย์</option>
-                        </select>
-                      )}
-                    />
-                  </div>
-                  <div className="col-sm-5 mt-2 align-middle text-right">
-                    <label>ภาคเรียน : </label>
-                  </div>
-                  <div className="col-sm-6 mt-2 mb-2 align-middle text-left">
-                    <Controller
-                      name="Term"
-                      defaultValue=""
-                      control={control}
-                      variant="outlined"
-                      render={({ onChange, value }) => (
-                        <select
-                          className="form-control"
-                          id="addTerm"
-                          onChange={onChange}
-                          value={value}
-                        >
-                          <option>เลือกภาคการเรียน</option>
-                          <option>ภาคเรียนที่ 1</option>
-                          <option>ภาคเรียนที่ 2</option>
-                          <option>ภาคฤดูร้อน</option>
-                        </select>
-                      )}
-                    />
-                  </div>
-                  <div className="col-sm-5 mt-2 align-middle text-right">
-                    <label>ปีการศึกษา : </label>
-                  </div>
-                  <div className="col-sm-6 mt-2 mb-2 align-middle text-left">
-                    <Controller
-                      name="Year_ID"
-                      defaultValue=""
-                      control={control}
-                      variant="outlined"
-                      render={({ onChange, value }) => (
-                        <select
-                          className="form-control"
-                          id="addTerm"
-                          onChange={onChange}
-                          value={value}
-                        >
-                          <option>เลือกปีการศึกษา</option>
-                        </select>
-                      )}
-                    />
-                  </div>
-                  <div className="col-sm-5 mt-3 align-middle text-right">
-                    <label>รหัสกลุ่มเรียน : </label>
+                  <div className="col-sm-5 mt-4 align-middle text-right">
+                    <label>รหัสเข้ากลุ่มเรียน : </label>
                   </div>
                   <div className="col-sm-6 mb-2 align-middle text-left">
                     <Controller
@@ -223,10 +126,10 @@ export default function student(props) {
                           margin="normal"
                           required
                           fullWidth
-                          label="รหัสกลุ่มเรียน"
+                          label="รหัสเข้ากลุ่มเรียน"
                           onChange={onChange}
                           value={value}
-                          type="text"
+                          type="password"
                         />
                       )}
                     />
@@ -250,35 +153,32 @@ export default function student(props) {
         </div>
 
         <div className="col-sm-12  mt-4 align-middle">
-          <table className="table table-striped align-middle text-center">
-            <thead>
-              <tr>
-                <th scope="col"></th>
-                <th scope="col">วิชา</th>
-                <th scope="col">กลุ่มเรียน</th>
-                <th scope="col">ภาคเรียน</th>
-                <th scope="col">ปีการศึกษา</th>
-                <th scope="col">จัดการ</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>
-                  <button type="button" className="btn btn-warning mr-2">
-                    <EditIcon />
-                  </button>
-                  <button type="button" className="btn btn-danger">
-                    <DeleteIcon />
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <center>
+            <table
+              className="table table-striped align-middle text-center"
+              style={{ width: "80%" }}
+            >
+              <thead>
+                <tr>
+                  <th width="60%">วิชา</th>
+                  <th width="20%">จัดการ</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td align="left">Mark</td>
+                  <td>
+                    <button type="button" className="btn btn-warning mr-2">
+                      <EditIcon />
+                    </button>
+                    <button type="button" className="btn btn-danger">
+                      <DeleteIcon />
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </center>
         </div>
       </form>
     </StudentTheme>

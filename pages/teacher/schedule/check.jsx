@@ -132,11 +132,10 @@ export default function check(props) {
                         autoPlay
                         muted
                       />
-                      <h1>{name}</h1>
                     </div>
                   </th>
                   <tr width="30%">
-                    <td>ชื่อ</td>
+                    <td>ชื่อ : {name}</td>
                     <td>วัน / เวลา</td>
                     <td>สถานะ</td>
                   </tr>

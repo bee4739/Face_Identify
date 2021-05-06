@@ -18,6 +18,8 @@ import Link from "next/link";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import ImageIcon from "@material-ui/icons/Image";
 import GroupIcon from "@material-ui/icons/Group";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+
 const drawerWidth = 240;
 
 const useStyles = makeStyles(theme => ({
@@ -97,6 +99,9 @@ const useStyles = makeStyles(theme => ({
   },
   fixedHeight: {
     height: 240
+  },
+  userN: {
+    textAlign: "right"
   }
 }));
 
@@ -144,6 +149,12 @@ export default function StudentTheme(props) {
             className={classes.title}
           >
             Face Recognition System for Personal Identification in Class Room
+          </Typography>
+          <Typography className={classes.userN}>
+            Hello! <br />
+            <AccountCircleIcon />
+            &nbsp;
+            {props.userLogin ? props.userLogin.Username : ""}
           </Typography>
         </Toolbar>
       </AppBar>

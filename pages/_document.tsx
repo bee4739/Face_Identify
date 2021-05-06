@@ -1,6 +1,9 @@
 import Document, { Html, Head, Main, NextScript } from "next/document";
 import { ServerStyleSheets } from "@material-ui/core/styles";
 import React from "react";
+import { Env } from "../environments/env";
+
+const env: Env = require(`../environments/${process.env.mode}`);
 
 class MyDocument extends Document {
   static async getInitialProps(ctx) {
@@ -39,6 +42,7 @@ class MyDocument extends Document {
         <body>
           <Main />
           <NextScript />
+          <script src={`${env.basePath}/all.min.js`}></script>
           <script
             src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
             integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
