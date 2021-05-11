@@ -11,14 +11,14 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   button: {
-    textAlign: "right"
+    textAlign: "right",
   },
   form: {
     width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1)
-  }
+    marginTop: theme.spacing(1),
+  },
 }));
 
 export default function Admin(props) {
@@ -26,17 +26,17 @@ export default function Admin(props) {
   const router = useRouter();
   const { control, handleSubmit } = useForm();
 
-  const onSubmit = data => {
+  const onSubmit = (data) => {
     axios
       .post(`${props.env.api_url}/insertYear`, JSON.stringify(data))
-      .then(value => {
+      .then((value) => {
         if (value.data.isQuery == true) {
           console.log("ddd", value.data);
           Swal.fire({
             title: "เพิ่มข้อมูลสำเร็จ!",
             text: "",
             icon: "success",
-            showConfirmButton: false
+            showConfirmButton: false,
           });
           setTimeout(() => {
             window.location.reload();
@@ -46,17 +46,17 @@ export default function Admin(props) {
             title: "เพิ่มข้อมูลไม่สำเร็จ!",
             text: "กรุณาตรวจสอบข้อมูลให้ถูกต้อง",
             icon: "error",
-            showConfirmButton: true
+            showConfirmButton: true,
           });
         }
       })
-      .catch(reason => {
+      .catch((reason) => {
         console.log(reason);
       });
     // alert("เพิ่มข้อมูลสำเร็จ");
   };
 
-  const onUpdate = data => {
+  const onUpdate = (data) => {
     data = { ...data, Year_ID: varY.Year_ID };
     // console.log(data);
     Swal.fire({
@@ -65,20 +65,20 @@ export default function Admin(props) {
       showCancelButton: true,
       confirmButtonText: `บันทึก`,
       denyButtonText: `ไม่บันทึก`,
-      cancelButtonText: `ยกเลิก`
-    }).then(result => {
+      cancelButtonText: `ยกเลิก`,
+    }).then((result) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
         axios
           .post(`${props.env.api_url}/editYear`, JSON.stringify(data))
-          .then(value => {
+          .then((value) => {
             if (value.data.isQuery == true) {
               console.log(value.data);
               Swal.fire({
                 title: "แก้ไขสำเร็จ!",
                 text: "",
                 icon: "success",
-                showConfirmButton: false
+                showConfirmButton: false,
               });
               setTimeout(() => {
                 window.location.reload();
@@ -89,11 +89,11 @@ export default function Admin(props) {
                 title: "แก้ไขไม่สำเร็จ!",
                 text: "กรุณาตรวจสอบข้อมูลให้ถูกต้อง",
                 icon: "error",
-                showConfirmButton: true
+                showConfirmButton: true,
               });
             }
           })
-          .catch(reason => {
+          .catch((reason) => {
             console.log(reason);
           });
       } else if (result.isDenied) {
@@ -101,7 +101,7 @@ export default function Admin(props) {
           title: "ไม่บันทึกการแก้ไข",
           text: "",
           icon: "info",
-          showConfirmButton: false
+          showConfirmButton: false,
         });
         setTimeout(() => {
           window.location.reload();
@@ -111,7 +111,7 @@ export default function Admin(props) {
     // window.location.reload();
   };
 
-  const onDel = data => {
+  const onDel = (data) => {
     Swal.fire({
       title: "ยืนยันการลบ?",
       text: "",
@@ -120,24 +120,24 @@ export default function Admin(props) {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "ตกลง",
-      cancelButtonText: "ยกเลิก"
-    }).then(result => {
+      cancelButtonText: "ยกเลิก",
+    }).then((result) => {
       if (result.isConfirmed) {
         axios
           .post(`${props.env.api_url}/delYear`, JSON.stringify(data))
-          .then(value => {
+          .then((value) => {
             console.log(value.data);
             Swal.fire({
               title: "ลบสำเร็จ!",
               text: "",
               icon: "success",
-              showConfirmButton: false
+              showConfirmButton: false,
             });
             setTimeout(() => {
               window.location.reload();
             }, 1000);
           })
-          .catch(reason => {
+          .catch((reason) => {
             console.log(reason);
           });
       }
@@ -149,14 +149,14 @@ export default function Admin(props) {
   const [varY, setvarY] = useState({});
 
   const [data, setData] = useState([]);
-  const getYear = data => {
+  const getYear = (data) => {
     axios
       .post(`${props.env.api_url}/getYear`, JSON.stringify(data))
-      .then(value => {
+      .then((value) => {
         console.log("data", value.data.result);
         setData(value.data.result);
       })
-      .catch(reason => {
+      .catch((reason) => {
         console.log(reason);
       });
   };

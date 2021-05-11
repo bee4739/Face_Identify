@@ -11,22 +11,22 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   form: {
-    marginTop: theme.spacing(1)
+    marginTop: theme.spacing(1),
   },
   d: {
-    width: "50%"
+    width: "50%",
   },
   t: {
-    width: "30%"
+    width: "30%",
   },
   table: {
-    textAlign: "center"
+    textAlign: "center",
   },
   button: {
-    textAlign: "right"
-  }
+    textAlign: "right",
+  },
 }));
 
 export default function student(props) {
@@ -35,65 +35,123 @@ export default function student(props) {
   const { control, handleSubmit } = useForm();
 
   const [studyGroupStudent, setStudyGroupStudent] = useState([]);
-  const getStudyGroupStudent = data => {
+  const getStudyGroupStudent = (data) => {
     axios
       .post(`${props.env.api_url}/getStudyGroupStudent`, JSON.stringify(data))
-      .then(value => {
+      .then((value) => {
         setStudyGroupStudent(value.data.result);
         console.log("ssss", value.data.result);
       })
-      .catch(reason => {
+      .catch((reason) => {
         console.log(reason);
       });
   };
 
   const [student, setStudent] = useState([]);
-  const getStudent = data => {
+  const getStudent = (data) => {
     data = { ...data, User_ID: props.userLogin.User_ID };
+
     axios
       .post(`${props.env.api_url}/getStudent`, JSON.stringify(data))
-      .then(value => {
+      .then((value) => {
         setStudent(value.data.result);
         console.log("s", value.data.result);
       })
-      .catch(reason => {
+      .catch((reason) => {
         console.log(reason);
       });
   };
 
-  const onSubmit = data => {
-    data = { ...data, User_ID: props.userLogin.User_ID };
+  const onSubmit = (data) => {
+    data = {
+      ...data,
+      User_ID: props.userLogin.User_ID,
+      Study_Group: `${data.Study_Group}`.split(",")[0],
+      passwordDefault: `${data.Study_Group}`.split(",")[1],
+    };
 
-    axios
-      .post(
-        `${props.env.api_url}/insertStudyGroupStudent`,
-        JSON.stringify(data)
-      )
-      .then(value => {
-        if (value.data.isQuery == true) {
-          console.log("oooo", value.data);
-          Swal.fire({
-            title: "เพิ่มข้อมูลสำเร็จ!",
-            text: "",
-            icon: "success",
-            showConfirmButton: false
-          });
-          setTimeout(() => {
-            window.location.reload();
-          }, 1000);
-        } else {
-          Swal.fire({
-            title: "เพิ่มข้อมูลไม่สำเร็จ!",
-            text: "กรุณาตรวจสอบข้อมูลให้ถูกต้อง",
-            icon: "error",
-            showConfirmButton: true
-          });
-        }
-      })
-      .catch(reason => {
-        console.log(reason);
+    console.log(data);
+
+    if (`${data.passwordDefault}` !== `${data.Pass_Group}`) {
+      Swal.fire({
+        title: "เพิ่มข้อมูลไม่สำเร็จ!",
+        text: "รหัสผ่านกลุ่มเรียนไม่ถูกต้อง",
+        icon: "error",
+        showConfirmButton: true,
       });
+    } else {
+      axios
+        .post(
+          `${props.env.api_url}/insertStudyGroupStudent`,
+          JSON.stringify(data)
+        )
+        .then((value) => {
+          console.log(value.data);
+          if (value.data.isQuery == true) {
+            console.log("oooo", value.data);
+            Swal.fire({
+              title: "เพิ่มข้อมูลสำเร็จ!",
+              text: "",
+              icon: "success",
+              showConfirmButton: false,
+            });
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          } else {
+            Swal.fire({
+              title: "เพิ่มข้อมูลไม่สำเร็จ!",
+              text: "กรุณาตรวจสอบข้อมูลให้ถูกต้อง",
+              icon: "error",
+              showConfirmButton: true,
+            });
+          }
+        })
+        .catch((reason) => {
+          console.log(reason);
+        });
+    }
   };
+
+  const onDel = (data) => {
+    Swal.fire({
+      title: "ยืนยันการลบ?",
+      text: "",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "ตกลง",
+      cancelButtonText: "ยกเลิก",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .post(
+            `${props.env.api_url}/delStudyGroupStudent`,
+            JSON.stringify(data)
+          )
+          .then((value) => {
+            console.log(value.data);
+            Swal.fire({
+              title: "ลบสำเร็จ!",
+              text: "",
+              icon: "success",
+              showConfirmButton: false,
+            });
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          })
+          .catch((reason) => {
+            console.log(reason);
+          });
+      }
+    });
+    // window.location.reload();
+    // alert("ลบข้อมูลสำเร็จ");
+  };
+
+  const [varY, setvarY] = useState({});
 
   React.useEffect(() => {
     getStudyGroupStudent();
@@ -152,7 +210,13 @@ export default function student(props) {
                         <select
                           className="form-control"
                           id="addSubject"
-                          onChange={onChange}
+                          onChange={(e) => {
+                            // let tmpEvent = {
+                            //   ...e,
+                            //   target: { value: e.target.value.split(",")[0] },
+                            // };
+                            onChange(e);
+                          }}
                           value={value}
                         >
                           <option value="" disabled="disabled">
@@ -160,7 +224,10 @@ export default function student(props) {
                           </option>
                           {studyGroupStudent.map((variable, index) => {
                             return (
-                              <option key={index} value={variable.Class_ID}>
+                              <option
+                                key={index}
+                                value={`${variable.Class_ID},${variable.Pass_Group}`}
+                              >
                                 {variable.Subject_ID}
                                 &nbsp;-&nbsp;
                                 {variable.Subject_NameTH}
@@ -217,11 +284,11 @@ export default function student(props) {
           <center>
             <table
               className="table table-striped align-middle text-center"
-              style={{ width: "80%" }}
+              style={{ width: "70%" }}
             >
               <thead>
                 <tr>
-                  <th>วิชา</th>
+                  <th>รหัสวิชา - ชื่อวิชา (กลุ่มเรียน)</th>
                 </tr>
               </thead>
               <tbody>
@@ -229,7 +296,7 @@ export default function student(props) {
                 {student.map((variable, index) => {
                   return (
                     <tr key={index}>
-                      <td align="left">
+                      <td>
                         {variable.Subject_ID}&nbsp;-&nbsp;
                         {variable.Subject_NameTH}&nbsp;&nbsp;(
                         {variable.Group_Study})

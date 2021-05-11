@@ -10,12 +10,12 @@ import * as tmImage from "@teachablemachine/image";
 import axios from "axios";
 import { useState, useEffect } from "react";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   form: {
     marginTop: theme.spacing(1),
     alignItems: "center",
-    textAlign: "center"
-  }
+    textAlign: "center",
+  },
 }));
 
 export default function check(props) {
@@ -42,14 +42,14 @@ export default function check(props) {
       ),
       faceapi.nets.ssdMobilenetv1.loadFromUri(
         `${props.env.basePath}/static/models`
-      )
+      ),
     ]).then(startVideo);
     const video = document.getElementById("video");
     function startVideo() {
       navigator.getUserMedia(
         { video: {} },
-        stream => (video.srcObject = stream),
-        err => console.error(err)
+        (stream) => (video.srcObject = stream),
+        (err) => console.error(err)
       );
     }
     video.addEventListener("play", () => {
@@ -79,7 +79,7 @@ export default function check(props) {
             labeledFaceDescriptors,
             0.6
           );
-          const results = resizedDetections.map(data =>
+          const results = resizedDetections.map((data) =>
             faceMatcher.findBestMatch(data.descriptor)
           );
           results.forEach((result, i) => {
@@ -97,7 +97,7 @@ export default function check(props) {
       const labels = [...new Set(listPathName.data)];
       console.log(labels);
       return Promise.all(
-        labels.map(async label => {
+        labels.map(async (label) => {
           const descriptions = [];
           for (let i = 1; i <= 7; i++) {
             const img = await faceapi.fetchImage(
@@ -134,7 +134,7 @@ export default function check(props) {
                       />
                     </div>
                   </th>
-                  <tr width="30%">
+                  <tr width="30%" textAlign="right">
                     <td>ชื่อ : {name}</td>
                     <td>วัน / เวลา</td>
                     <td>สถานะ</td>
