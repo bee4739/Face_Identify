@@ -13,6 +13,7 @@ import Container from "@material-ui/core/Container";
 import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
 import { useRouter } from "next/router";
+import Swal from "sweetalert2";
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -39,12 +40,25 @@ export default function SignIn(props) {
     axios
       .post(`${props.env.api_url}/login`, JSON.stringify(data))
       .then(value => {
-        console.log(value.data);
         if (value.data.success) {
+          Swal.fire({
+            title: "เข้าสู่ระบบสำเร็จ!",
+            text: "",
+            icon: "success",
+            showConfirmButton: false
+          });
           props.setUserLogin(value.data.data);
           router.replace("/");
+          // setTimeout(() => {
+          //   router.replace("/");
+          // }, 1000);
         } else {
-          alert(value.data.message);
+          Swal.fire({
+            title: "เข้าสู่ระบบไม่สำเร็จ!",
+            text: "กรุณาตรวจสอบข้อมูล",
+            icon: "error",
+            showConfirmButton: true
+          });
         }
       })
       .catch(reason => {

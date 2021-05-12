@@ -19,6 +19,7 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import DateRangeIcon from "@material-ui/icons/DateRange";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import Link from "next/link";
+import Swal from "sweetalert2";
 
 const drawerWidth = 240;
 
@@ -114,8 +115,29 @@ export default function AdminTheme(props) {
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
   const logout = () => {
-    window.localStorage.clear();
-    window.location.replace(`${props.env.basePath}/login`);
+    Swal.fire({
+      title: "ยืนยันการออกจากระบบ?",
+      text: "",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "ตกลง",
+      cancelButtonText: "ยกเลิก"
+    }).then(result => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: "ออกจากระบบสำเร็จ!",
+          text: "",
+          icon: "success",
+          showConfirmButton: false
+        });
+        window.localStorage.clear();
+        setTimeout(() => {
+          window.location.replace(`${props.env.basePath}/login`);
+        }, 1000);
+      }
+    });
   };
 
   return (

@@ -20,6 +20,7 @@ import EventAvailableIcon from "@material-ui/icons/EventAvailable";
 import DescriptionIcon from "@material-ui/icons/Description";
 import GroupIcon from "@material-ui/icons/Group";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import Swal from "sweetalert2";
 
 const drawerWidth = 240;
 
@@ -115,9 +116,31 @@ export default function TeacherTheme(props) {
   const handleDrawerClose = () => {
     props.setOpenNav(false);
   };
+
   const logout = () => {
-    window.localStorage.clear();
-    window.location.replace(`${props.env.basePath}/login`);
+    Swal.fire({
+      title: "ยืนยันการออกจากระบบ?",
+      text: "",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "ตกลง",
+      cancelButtonText: "ยกเลิก"
+    }).then(result => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: "ออกจากระบบสำเร็จ!",
+          text: "",
+          icon: "success",
+          showConfirmButton: false
+        });
+        window.localStorage.clear();
+        setTimeout(() => {
+          window.location.replace(`${props.env.basePath}/login`);
+        }, 1000);
+      }
+    });
   };
 
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
