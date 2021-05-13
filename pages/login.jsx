@@ -45,13 +45,15 @@ export default function SignIn(props) {
             title: "เข้าสู่ระบบสำเร็จ!",
             text: "",
             icon: "success",
-            showConfirmButton: false
+            showConfirmButton: false,
+            timer: 1000
           });
           props.setUserLogin(value.data.data);
-          router.replace("/");
-          // setTimeout(() => {
-          //   router.replace("/");
-          // }, 1000);
+          // router.replace("/");
+          setTimeout(() => {
+            router.replace("/");
+            // window.location.replace(`${props.env.basePath}/`);
+          }, 1000);
         } else {
           Swal.fire({
             title: "เข้าสู่ระบบไม่สำเร็จ!",
