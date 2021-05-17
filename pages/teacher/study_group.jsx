@@ -5,6 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useForm, Controller } from "react-hook-form";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
+import FaceIcon from "@material-ui/icons/Face";
 import AddIcon from "@material-ui/icons/Add";
 import TextField from "@material-ui/core/TextField";
 import axios from "axios";
@@ -199,10 +200,40 @@ export default function Teacher(props) {
       });
   };
 
+  const [varY, setvarY] = useState({});
+  const [nameStd, setNameStd] = useState([]);
+  const listNameStd = data => {
+    // data = { ...data, Class_ID: varY.Class_ID };
+    data = { ...data, classID: varY.Class_ID };
+
+    if (`${data.classID}` === varY.Class_ID) {
+      axios
+        .post(`${props.env.api_url}/getNameStd`, JSON.stringify(data))
+        .then(value => {
+          setNameStd(value.data.result);
+          console.log("zzzz", value.data.result);
+        })
+        .catch(reason => {
+          console.log(reason);
+        });
+    }
+
+    // axios
+    //   .post(`${props.env.api_url}/getNameStd`, JSON.stringify(data))
+    //   .then(value => {
+    //     setNameStd(value.data.result);
+    //     console.log("zzzz", value.data.result);
+    //   })
+    //   .catch(reason => {
+    //     console.log(reason);
+    //   });
+  };
+
   useEffect(() => {
     getSubject();
     getYear();
     getStudyGroup();
+    listNameStd();
   }, []);
 
   return (
@@ -572,16 +603,12 @@ export default function Teacher(props) {
         <table className="table table-striped align-middle text-center">
           <thead>
             <tr>
-              <th scope="col" style={{ verticalAlign: "middle" }}>
+              <th width="45%" style={{ verticalAlign: "middle" }}>
                 รหัสวิชา - ชื่อวิชา
               </th>
-              <th scope="col" style={{ verticalAlign: "middle" }}>
-                กลุ่มเรียน
-              </th>
-              <th scope="col" style={{ verticalAlign: "middle" }}>
-                ปีการศึกษา / ภาคเรียน
-              </th>
-              <th scope="col" width="15%" style={{ verticalAlign: "middle" }}>
+              <th style={{ verticalAlign: "middle" }}>กลุ่มเรียน</th>
+              <th style={{ verticalAlign: "middle" }}>ปีการศึกษา / ภาคเรียน</th>
+              <th width="25%" style={{ verticalAlign: "middle" }}>
                 จัดการ
               </th>
             </tr>
@@ -590,18 +617,38 @@ export default function Teacher(props) {
             {studyGroup.map((variable, index) => {
               return (
                 <tr key={index}>
-                  <td style={{ textAlign: "left" }}>
+                  <td style={{ textAlign: "left", verticalAlign: "middle" }}>
                     {variable.Subject_ID}
                     &nbsp;&nbsp;-&nbsp;&nbsp;
                     {variable.Subject_NameTH}
                   </td>
-                  <td>{variable.Group_Study}</td>
-                  <td>
+                  <td style={{ verticalAlign: "middle" }}>
+                    {variable.Group_Study}
+                  </td>
+                  <td style={{ verticalAlign: "middle" }}>
                     {variable.Year}
                     &nbsp;&nbsp;/&nbsp;&nbsp;
                     {variable.Term}
                   </td>
-                  <td>
+                  <td style={{ verticalAlign: "middle" }}>
+                    <button
+                      type="button"
+                      className="btn btn-info mr-2"
+                      data-toggle="modal"
+                      data-placement="bottom"
+                      title="รายชื่อนักศึกษา"
+                      data-target="#listnameStd"
+                      onClick={() => {
+                        // listNameStd({ Class_ID: variable });
+                        // x = variable.Class_ID;
+                        setvarY(variable);
+                        console.log("varY", varY);
+                        // alert(varY);
+                        // setvarY(variable);
+                      }}
+                    >
+                      <FaceIcon />
+                    </button>
                     <button
                       type="button"
                       className="btn btn-warning mr-2"
@@ -634,6 +681,99 @@ export default function Teacher(props) {
           </tbody>
         </table>
       </div>
+
+      <form onClick={handleSubmit(listNameStd)}>
+        <div>
+          <div
+            class="modal fade"
+            id="listnameStd"
+            tabindex="-1"
+            aria-labelledby="exampleModalLabel"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">
+                    รายชื่อนักศึกษา
+                  </h5>
+                  <button
+                    type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close"
+                  >
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <center>
+                    <table class="table" style={{ width: "80%" }}>
+                      <thead>
+                        <tr>
+                          <th
+                            width="30%"
+                            style={{
+                              textAlign: "center",
+                              verticalAlign: "middle"
+                            }}
+                          >
+                            รหัสนักศึกษา
+                          </th>
+                          <th
+                            width="40%"
+                            style={{
+                              textAlign: "center",
+                              verticalAlign: "middle"
+                            }}
+                          >
+                            ชื่อ - นามสกุล
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {nameStd.map((variable, index) => {
+                          return (
+                            <tr key={index}>
+                              <td
+                                style={{
+                                  textAlign: "center",
+                                  verticalAlign: "middle"
+                                }}
+                              >
+                                {variable.Std_ID}
+                              </td>
+                              <td
+                                style={{
+                                  textAlign: "left",
+                                  verticalAlign: "middle"
+                                }}
+                              >
+                                {variable.Std_FirstName}
+                                &nbsp;&nbsp;
+                                {variable.Std_LastName}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </center>
+                </div>
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-dismiss="modal"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
     </TeacherTheme>
   );
 }

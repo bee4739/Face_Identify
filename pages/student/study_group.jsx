@@ -281,7 +281,7 @@ export default function student(props) {
           <center>
             <table
               className="table table-striped align-middle text-center"
-              style={{ width: "70%" }}
+              style={{ width: "80%" }}
             >
               <thead>
                 <tr>
