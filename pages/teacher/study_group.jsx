@@ -74,7 +74,8 @@ export default function Teacher(props) {
             title: "เพิ่มข้อมูลสำเร็จ!",
             text: "",
             icon: "success",
-            showConfirmButton: false
+            showConfirmButton: false,
+            timer: 1000
           });
           setTimeout(() => {
             window.location.reload();
@@ -118,7 +119,8 @@ export default function Teacher(props) {
                 title: "แก้ไขสำเร็จ!",
                 text: "",
                 icon: "success",
-                showConfirmButton: false
+                showConfirmButton: false,
+                timer: 1000
               });
               setTimeout(() => {
                 window.location.reload();
@@ -140,7 +142,8 @@ export default function Teacher(props) {
           title: "ไม่บันทึกการแก้ไข",
           text: "",
           icon: "info",
-          showConfirmButton: false
+          showConfirmButton: false,
+          timer: 1000
         });
         setTimeout(() => {
           window.location.reload();
@@ -171,7 +174,8 @@ export default function Teacher(props) {
               title: "ลบสำเร็จ!",
               text: "",
               icon: "success",
-              showConfirmButton: false
+              showConfirmButton: false,
+              timer: 1000
             });
             setTimeout(() => {
               window.location.reload();
@@ -200,40 +204,60 @@ export default function Teacher(props) {
       });
   };
 
-  const [varY, setvarY] = useState({});
   const [nameStd, setNameStd] = useState([]);
   const listNameStd = data => {
-    // data = { ...data, Class_ID: varY.Class_ID };
-    data = { ...data, classID: varY.Class_ID };
+    console.log(data);
+    axios
+      .post(`${props.env.api_url}/getNameStd`, JSON.stringify(data))
+      .then(value => {
+        console.log(value.data);
+        setNameStd(value.data.result);
+        console.log("zzzz", value.data.result);
+      })
+      .catch(reason => {
+        console.log(reason);
+      });
+  };
 
-    if (`${data.classID}` === varY.Class_ID) {
-      axios
-        .post(`${props.env.api_url}/getNameStd`, JSON.stringify(data))
-        .then(value => {
-          setNameStd(value.data.result);
-          console.log("zzzz", value.data.result);
-        })
-        .catch(reason => {
-          console.log(reason);
-        });
-    }
-
-    // axios
-    //   .post(`${props.env.api_url}/getNameStd`, JSON.stringify(data))
-    //   .then(value => {
-    //     setNameStd(value.data.result);
-    //     console.log("zzzz", value.data.result);
-    //   })
-    //   .catch(reason => {
-    //     console.log(reason);
-    //   });
+  const delNameStd = data => {
+    Swal.fire({
+      title: "ยืนยันการลบ?",
+      text: "",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "ตกลง",
+      cancelButtonText: "ยกเลิก"
+    }).then(result => {
+      if (result.isConfirmed) {
+        axios
+          .post(`${props.env.api_url}/delNameStd`, JSON.stringify(data))
+          .then(value => {
+            console.log(value.data);
+            Swal.fire({
+              title: "ลบสำเร็จ!",
+              text: "",
+              icon: "success",
+              showConfirmButton: false
+            });
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          })
+          .catch(reason => {
+            console.log(reason);
+          });
+      }
+    });
+    // window.location.reload();
+    // alert("ลบข้อมูลสำเร็จ");
   };
 
   useEffect(() => {
     getSubject();
     getYear();
     getStudyGroup();
-    listNameStd();
   }, []);
 
   return (
@@ -639,12 +663,7 @@ export default function Teacher(props) {
                       title="รายชื่อนักศึกษา"
                       data-target="#listnameStd"
                       onClick={() => {
-                        // listNameStd({ Class_ID: variable });
-                        // x = variable.Class_ID;
-                        setvarY(variable);
-                        console.log("varY", varY);
-                        // alert(varY);
-                        // setvarY(variable);
+                        listNameStd({ Class_ID: variable.Class_ID });
                       }}
                     >
                       <FaceIcon />
@@ -682,7 +701,7 @@ export default function Teacher(props) {
         </table>
       </div>
 
-      <form onClick={handleSubmit(listNameStd)}>
+      <form>
         <div>
           <div
             class="modal fade"
@@ -729,6 +748,15 @@ export default function Teacher(props) {
                           >
                             ชื่อ - นามสกุล
                           </th>
+                          <th
+                            width="10%"
+                            style={{
+                              textAlign: "center",
+                              verticalAlign: "middle"
+                            }}
+                          >
+                            จัดการ
+                          </th>
                         </tr>
                       </thead>
                       <tbody>
@@ -753,6 +781,30 @@ export default function Teacher(props) {
                                 &nbsp;&nbsp;
                                 {variable.Std_LastName}
                               </td>
+                              <td
+                                style={{
+                                  textAlign: "center",
+                                  verticalAlign: "middle"
+                                }}
+                              >
+                                <button
+                                  type="button"
+                                  className="btn btn-danger"
+                                  style={{
+                                    padding: "2px 2px"
+                                  }}
+                                  onClick={() => {
+                                    delNameStd({
+                                      Std_No: variable.Std_No,
+                                      Class_ID: variable.Class_ID
+                                    });
+                                  }}
+                                  data-placement="bottom"
+                                  title="ลบออกจากกลุ่ม"
+                                >
+                                  <DeleteIcon />
+                                </button>
+                              </td>
                             </tr>
                           );
                         })}
@@ -766,7 +818,7 @@ export default function Teacher(props) {
                     class="btn btn-secondary"
                     data-dismiss="modal"
                   >
-                    Close
+                    ปิด
                   </button>
                 </div>
               </div>

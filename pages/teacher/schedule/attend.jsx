@@ -132,7 +132,8 @@ export default function Teacher(props) {
             title: "เพิ่มข้อมูลสำเร็จ!",
             text: "",
             icon: "success",
-            showConfirmButton: false
+            showConfirmButton: false,
+            timer: 1000
           });
           setTimeout(() => {
             window.location.reload();
@@ -176,7 +177,8 @@ export default function Teacher(props) {
                 title: "แก้ไขสำเร็จ!",
                 text: "",
                 icon: "success",
-                showConfirmButton: false
+                showConfirmButton: false,
+                timer: 1000
               });
               setTimeout(() => {
                 window.location.reload();
@@ -198,7 +200,8 @@ export default function Teacher(props) {
           title: "ไม่บันทึกการแก้ไข",
           text: "",
           icon: "info",
-          showConfirmButton: false
+          showConfirmButton: false,
+          timer: 1000
         });
         setTimeout(() => {
           window.location.reload();
@@ -229,7 +232,8 @@ export default function Teacher(props) {
               title: "ลบสำเร็จ!",
               text: "",
               icon: "success",
-              showConfirmButton: false
+              showConfirmButton: false,
+              timer: 1000
             });
             setTimeout(() => {
               window.location.reload();
@@ -633,7 +637,9 @@ export default function Teacher(props) {
                       ประเภทวิชา : {dateSelect.data6}
                     </td>
                     <td style={{ verticalAlign: "middle" }}>
-                      <Link href="/teacher/schedule/check">
+                      <Link
+                        href={`/teacher/schedule/check?Class_ID=${dateSelect.data8}&Schedule_ID=${dateSelect.data7}`}
+                      >
                         <button type="button" className="btn btn-success">
                           <HowToRegIcon />
                           &nbsp;เช็คชื่อ

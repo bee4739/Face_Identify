@@ -36,7 +36,8 @@ export default function Admin(props) {
             title: "เพิ่มข้อมูลสำเร็จ!",
             text: "",
             icon: "success",
-            showConfirmButton: false
+            showConfirmButton: false,
+            timer: 1000
           });
           setTimeout(() => {
             window.location.reload();
@@ -79,7 +80,8 @@ export default function Admin(props) {
                 title: "แก้ไขสำเร็จ!",
                 text: "",
                 icon: "success",
-                showConfirmButton: false
+                showConfirmButton: false,
+                timer: 1000
               });
               setTimeout(() => {
                 window.location.reload();
@@ -101,7 +103,8 @@ export default function Admin(props) {
           title: "ไม่บันทึกการแก้ไข",
           text: "",
           icon: "info",
-          showConfirmButton: false
+          showConfirmButton: false,
+          timer: 1000
         });
         setTimeout(() => {
           window.location.reload();
@@ -132,7 +135,8 @@ export default function Admin(props) {
               title: "ลบสำเร็จ!",
               text: "",
               icon: "success",
-              showConfirmButton: false
+              showConfirmButton: false,
+              timer: 1000
             });
             setTimeout(() => {
               window.location.reload();
@@ -148,7 +152,6 @@ export default function Admin(props) {
   };
 
   const [varY, setvarY] = useState({});
-
   const [data, setData] = useState([]);
   const getSubject = data => {
     axios

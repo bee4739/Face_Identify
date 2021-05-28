@@ -10,12 +10,17 @@ import * as tmImage from "@teachablemachine/image";
 import axios from "axios";
 import { useState, useEffect } from "react";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   form: {
     marginTop: theme.spacing(1),
     alignItems: "center",
-    textAlign: "center",
+    textAlign: "center"
   },
+  cam: {
+    marginTop: theme.spacing(1),
+    alignItems: "left",
+    textAlign: "left"
+  }
 }));
 
 export default function check(props) {
@@ -23,11 +28,61 @@ export default function check(props) {
   const router = useRouter();
   const { control, handleSubmit } = useForm();
 
-  useEffect(() => {
-    Webcam();
-  }, []);
-
   const [name, setName] = useState("");
+
+  const [nameStd, setNameStd] = useState([]);
+  const getNameStudent = data => {
+    console.log(data);
+    axios
+      .post(
+        `${props.env.api_url}/getNameStudent`,
+        JSON.stringify({ Class_ID: data })
+      )
+      .then(value => {
+        console.log(value.data);
+        setNameStd(value.data.result);
+        console.log("zzzz", value.data.result);
+      })
+      .catch(reason => {
+        console.log(reason);
+      });
+  };
+
+  const checkName = data => {
+    data = { ...data, name: name };
+    axios
+      .post(
+        `${props.env.api_url}/checkName`,
+        JSON.stringify({ Schedule_ID: data })
+      )
+      .then(value => {
+        console.log("ddd", value.data);
+      })
+      .catch(reason => {
+        console.log(reason);
+      });
+    // alert("เพิ่มข้อมูลสำเร็จ");
+  };
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+
+    if (params.get("Class_ID")) {
+      getNameStudent(params.get("Class_ID"));
+    } else {
+      alert("ไม่พบข้อมูลห้อง");
+      router.back();
+    }
+
+    if (params.get("Schedule_ID")) {
+      checkName(params.get("Schedule_ID"));
+    } else {
+      alert("ไม่พบข้อมูลตารางสอน");
+      router.back();
+    }
+    Webcam();
+    checkName();
+  }, []);
 
   async function Webcam() {
     Promise.all([
@@ -42,14 +97,14 @@ export default function check(props) {
       ),
       faceapi.nets.ssdMobilenetv1.loadFromUri(
         `${props.env.basePath}/static/models`
-      ),
+      )
     ]).then(startVideo);
     const video = document.getElementById("video");
     function startVideo() {
       navigator.getUserMedia(
         { video: {} },
-        (stream) => (video.srcObject = stream),
-        (err) => console.error(err)
+        stream => (video.srcObject = stream),
+        err => console.error(err)
       );
     }
     video.addEventListener("play", () => {
@@ -79,7 +134,7 @@ export default function check(props) {
             labeledFaceDescriptors,
             0.6
           );
-          const results = resizedDetections.map((data) =>
+          const results = resizedDetections.map(data =>
             faceMatcher.findBestMatch(data.descriptor)
           );
           results.forEach((result, i) => {
@@ -97,7 +152,7 @@ export default function check(props) {
       const labels = [...new Set(listPathName.data)];
       console.log(labels);
       return Promise.all(
-        labels.map(async (label) => {
+        labels.map(async label => {
           const descriptions = [];
           for (let i = 1; i <= 7; i++) {
             const img = await faceapi.fetchImage(
@@ -120,37 +175,50 @@ export default function check(props) {
       <form className={classes.form}>
         <div>
           <center>
-            <table class="table" style={{ width: "80%" }}>
-              <thead>
-                <tr className={classes.dataCarlendar}>
-                  <th width="50%">
-                    <div>
-                      <video
-                        id="video"
-                        height="500px"
-                        width="500px"
-                        autoPlay
-                        muted
-                      />
-                    </div>
-                  </th>
-                  <tr width="30%" textAlign="right">
-                    <td>ชื่อ : {name}</td>
-                    <td>วัน / เวลา</td>
-                    <td>สถานะ</td>
-                  </tr>
-                </tr>
-              </thead>
-              <tbody></tbody>
+            <table class="table">
+              <tr>
+                <th width="50%">
+                  <div>
+                    <video
+                      id="video"
+                      height="500px"
+                      width="500px"
+                      autoPlay
+                      muted
+                    />
+                  </div>
+                </th>
+                <td textAlign="right" width="50%">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>ชื่อ - นามสกุล</th>
+                        <th>วัน / เวลา</th>
+                        <th>สถานะ</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {nameStd.map((variable, index) => {
+                        return (
+                          <tr key={index}>
+                            <td>
+                              {variable.Std_FirstName}
+                              &nbsp;&nbsp;
+                              {variable.Std_LastName}
+                            </td>
+                            <td>Otto</td>
+                            <td>{name}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
             </table>
           </center>
           <div>
-            <button
-              type="button"
-              className="btn btn-info"
-              data-toggle="modal"
-              data-target="#EditSub"
-            >
+            <button type="button" className="btn btn-info">
               &nbsp;สรุปผลเช็คชื่อ&nbsp;
             </button>
           </div>

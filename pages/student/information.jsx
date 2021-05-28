@@ -12,17 +12,17 @@ import { makeStyles } from "@material-ui/core/styles";
 import zIndex from "@material-ui/core/styles/zIndex";
 import Swal from "sweetalert2";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   videoTake: {
-    marginLeft: "350px",
+    marginLeft: "350px"
   },
   buttonTake: {
-    marginLeft: "480px",
+    marginLeft: "480px"
   },
   tableImg: {
     alignItems: "center",
-    textAlign: "left",
-  },
+    textAlign: "left"
+  }
 }));
 
 let imageListArr = [];
@@ -38,7 +38,7 @@ export default function student(props) {
     for (let i = 1; i < 8; i++) {
       imageListArr.push({
         src: `${props.env.imageStudentPath}/${props.userLogin.Username}/${i}.jpg`,
-        index: i,
+        index: i
       });
     }
     setListImg(imageListArr);
@@ -61,9 +61,7 @@ export default function student(props) {
       faceapi.nets.faceRecognitionNet.loadFromUri(
         `${props.env.basePath}/models`
       ),
-      faceapi.nets.faceExpressionNet.loadFromUri(
-        `${props.env.basePath}/models`
-      ),
+      faceapi.nets.faceExpressionNet.loadFromUri(`${props.env.basePath}/models`)
     ]).then(() => {
       startVideo();
     });
@@ -73,15 +71,15 @@ export default function student(props) {
         {
           video: {
             width: 300,
-            height: 300,
-          },
+            height: 300
+          }
         },
-        (stream) => (video.srcObject = stream),
-        (err) => console.error(err)
+        stream => (video.srcObject = stream),
+        err => console.error(err)
       );
     };
 
-    video.addEventListener("play", (e) => {
+    video.addEventListener("play", e => {
       e.preventDefault();
       if (document.getElementById("imageCropPreview") === null) {
         const canvas = faceapi.createCanvasFromMedia(video);
@@ -138,12 +136,12 @@ export default function student(props) {
     // tempCanvas.toDataURL("image/jpeg")
     let data = {
       image: tempCanvas.toDataURL("image/jpeg"),
-      username: props.userLogin.Username,
+      username: props.userLogin.Username
     };
 
     axios
       .post(`${props.env.api_url}/createImage`, JSON.stringify(data))
-      .then((value) => {
+      .then(value => {
         console.log(value.data);
         if (value.data.success) {
           Swal.fire({
@@ -151,18 +149,19 @@ export default function student(props) {
             text: "",
             icon: "success",
             showConfirmButton: false,
+            timer: 1000
           });
           setTimeout(() => {
             window.location.reload();
           }, 1000);
         }
       })
-      .catch((reason) => {
+      .catch(reason => {
         console.log(reason);
       });
   };
 
-  const onDel = (data) => {
+  const onDel = data => {
     data = { imageName: `${data}.jpg`, username: props.userLogin.Username };
     Swal.fire({
       title: "ยืนยันการลบ?",
@@ -172,8 +171,8 @@ export default function student(props) {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "ตกลง",
-      cancelButtonText: "ยกเลิก",
-    }).then((result) => {
+      cancelButtonText: "ยกเลิก"
+    }).then(result => {
       if (result.isConfirmed) {
         console.log("hello");
         axios
@@ -181,7 +180,7 @@ export default function student(props) {
             `${props.env.api_url}/delImageinformation`,
             JSON.stringify(data)
           )
-          .then((value) => {
+          .then(value => {
             console.log(value.data);
             if (value.data.success) {
               Swal.fire({
@@ -189,13 +188,14 @@ export default function student(props) {
                 text: "",
                 icon: "success",
                 showConfirmButton: false,
+                timer: 1000
               });
               setTimeout(() => {
                 window.location.reload();
               }, 1000);
             }
           })
-          .catch((reason) => {
+          .catch(reason => {
             console.log(reason);
           });
       }
@@ -209,7 +209,7 @@ export default function student(props) {
           <div
             style={{
               position: "absolute",
-              zIndex: "-1000",
+              zIndex: "-1000"
             }}
           >
             <video id="video" height="300" width="300" autoPlay muted />
@@ -247,13 +247,13 @@ export default function student(props) {
                         height: "100px",
                         overflow: "hidden",
                         boxShadow:
-                          "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
+                          "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
                       }}
                       key={i}
                     >
                       <div
                         style={{
-                          position: "relative",
+                          position: "relative"
                         }}
                         key={i}
                         onMouseOver={() => {
@@ -281,7 +281,7 @@ export default function student(props) {
                             top: 65,
                             zIndex: "200",
                             padding: "3px 5px",
-                            display: "none",
+                            display: "none"
                           }}
                         >
                           <i className="fas fa-trash-alt"></i>

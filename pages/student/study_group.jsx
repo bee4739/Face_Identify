@@ -93,7 +93,8 @@ export default function student(props) {
               title: "เพิ่มข้อมูลสำเร็จ!",
               text: "",
               icon: "success",
-              showConfirmButton: false
+              showConfirmButton: false,
+              timer: 1000
             });
             setTimeout(() => {
               window.location.reload();
@@ -135,7 +136,8 @@ export default function student(props) {
               title: "ลบสำเร็จ!",
               text: "",
               icon: "success",
-              showConfirmButton: false
+              showConfirmButton: false,
+              timer: 1000
             });
             setTimeout(() => {
               window.location.reload();
