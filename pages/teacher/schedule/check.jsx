@@ -3,10 +3,7 @@ import { useRouter } from "next/router";
 import TeacherTheme from "../../../components/TeacherTheme";
 import { makeStyles } from "@material-ui/core/styles";
 import { useForm, Controller } from "react-hook-form";
-import Link from "next/link";
 import * as faceapi from "face-api.js";
-import * as tf from "@tensorflow/tfjs";
-import * as tmImage from "@teachablemachine/image";
 import axios from "axios";
 import { useState, useEffect } from "react";
 
@@ -23,66 +20,33 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+async function delay(ms) {
+  return await new Promise(resolve => setTimeout(resolve, ms));
+}
 export default function check(props) {
   const classes = useStyles();
   const router = useRouter();
   const { control, handleSubmit } = useForm();
-
-  const [name, setName] = useState("");
-
   const [nameStd, setNameStd] = useState([]);
-  const getNameStudent = data => {
-    console.log(data);
-    axios
-      .post(
-        `${props.env.api_url}/getNameStudent`,
-        JSON.stringify({ Class_ID: data })
-      )
-      .then(value => {
-        console.log(value.data);
-        setNameStd(value.data.result);
-        console.log("zzzz", value.data.result);
-      })
-      .catch(reason => {
-        console.log(reason);
-      });
-  };
+  const [stdChecked, setStdChecked] = useState([]);
 
-  const checkName = data => {
-    data = { ...data, name: name };
-    axios
-      .post(
-        `${props.env.api_url}/checkName`,
-        JSON.stringify({ Schedule_ID: data })
-      )
-      .then(value => {
-        console.log("ddd", value.data);
-      })
-      .catch(reason => {
-        console.log(reason);
-      });
-    // alert("เพิ่มข้อมูลสำเร็จ");
+  const checkName = async username => {
+    setStdChecked(prev => {
+      return typeof prev == "object"
+        ? prev.filter(e => e == username).length > 0
+          ? prev
+          : [...new Set([`${username}`, ...prev])]
+        : [`${username}`];
+    });
   };
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-
-    if (params.get("Class_ID")) {
-      getNameStudent(params.get("Class_ID"));
-    } else {
-      alert("ไม่พบข้อมูลห้อง");
-      router.back();
-    }
-
-    if (params.get("Schedule_ID")) {
-      checkName(params.get("Schedule_ID"));
-    } else {
-      alert("ไม่พบข้อมูลตารางสอน");
-      router.back();
-    }
     Webcam();
-    checkName();
   }, []);
+
+  React.useEffect(() => {
+    // API Check name
+  }, [stdChecked]);
 
   async function Webcam() {
     Promise.all([
@@ -102,14 +66,19 @@ export default function check(props) {
     const video = document.getElementById("video");
     function startVideo() {
       navigator.getUserMedia(
-        { video: {} },
+        {
+          video: {
+            width: 300,
+            height: 300
+          }
+        },
         stream => (video.srcObject = stream),
         err => console.error(err)
       );
     }
     video.addEventListener("play", () => {
       const canvas = faceapi.createCanvasFromMedia(video);
-      document.body.append(canvas);
+      window.document.getElementById("canvasCreate").append(canvas);
       const displaySize = { width: video.width, height: video.height };
       faceapi.matchDimensions(canvas, displaySize);
 
@@ -123,34 +92,69 @@ export default function check(props) {
           .detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
           .withFaceLandmarks()
           .withFaceDescriptors();
-        console.log(detections);
+        // console.log(detections);
         const resizedDetections = faceapi.resizeResults(
           detections,
           displaySize
         );
+
+        let username = null;
+
         canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
         if (labeledFaceDescriptors) {
           const faceMatcher = new faceapi.FaceMatcher(
             labeledFaceDescriptors,
-            0.6
+            0.5
           );
           const results = resizedDetections.map(data =>
             faceMatcher.findBestMatch(data.descriptor)
           );
-          results.forEach((result, i) => {
-            const box = resizedDetections[i].detection.box;
-            setName(result.toString());
-            //const drawBox = new faceapi.draw.DrawBox(box, { label: result.toString() })
-            //drawBox.draw(canvas)
-          });
+
+          if (resizedDetections[0]) {
+            username = results[0].toString().split(/[ ,]+/)[0];
+
+            if (username !== "unknown") {
+              const box = resizedDetections[0].detection.box;
+              const drawBox = new faceapi.draw.DrawBox(box, {
+                label: `${username}`
+              });
+              drawBox.draw(canvas);
+              checkName(username);
+            } else {
+              username = null;
+            }
+          }
         }
       }, 100);
     });
 
     const loadLabeledImages = async () => {
-      let listPathName = await axios.get(`${props.env.api_url}/getImageFile`);
-      const labels = [...new Set(listPathName.data)];
-      console.log(labels);
+      let listPathName = [];
+      const params = new URLSearchParams(window.location.search);
+
+      if (params.get("Class_ID")) {
+        if (params.get("Schedule_ID")) {
+          listPathName = await axios.post(
+            `${props.env.api_url}/getNameStudent`,
+            JSON.stringify({
+              Class_ID: params.get("Class_ID"),
+              Schedule_ID: params.get("Schedule_ID")
+            })
+          );
+          setNameStd(listPathName.data.result);
+        } else {
+          alert("ไม่พบข้อมูลตารางสอน");
+          router.back();
+        }
+      } else {
+        alert("ไม่พบข้อมูลห้อง");
+        router.back();
+      }
+
+      const labels = [
+        ...new Set(listPathName.data.result.map(e => e.Username))
+      ];
+
       return Promise.all(
         labels.map(async label => {
           const descriptions = [];
@@ -162,7 +166,7 @@ export default function check(props) {
               .detectSingleFace(img)
               .withFaceLandmarks()
               .withFaceDescriptor();
-            descriptions.push(detections.descriptor);
+            if (detections) descriptions.push(detections.descriptor);
           }
           return new faceapi.LabeledFaceDescriptors(label, descriptions);
         })
@@ -172,56 +176,89 @@ export default function check(props) {
 
   return (
     <TeacherTheme {...props}>
-      <form className={classes.form}>
+      <form>
         <div>
-          <center>
-            <table class="table">
-              <tr>
-                <th width="50%">
-                  <div>
+          <table class="table table-borderless">
+            <tr>
+              <th style={{ minWidth: "300px" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    height: "300px"
+                  }}
+                >
+                  <div
+                    style={{
+                      position: "relative",
+                      maxWidth: "300px",
+                      maxHeight: "300px"
+                    }}
+                  ></div>
+                  <div
+                    style={{
+                      position: "absolute",
+                      zIndex: "1000"
+                    }}
+                  >
                     <video
                       id="video"
-                      height="500px"
-                      width="500px"
+                      height="300px"
+                      width="300px"
                       autoPlay
                       muted
                     />
                   </div>
-                </th>
-                <td textAlign="right" width="50%">
-                  <table class="table">
-                    <thead>
-                      <tr>
-                        <th>ชื่อ - นามสกุล</th>
-                        <th>วัน / เวลา</th>
-                        <th>สถานะ</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {nameStd.map((variable, index) => {
-                        return (
-                          <tr key={index}>
-                            <td>
-                              {variable.Std_FirstName}
-                              &nbsp;&nbsp;
-                              {variable.Std_LastName}
-                            </td>
-                            <td>Otto</td>
-                            <td>{name}</td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </td>
-              </tr>
-            </table>
-          </center>
-          <div>
-            <button type="button" className="btn btn-info">
-              &nbsp;สรุปผลเช็คชื่อ&nbsp;
-            </button>
-          </div>
+                  <div
+                    id={`canvasCreate`}
+                    style={{
+                      position: "absolute",
+                      zIndex: "20000",
+                      width: "300px",
+                      height: "300px"
+                    }}
+                  ></div>
+                </div>
+              </th>
+              <td>
+                <div className="text-right mb-3">
+                  <button type="button" className="btn btn-info btn-sm">
+                    &nbsp;สรุปผลเช็คชื่อ&nbsp;
+                  </button>
+                </div>
+
+                <table class="table table-sm table-borderless">
+                  <thead>
+                    <tr>
+                      <th>ชื่อ - นามสกุล</th>
+                      <th>วัน / เวลา</th>
+                      <th>สถานะ</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {nameStd.map((variable, index) => {
+                      return (
+                        <tr key={index}>
+                          <td>
+                            {variable.Std_FirstName}
+                            &nbsp;&nbsp;
+                            {variable.Std_LastName}
+                          </td>
+                          <td>Otto</td>
+                          <td>
+                            {stdChecked.indexOf(`${variable.Username}`) != -1
+                              ? "1"
+                              : "0"}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </table>
         </div>
       </form>
     </TeacherTheme>

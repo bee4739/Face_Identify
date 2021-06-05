@@ -80,7 +80,7 @@ export default function Teacher(props) {
             ) {
               backup.push({
                 Id: backup.length + 1,
-                Subject: e.Group_Study,
+                Subject: e.Subject_NameTH,
                 StartTime: new Date(i),
                 EndTime: new Date(i),
                 IsAllDay: true,
