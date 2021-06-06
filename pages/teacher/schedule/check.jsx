@@ -6,6 +6,8 @@ import { useForm, Controller } from "react-hook-form";
 import * as faceapi from "face-api.js";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import CheckIcon from "@material-ui/icons/Check";
+import ClearIcon from "@material-ui/icons/Clear";
 
 const useStyles = makeStyles(theme => ({
   form: {
@@ -29,6 +31,7 @@ export default function check(props) {
   const { control, handleSubmit } = useForm();
   const [nameStd, setNameStd] = useState([]);
   const [stdChecked, setStdChecked] = useState([]);
+  const [listStudent, setListStudent] = useState([]);
 
   const checkName = async username => {
     setStdChecked(prev => {
@@ -46,6 +49,29 @@ export default function check(props) {
 
   React.useEffect(() => {
     // API Check name
+    const params = new URLSearchParams(window.location.search);
+    let data = { username: `${JSON.stringify(stdChecked)}` };
+
+    if (stdChecked.length > 0) {
+      axios
+        .post(
+          `${props.env.api_url}/checkName`,
+          JSON.stringify({
+            ...data,
+            Class_ID: params.get("Class_ID"),
+            Schedule_ID: params.get("Schedule_ID")
+          })
+        )
+        .then(value => {
+          console.log(value);
+          if (value.data.rowCount > 0) {
+            setListStudent(value.data.result);
+          }
+        })
+        .catch(reason => {
+          console.log(reason);
+        });
+    }
   }, [stdChecked]);
 
   async function Webcam() {
@@ -245,11 +271,22 @@ export default function check(props) {
                             &nbsp;&nbsp;
                             {variable.Std_LastName}
                           </td>
-                          <td>Otto</td>
                           <td>
-                            {stdChecked.indexOf(`${variable.Username}`) != -1
-                              ? "1"
-                              : "0"}
+                            {(() => {
+                              let std = listStudent.filter(
+                                e => `${e.Username}` == `${variable.Username}`
+                              );
+                              if (std.length > 0) return std[0]["Time"];
+                              else return "";
+                            })()}
+                          </td>
+                          <td>
+                            {stdChecked.indexOf(`${variable.Username}`) !=
+                            -1 ? (
+                              <CheckIcon />
+                            ) : (
+                              <ClearIcon />
+                            )}
                           </td>
                         </tr>
                       );
