@@ -25,6 +25,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import HowToRegIcon from "@material-ui/icons/HowToReg";
 import Link from "next/link";
+import { TimePicker } from "@material-ui/pickers";
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -48,6 +49,8 @@ const useStyles = makeStyles(theme => ({
 
 export default function Teacher(props) {
   console.log(props.userLogin);
+
+  const [btStatus, setBtStatus] = useState(true);
 
   const classes = useStyles();
   const router = useRouter();
@@ -267,34 +270,72 @@ export default function Teacher(props) {
   //   },
   // ];
 
+  const [schedule, setSchedule] = useState({});
+  const insertCompensate = data => {
+    data = { ...data, Schedule_ID: schedule.data7 };
+
+    axios
+      .post(`${props.env.api_url}/insertCompensate`, JSON.stringify(data))
+      .then(value => {
+        if (value.data.isQuery == true) {
+          console.log("scheduleS", value.data);
+          Swal.fire({
+            title: "เพิ่มข้อมูลสำเร็จ!",
+            text: "",
+            icon: "success",
+            showConfirmButton: false,
+            timer: 1000
+          });
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        } else {
+          console.log("scheduleF", value.data);
+          Swal.fire({
+            title: "เพิ่มข้อมูลไม่สำเร็จ!",
+            text: "กรุณาตรวจสอบข้อมูลให้ถูกต้อง",
+            icon: "error",
+            showConfirmButton: true
+          });
+        }
+      })
+      .catch(reason => {
+        console.log(reason);
+      });
+    // window.location.reload();
+    // alert("เพิ่มข้อมูลสำเร็จ");
+  };
+
   React.useEffect(() => {
     getSubject();
     getDay();
+    // var x = document.getElementsByName("checkname");
+    // x.disabled = btStatus;
   }, []);
 
   return (
     <TeacherTheme {...props}>
-      <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
-        <div className={classes.button}>
-          <button
-            type="button"
-            className="btn btn-success"
-            data-toggle="modal"
-            data-target="#AddSub"
-          >
-            <AddIcon />
-            เพิ่มตารางสอน
-          </button>
-        </div>
-
-        <div
-          className="modal fade"
-          id="AddSub"
-          tabIndex="-1"
-          aria-labelledby="exampleModalLabel"
-          aria-hidden="true"
+      <div className={classes.button}>
+        <button
+          type="button"
+          className="btn btn-success mb-4"
+          data-toggle="modal"
+          data-target="#AddSub"
         >
-          <div className="modal-dialog">
+          <AddIcon />
+          เพิ่มตารางสอน
+        </button>
+      </div>
+
+      <div
+        className="modal fade"
+        id="AddSub"
+        tabIndex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog">
+          <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title" id="exampleModalLabel">
@@ -346,7 +387,7 @@ export default function Teacher(props) {
                     />
                   </div>
                   <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
-                    เลือกวันที่ :
+                    เลือกวัน :
                   </div>
                   <div className="col-sm-6 mt-2 mb-2 align-middle text-left">
                     <Controller
@@ -357,12 +398,12 @@ export default function Teacher(props) {
                       render={({ onChange, value }) => (
                         <select
                           className="form-control"
-                          id="addTerm"
+                          id="addDay"
                           onChange={onChange}
                           value={value}
                         >
                           <option value="" disabled="disabled">
-                            กรุณาเลือกวันที่...
+                            กรุณาเลือกวัน...
                           </option>
                           <option value={0}>วันอาทิตย์</option>
                           <option value={1}>วันจันทร์</option>
@@ -397,6 +438,7 @@ export default function Teacher(props) {
                       )}
                     />
                   </div>
+
                   <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
                     <label>เวลาสิ้นสุด : </label>
                   </div>
@@ -461,31 +503,25 @@ export default function Teacher(props) {
                 </button>
               </div>
             </div>
-          </div>
+          </form>
         </div>
+      </div>
 
-        <div className={classes.button}>
-          <button
-            type="button"
-            className="btn btn-info mb-2 mt-2"
-            data-toggle="modal"
-            data-target="#compensate"
+      <div
+        className="modal fade"
+        id="compensate"
+        tabIndex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog">
+          <form
+            className={classes.form}
+            onSubmit={handleSubmit(insertCompensate)}
           >
-            สอนชดเชย
-          </button>
-        </div>
-
-        <div
-          className="modal fade"
-          id="compensate"
-          tabIndex="-1"
-          aria-labelledby="exampleModalLabel"
-          aria-hidden="true"
-        >
-          <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title" id="exampleModalLabel">
+                <h5 className="modal-title" id="compensate">
                   สอนชดเชย
                 </h5>
                 <button
@@ -499,23 +535,124 @@ export default function Teacher(props) {
               </div>
               <div className="modal-body">
                 <div className="row">
-                  <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
-                    <label>เลือกวันที่ : </label>
+                  <div className="col-sm-5 mt-3 align-middle text-right">
+                    <label>วันสอนชดเชย : </label>
                   </div>
-                  <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
-                    <input type="date" className="form-control"></input>
+                  <div className="col-sm-6 align-middle text-left">
+                    <Controller
+                      name="Date_Composate"
+                      defaultValue=""
+                      control={control}
+                      render={({ onChange, value }) => (
+                        <TextField
+                          variant="outlined"
+                          size="small"
+                          margin="normal"
+                          required
+                          fullWidth
+                          onChange={onChange}
+                          value={value}
+                          type="date"
+                        />
+                      )}
+                    />
+                  </div>
+                  <div className="col-sm-5 mt-3 align-middle text-right">
+                    <label>วันสอนปกติ : </label>
+                  </div>
+                  <div className="col-sm-6 align-middle text-left">
+                    <Controller
+                      name="Date_Normal"
+                      defaultValue=""
+                      control={control}
+                      render={({ onChange, value }) => (
+                        <TextField
+                          variant="outlined"
+                          size="small"
+                          margin="normal"
+                          required
+                          fullWidth
+                          onChange={onChange}
+                          value={value}
+                          type="date"
+                        />
+                      )}
+                    />
+                  </div>
+                  <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
+                    เลือกวัน :
+                  </div>
+                  <div className="col-sm-6 mt-2 mb-2 align-middle text-left">
+                    <Controller
+                      name="Day_Composate"
+                      defaultValue=""
+                      control={control}
+                      variant="outlined"
+                      render={({ onChange, value }) => (
+                        <select
+                          className="form-control"
+                          id="addDayComposate"
+                          onChange={onChange}
+                          value={value}
+                        >
+                          <option value="" disabled="disabled">
+                            กรุณาเลือกวัน...
+                          </option>
+                          <option value={0}>วันอาทิตย์</option>
+                          <option value={1}>วันจันทร์</option>
+                          <option value={2}>วันอังคาร</option>
+                          <option value={3}>วันพุธ</option>
+                          <option value={4}>วันพฤหัสบดี</option>
+                          <option value={5}>วันศุกร์</option>
+                          <option value={6}>วันเสาร์</option>
+                        </select>
+                      )}
+                    />
                   </div>
                   <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
                     <label>เวลาเริ่ม : </label>
                   </div>
-                  <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
-                    <input type="time" className="form-control"></input>
+                  <div className="col-sm-6 align-middle text-left">
+                    <Controller
+                      name="Start_Time_Composate"
+                      defaultValue=""
+                      control={control}
+                      render={({ onChange, value }) => (
+                        <TextField
+                          variant="outlined"
+                          size="small"
+                          margin="normal"
+                          required
+                          fullWidth
+                          onChange={onChange}
+                          value={value}
+                          type="time"
+                        />
+                      )}
+                    />
                   </div>
                   <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
                     <label>เวลาสิ้นสุด : </label>
                   </div>
-                  <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
-                    <input type="time" className="form-control"></input>
+                  <div className="col-sm-6 align-middle text-left">
+                    <Controller
+                      name="End_Time_Composate"
+                      defaultValue=""
+                      control={control}
+                      render={({ onChange, value }) => (
+                        <TextField
+                          variant="outlined"
+                          size="small"
+                          margin="normal"
+                          required
+                          fullWidth
+                          onChange={onChange}
+                          value={value}
+                          type="time"
+                          ampm={false}
+                        />
+                      )}
+                    />
                   </div>
                 </div>
               </div>
@@ -527,85 +664,139 @@ export default function Teacher(props) {
                 >
                   ยกเลิก
                 </button>
-                <button type="button" className="btn btn-success">
+                <button
+                  type="submit"
+                  className="btn btn-success"
+                  // onClick={() => {
+                  //   insertCompensate({ Schedule_ID: schedule.data7 });
+                  // }}
+                >
                   เพิ่ม
                 </button>
               </div>
             </div>
-          </div>
+          </form>
         </div>
-        {/* <div className="text-center">
+      </div>
+      {/* <div className="text-center">
           <Calendar />
         </div> */}
-        <div className="mb-4">
-          <ScheduleComponent
-            // height="auto"
-            currentView="Month"
-            eventSettings={{
-              dataSource: dayList
-            }}
-            // rowAutoHeight={true}
-            readonly={true}
-            showQuickInfo={false}
-            select={e => {
-              setDateSelect(e.data);
-            }}
-          >
-            <Inject services={[Day, Week, WorkWeek, Month]} />
-          </ScheduleComponent>
-        </div>
-      </form>
+      <div className="mb-4">
+        <ScheduleComponent
+          // height="auto"
+          currentView="Month"
+          eventSettings={{
+            dataSource: dayList
+          }}
+          // rowAutoHeight={true}
+          readonly={true}
+          showQuickInfo={false}
+          select={e => {
+            setDateSelect(e.data);
+            console.log("e", e.data);
+            // console.log(Date.parse("Thu Sep 02 2021"));
+            var timestamp = Date.parse(e.data.StartTime);
+            var date = new Date(timestamp);
+            // alert(date.getDate());
+            var n = Date.now();
+            var date_now = new Date(n);
+
+            // alert(date_now.getDate());
+            // var x = document.getElementsByName("checkname");
+
+            var hms =
+              date.getFullYear.toString() +
+              "-" +
+              (date.getMonth() + 1).toString() +
+              "-" +
+              date.getDate().toString() +
+              " ";
+            var start_time = new Date(hms + e.data.data4);
+            var end_time = new Date(hms + e.data.data5);
+
+            console.log(start_time);
+            console.log(end_time);
+            var d_now = -1.0;
+            var d_start = -1.0;
+            var d_end = -1.0;
+
+            if (date_now.getMinutes() < 10) {
+              var s_now =
+                date_now.getHours().toString() +
+                ".0" +
+                date_now.getMinutes().toString();
+              d_now = parseFloat(s_now).toFixed(2);
+            } else {
+              var s_now =
+                date_now.getHours().toString() +
+                "." +
+                date_now.getMinutes().toString();
+              d_now = parseFloat(s_now).toFixed(2);
+            }
+
+            if (date_now.getMinutes() < 10) {
+              var s_start =
+                start_time.getHours().toString() +
+                ".0" +
+                start_time.getMinutes().toString();
+              d_start = parseFloat(s_start).toFixed(2);
+            } else {
+              var s_start =
+                start_time.getHours().toString() +
+                "." +
+                start_time.getMinutes().toString();
+              d_start = parseFloat(s_start).toFixed(2);
+            }
+
+            if (date_now.getMinutes() < 10) {
+              var s_end =
+                end_time.getHours().toString() +
+                ".0" +
+                end_time.getMinutes().toString();
+              d_end = parseFloat(s_end).toFixed(2);
+            } else {
+              var s_end =
+                end_time.getHours().toString() +
+                "." +
+                end_time.getMinutes().toString();
+              d_end = parseFloat(s_end).toFixed(2);
+            }
+
+            console.log(d_now);
+            console.log(d_start);
+            console.log(d_end);
+            console.log(d_start <= d_now);
+            console.log(d_now <= d_end);
+
+            if (
+              date.getDate() == date_now.getDate() &&
+              date.getMonth() == date_now.getMonth() &&
+              date.getFullYear() == date_now.getFullYear() &&
+              d_start <= d_now &&
+              d_now <= d_end
+            ) {
+              // setBtStatus(true);
+              document.getElementById("checkname").disabled = false;
+            } else {
+              document.getElementById("checkname").disabled = true;
+            }
+            // console.log("ssss", date_now.getHours());
+            // console.log("d", target.getHours());
+            // console.log("oooo", date_now.getMonth());
+            // console.log("f", date.getFullYear());
+            // console.log("oosoo", date_now.getFullYear());
+
+            // alert(btStatus + "." + date_now.getDate() + "." + date.getDate());
+          }}
+        >
+          <Inject services={[Day, Week, WorkWeek, Month]} />
+        </ScheduleComponent>
+      </div>
 
       {(date => {
         if (date) {
-          // Swal.fire({
-          //   icon: "error",
-          //   title: "ควย"
-          //   // text:
-          //   //   "วิชา : " +
-          //   //   dateSelect.data1 +
-          //   //   " - " +
-          //   //   dateSelect.data2 +
-          //   //   "\n" +
-          //   //   "กลุ่มเรียน : " +
-          //   //   dateSelect.data3 +
-          //   //   "\n" +
-          //   //   "เวลาเริ่มต้น : " +
-          //   //   dateSelect.data4 +
-          //   //   "\n" +
-          //   //   "เวลาสิ้นสุด : " +
-          //   //   dateSelect.data5 +
-          //   //   "\n" +
-          //   //   "ประเภทวิชา : " +
-          //   //   dateSelect.data6
-          // });
           return (
             <div>
-              {/* <div className={classes.left}>
-                รหัสวิชา : {dateSelect.data1}
-                <br />
-                ชื่อวิชา : {dateSelect.data2}
-                <br />
-                กลุ่มเรียน : {dateSelect.data3}
-                <br />
-                เวลาเริ่ม : {dateSelect.data4}
-                <br />
-                เวลาสิ้นสุด : {dateSelect.data5}
-                <br />
-                ประเภทวิชา : {dateSelect.data6}
-              </div>
-              <div className={classes.right}>
-                <button type="button" class="btn btn-primary">
-                  Primary
-                </button>
-                <button type="button" class="btn btn-secondary">
-                  Secondary
-                </button>
-                <button type="button" class="btn btn-success">
-                  Success
-                </button>
-              </div> */}
-
               <table class="table">
                 <thead>
                   <tr className={classes.dataCarlendar}>
@@ -636,27 +827,53 @@ export default function Teacher(props) {
                       <br />
                       ประเภทวิชา : {dateSelect.data6}
                     </td>
-                    <td style={{ verticalAlign: "middle" }}>
+
+                    <td style={{ verticalAlign: "middle", width: 120 }}>
                       <Link
                         href={`/teacher/schedule/check?Class_ID=${dateSelect.data8}&Schedule_ID=${dateSelect.data7}`}
                       >
-                        <button type="button" className="btn btn-success">
+                        <button
+                          id="checkname"
+                          disabled=""
+                          type="button"
+                          className="btn btn-success"
+                          style={{ height: 40, width: 100 }}
+                          onClick={() => {
+                            // var d = new Date();
+                            // alert(dateSelect.data4);
+                          }}
+                        >
                           <HowToRegIcon />
                           &nbsp;เช็คชื่อ
                         </button>
                       </Link>
-                    </td>
-                    <td style={{ verticalAlign: "middle" }}>
                       <button
                         type="button"
-                        className="btn btn-warning"
+                        className="mt-2 btn btn-info"
+                        data-toggle="modal"
+                        data-target="#compensate"
+                        style={{ height: 40, width: 100 }}
+                        // onClick={() => {
+                        //   listNameStd({ Class_ID: variable.Class_ID });
+                        // }}
+                        onClick={() => {
+                          setSchedule(dateSelect);
+                          // console.log("sc", dateSelect.data7);
+                        }}
+                      >
+                        สอนชดเชย
+                      </button>
+                    </td>
+                    <td style={{ verticalAlign: "middle", width: 120 }}>
+                      <button
                         type="button"
                         className="btn btn-warning"
                         data-toggle="modal"
                         data-target="#EditSub"
+                        style={{ height: 40, width: 100 }}
                         onClick={() => {
                           setDef(dateSelect);
-                          console.log(dateSelect);
+                          console.log("test", dateSelect);
                           reset({
                             Class_IDE: dateSelect.data8
                           });
@@ -666,17 +883,17 @@ export default function Teacher(props) {
                         &nbsp;แก้ไข&nbsp;
                       </button>
                     </td>
-                    <td style={{ verticalAlign: "middle" }}>
+                    <td style={{ verticalAlign: "middle", width: 120 }}>
                       <button
                         type="button"
                         className="btn btn-danger"
+                        style={{ height: 40, width: 100 }}
                         onClick={() => {
                           onDel({ Schedule_ID: dateSelect.data7 });
                         }}
                       >
-                        &nbsp;&nbsp;&nbsp;
                         <DeleteIcon />
-                        &nbsp;ลบ&nbsp;&nbsp;&nbsp;
+                        &nbsp;ลบ
                       </button>
                     </td>
                     <td></td>
