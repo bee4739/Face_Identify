@@ -8,6 +8,8 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
+import TextField from "@material-ui/core/TextField";
+import Swal from "sweetalert2";
 
 const useStyles = makeStyles(theme => ({
   form: {
@@ -32,6 +34,10 @@ export default function check(props) {
   const [nameStd, setNameStd] = useState([]);
   const [stdChecked, setStdChecked] = useState([]);
   const [listStudent, setListStudent] = useState([]);
+  const [time, setTime] = useState("");
+  var [a] = "";
+  const [start_Time, setStart_Time] = useState("");
+  const [end_Time, setEnd_Time] = useState("");
 
   const checkName = async username => {
     setStdChecked(prev => {
@@ -44,22 +50,157 @@ export default function check(props) {
   };
 
   useEffect(() => {
-    Webcam();
-  }, []);
+    const gettime = data => {
+      const params = new URLSearchParams(window.location.search);
+      axios
+        .post(
+          `${props.env.api_url}/gettime`,
+          JSON.stringify({
+            ...data,
+            Class_ID: params.get("Class_ID"),
+            Schedule_ID: params.get("Schedule_ID")
+          })
+        )
+        .then(value => {
+          console.log("data", value.data.result);
+          // setDatatime(value.data.result);
+          [a] = value.data.result;
 
-  React.useEffect(() => {
+          // alert(a.Start_Time);
+          // alert(a.End_Time);
+          setStart_Time(a.Start_Time);
+          setEnd_Time(a.End_Time);
+          // alert(datatime);
+        })
+        .catch(reason => {
+          console.log(reason);
+        });
+    };
+
+    (async () => {
+      const { value: formValues } = await Swal.fire({
+        title: "กรุณากำหนดเวลามาสาย",
+        html:
+          '<center><input id="swal-input1" class="swal2-input" type="time" style="width:200px"></center>',
+        focusConfirm: false,
+        preConfirm: () => {
+          return [document.getElementById("swal-input1").value];
+        }
+      });
+
+      if (formValues) {
+        Swal.fire("เวลาที่เข้าสายคือ" + "\n" + formValues).then(() => {
+          setTime(formValues);
+          Webcam();
+        });
+      }
+    })();
+
+    gettime();
+  }, [end_Time]);
+  // console.log(time);
+
+  useEffect(() => {
     // API Check name
     const params = new URLSearchParams(window.location.search);
     let data = { username: `${JSON.stringify(stdChecked)}` };
+    console.log(start_Time);
 
-    if (stdChecked.length > 0) {
+    //if status
+    var n = Date.now();
+    var date_now = new Date(n);
+
+    var hms =
+      date_now.getFullYear.toString() +
+      "-" +
+      (date_now.getMonth() + 1).toString() +
+      "-" +
+      date_now.getDate().toString() +
+      " ";
+    var start_time = new Date(hms + start_Time);
+    var end_time = new Date(hms + end_Time);
+    var late_time = new Date(hms + time);
+
+    console.log("start_time", start_time);
+    console.log("end_time", end_time);
+    var d_now = -1.0;
+    var d_start = -1.0;
+    var d_end = -1.0;
+    var d_late = -1.0;
+
+    if (date_now.getMinutes() < 10) {
+      var s_now =
+        date_now.getHours().toString() +
+        ".0" +
+        date_now.getMinutes().toString();
+      d_now = parseFloat(s_now).toFixed(2);
+    } else {
+      var s_now =
+        date_now.getHours().toString() + "." + date_now.getMinutes().toString();
+      d_now = parseFloat(s_now).toFixed(2);
+    }
+
+    if (date_now.getMinutes() < 10) {
+      var s_start =
+        start_time.getHours().toString() +
+        ".0" +
+        start_time.getMinutes().toString();
+      d_start = parseFloat(s_start).toFixed(2);
+    } else {
+      var s_start =
+        start_time.getHours().toString() +
+        "." +
+        start_time.getMinutes().toString();
+      d_start = parseFloat(s_start).toFixed(2);
+    }
+
+    if (date_now.getMinutes() < 10) {
+      var s_end =
+        end_time.getHours().toString() +
+        ".0" +
+        end_time.getMinutes().toString();
+      d_end = parseFloat(s_end).toFixed(2);
+    } else {
+      var s_end =
+        end_time.getHours().toString() + "." + end_time.getMinutes().toString();
+      d_end = parseFloat(s_end).toFixed(2);
+    }
+
+    if (date_now.getMinutes() < 10) {
+      var s_late =
+        late_time.getHours().toString() +
+        ".0" +
+        late_time.getMinutes().toString();
+      d_late = parseFloat(s_late).toFixed(2);
+    } else {
+      var s_late =
+        late_time.getHours().toString() +
+        "." +
+        late_time.getMinutes().toString();
+      d_late = parseFloat(s_late).toFixed(2);
+    }
+
+    console.log("now", d_now);
+    console.log("start", d_start);
+    console.log("end", d_end);
+    console.log("late", d_late);
+
+    var checkstatus = "";
+    if (d_late <= d_now && d_now <= d_end) {
+      checkstatus = "สาย";
+    } else {
+      checkstatus = "ปกติ";
+    }
+
+    if (stdChecked.length > 0 && checkstatus !== "") {
       axios
         .post(
           `${props.env.api_url}/checkName`,
           JSON.stringify({
             ...data,
             Class_ID: params.get("Class_ID"),
-            Schedule_ID: params.get("Schedule_ID")
+            Schedule_ID: params.get("Schedule_ID"),
+            Status: checkstatus
           })
         )
         .then(value => {
