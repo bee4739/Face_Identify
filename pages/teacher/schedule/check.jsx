@@ -8,7 +8,6 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
-import TextField from "@material-ui/core/TextField";
 import Swal from "sweetalert2";
 
 const useStyles = makeStyles(theme => ({
@@ -49,6 +48,48 @@ export default function check(props) {
     });
   };
 
+  const hmsTime = times => {
+    var n = Date.now();
+    var date_now = new Date(n);
+
+    if (times == "0") {
+      var hms =
+        date_now.getFullYear.toString() +
+        "-" +
+        (date_now.getMonth() + 1).toString() +
+        "-" +
+        date_now.getDate().toString() +
+        " ";
+      var hms_time = new Date(hms);
+    } else {
+      var hms =
+        date_now.getFullYear.toString() +
+        "-" +
+        (date_now.getMonth() + 1).toString() +
+        "-" +
+        date_now.getDate().toString() +
+        " ";
+      var hms_time = new Date(hms + times);
+    }
+    return hms_time;
+  };
+
+  const hhmms = hhmm => {
+    var d_hms = -1.0;
+
+    if (hhmm.getMinutes() < 10) {
+      var s_now =
+        hhmm.getHours().toString() + ".0" + hhmm.getMinutes().toString();
+      d_hms = parseFloat(s_now).toFixed(2);
+    } else {
+      var s_now =
+        hhmm.getHours().toString() + "." + hhmm.getMinutes().toString();
+      d_hms = parseFloat(s_now).toFixed(2);
+    }
+    // console.log("hms", d_hms);
+    return d_hms;
+  };
+
   useEffect(() => {
     const gettime = data => {
       const params = new URLSearchParams(window.location.search);
@@ -78,22 +119,68 @@ export default function check(props) {
     };
 
     (async () => {
-      const { value: formValues } = await Swal.fire({
+      const { value: lateTime } = await Swal.fire({
         title: "กรุณากำหนดเวลามาสาย",
         html:
-          '<center><input id="swal-input1" class="swal2-input" type="time" style="width:200px"></center>',
+          '<center><input id="input-lateTime" class="swal2-input" type="time" style="width:200px"></center>',
         focusConfirm: false,
+        confirmButtonText: `ตกลง`,
         preConfirm: () => {
-          return [document.getElementById("swal-input1").value];
+          return [document.getElementById("input-lateTime").value];
         }
       });
 
-      if (formValues) {
-        Swal.fire("เวลาที่เข้าสายคือ" + "\n" + formValues).then(() => {
-          setTime(formValues);
+      var n = Date.now();
+      var date_now = new Date(n);
+
+      var selectTime = hmsTime(lateTime);
+      var endTime = hmsTime(end_Time);
+      // var currentTime = hmsTime("date_now");
+
+      var selectTimes = hhmms(selectTime);
+      var currentTimes = hhmms(date_now);
+      var endTimes = hhmms(endTime);
+
+      console.log(hhmms(date_now));
+      console.log(hhmms(selectTime));
+      console.log(endTimes);
+
+      if (selectTimes < currentTimes) {
+        Swal.fire({
+          icon: "error",
+          title: "เวลาไม่ถูกต้อง!",
+          text: "กรุณากำหนดเวลาใหม่",
+          confirmButtonText: `ตกลง`
+        }).then(() => {
+          window.location.reload();
+        });
+      } else if (endTimes < selectTimes) {
+        Swal.fire({
+          icon: "error",
+          title: "เวลาไม่ถูกต้อง!",
+          text: "กรุณากำหนดเวลาใหม่",
+          confirmButtonText: `ตกลง`
+        }).then(() => {
+          window.location.reload();
+        });
+      } else {
+        Swal.fire({
+          icon: "success",
+          title: "เวลาที่เข้าสายคือ" + " : " + lateTime + " " + "น.",
+          // text: lateTime,
+          confirmButtonText: `ตกลง`
+        }).then(() => {
+          setTime(lateTime);
           Webcam();
         });
       }
+
+      // if (lateTime) {
+      //   Swal.fire("เวลาที่เข้าสายคือ" + "\n" + lateTime).then(() => {
+      //     setTime(lateTime);
+      //     Webcam();
+      //   });
+      // }
     })();
 
     gettime();
