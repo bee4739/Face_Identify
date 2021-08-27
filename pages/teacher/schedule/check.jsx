@@ -9,6 +9,7 @@ import { useState, useEffect } from "react";
 import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
 import Swal from "sweetalert2";
+import Link from "next/link";
 
 const useStyles = makeStyles(theme => ({
   form: {
@@ -37,6 +38,27 @@ export default function check(props) {
   var [a] = "";
   const [start_Time, setStart_Time] = useState("");
   const [end_Time, setEnd_Time] = useState("");
+
+  const [summarySub, setSummarySub] = useState([]);
+  const getSummarySub = data => {
+    const params = new URLSearchParams(window.location.search);
+    axios
+      .post(
+        `${props.env.api_url}/getSummarySub`,
+        JSON.stringify({
+          ...data,
+          Class_ID: params.get("Class_ID"),
+          Schedule_ID: params.get("Schedule_ID")
+        })
+      )
+      .then(value => {
+        console.log("summarySub", value.data.result);
+        setSummarySub(value.data.result);
+      })
+      .catch(reason => {
+        console.log(reason);
+      });
+  };
 
   const checkName = async username => {
     setStdChecked(prev => {
@@ -91,6 +113,7 @@ export default function check(props) {
   };
 
   useEffect(() => {
+    getSummarySub();
     const gettime = data => {
       const params = new URLSearchParams(window.location.search);
       axios
@@ -103,7 +126,7 @@ export default function check(props) {
           })
         )
         .then(value => {
-          console.log("data", value.data.result);
+          console.log("getTime", value.data.result);
           // setDatatime(value.data.result);
           [a] = value.data.result;
 
@@ -430,59 +453,64 @@ export default function check(props) {
 
   return (
     <TeacherTheme {...props}>
-      <form>
-        <div>
-          <table class="table table-borderless">
-            <tr>
-              <th style={{ minWidth: "300px" }}>
+      <div>
+        <table class="table table-borderless">
+          <tr>
+            <th style={{ minWidth: "300px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  height: "300px"
+                }}
+              >
                 <div
                   style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    height: "300px"
+                    position: "relative",
+                    maxWidth: "300px",
+                    maxHeight: "300px"
+                  }}
+                ></div>
+                <div
+                  style={{
+                    position: "absolute",
+                    zIndex: "1000"
                   }}
                 >
-                  <div
-                    style={{
-                      position: "relative",
-                      maxWidth: "300px",
-                      maxHeight: "300px"
-                    }}
-                  ></div>
-                  <div
-                    style={{
-                      position: "absolute",
-                      zIndex: "1000"
-                    }}
-                  >
-                    <video
-                      id="video"
-                      height="300px"
-                      width="300px"
-                      autoPlay
-                      muted
-                    />
-                  </div>
-                  <div
-                    id={`canvasCreate`}
-                    style={{
-                      position: "absolute",
-                      zIndex: "20000",
-                      width: "300px",
-                      height: "300px"
-                    }}
-                  ></div>
+                  <video
+                    id="video"
+                    height="300px"
+                    width="300px"
+                    autoPlay
+                    muted
+                  />
                 </div>
-              </th>
-              <td>
-                <div className="text-right mb-3">
-                  <button type="button" className="btn btn-info btn-sm">
-                    &nbsp;สรุปผลเช็คชื่อ&nbsp;
-                  </button>
-                </div>
+                <div
+                  id={`canvasCreate`}
+                  style={{
+                    position: "absolute",
+                    zIndex: "20000",
+                    width: "300px",
+                    height: "300px"
+                  }}
+                ></div>
+              </div>
+            </th>
+            <td>
+              <div className="text-right mb-3">
+                <button
+                  type="button"
+                  className="btn btn-info btn-sm"
+                  data-toggle="modal"
+                  data-target="#summarycheck"
+                >
+                  &nbsp;สรุปผลเช็คชื่อ&nbsp;
+                </button>
+              </div>
 
-                <table class="table table-sm table-borderless">
+              <form>
+                <table class="table table-sm table-hover">
                   <thead>
                     <tr>
                       <th>ชื่อ - นามสกุล</th>
@@ -521,11 +549,127 @@ export default function check(props) {
                     })}
                   </tbody>
                 </table>
-              </td>
-            </tr>
-          </table>
+              </form>
+            </td>
+          </tr>
+        </table>
+
+        <div
+          class="modal fade"
+          id="summarycheck"
+          tabindex="-1"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">
+                  สรุปผลเช็คชื่อ
+                </h5>
+                <button
+                  type="button"
+                  class="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <center>
+                  <table
+                    className="table table-striped align-middle text-center"
+                    style={{ width: "100%" }}
+                  >
+                    <thead>
+                      <tr>
+                        <th
+                          style={{ width: "5%", backgroundColor: "#F7D9D9" }}
+                        ></th>
+                        <th style={{ backgroundColor: "#F7D9D9" }}>
+                          ข้อมูลรายวิชา
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {summarySub.map((variable, index) => {
+                        return (
+                          <tr key={variable.Schedule_ID}>
+                            <td style={{ width: "5%" }}></td>
+                            <td style={{ textAlign: "left" }}>
+                              รหัสวิชา : {variable.Subject_ID}
+                              <br />
+                              ชื่อวิชา : {variable.Subject_NameTH}
+                              <br />
+                              กลุ่มเรียน : {variable.Group_Study}
+                              <br />
+                              ประเภทวิชา : {variable.Subject_Type}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+
+                  <table
+                    className="table table-hover align-middle text-center"
+                    style={{ width: "100%" }}
+                  >
+                    <thead className="">
+                      <tr>
+                        <th
+                          style={{
+                            verticalAlign: "middle",
+                            backgroundColor: "#DDDDDD"
+                          }}
+                        >
+                          ชื่อ-นามสกุล
+                        </th>
+                        <th
+                          style={{
+                            verticalAlign: "middle",
+                            backgroundColor: "#DDDDDD"
+                          }}
+                        >
+                          วันเวลา
+                        </th>
+                        <th
+                          style={{
+                            verticalAlign: "middle",
+                            backgroundColor: "#DDDDDD"
+                          }}
+                        >
+                          สถานะ
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </center>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-danger"
+                  data-dismiss="modal"
+                >
+                  ยกเลิก
+                </button>
+                <button type="submit" className="btn btn-success mr-2">
+                  บันทึก
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-      </form>
+      </div>
     </TeacherTheme>
   );
 }

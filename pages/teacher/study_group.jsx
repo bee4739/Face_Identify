@@ -624,15 +624,29 @@ export default function Teacher(props) {
       </div>
 
       <div className="col-sm-12  mt-4 align-middle">
-        <table className="table table-striped align-middle text-center">
+        <table className="table table-hover align-middle text-center">
           <thead>
-            <tr>
-              <th width="45%" style={{ verticalAlign: "middle" }}>
+            <tr style={{ height: "60px" }}>
+              <th
+                width="45%"
+                style={{ verticalAlign: "middle", backgroundColor: "#DDDDDD" }}
+              >
                 รหัสวิชา - ชื่อวิชา
               </th>
-              <th style={{ verticalAlign: "middle" }}>กลุ่มเรียน</th>
-              <th style={{ verticalAlign: "middle" }}>ปีการศึกษา / ภาคเรียน</th>
-              <th width="25%" style={{ verticalAlign: "middle" }}>
+              <th
+                style={{ verticalAlign: "middle", backgroundColor: "#DDDDDD" }}
+              >
+                กลุ่มเรียน
+              </th>
+              <th
+                style={{ verticalAlign: "middle", backgroundColor: "#DDDDDD" }}
+              >
+                ปีการศึกษา / ภาคเรียน
+              </th>
+              <th
+                width="25%"
+                style={{ verticalAlign: "middle", backgroundColor: "#DDDDDD" }}
+              >
                 จัดการ
               </th>
             </tr>

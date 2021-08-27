@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme => ({
   },
   toolbar: {
     paddingRight: 24,
-    backgroundColor: "#ff3366"
+    backgroundColor: "#F25287"
   },
   toolbarIcon: {
     display: "flex",
@@ -69,7 +69,8 @@ const useStyles = makeStyles(theme => ({
     transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen
-    })
+    }),
+    backgroundColor: "#DDDDDD"
   },
   drawerPaperClose: {
     overflowX: "hidden",
@@ -85,8 +86,9 @@ const useStyles = makeStyles(theme => ({
   appBarSpacer: theme.mixins.toolbar,
   content: {
     flexGrow: 1,
-    height: "95vh",
-    overflow: "auto"
+    height: "97vh",
+    overflow: "auto",
+    backgroundColor: "#F9F3F3"
   },
   container: {
     paddingTop: theme.spacing(4),

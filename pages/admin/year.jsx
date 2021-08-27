@@ -665,17 +665,38 @@ export default function Admin(props) {
       </div>
 
       <div className="col-sm-12  mt-4 align-middle">
-        <table className="table table-striped align-middle text-center">
+        <table className="table table-hover align-middle text-center">
           <thead>
-            <tr>
-              <th style={{ verticalAlign: "middle" }}>ปีการศึกษา</th>
-              <th style={{ verticalAlign: "middle" }}>ภาคเรียน</th>
-              <th style={{ verticalAlign: "middle" }}>
+            <tr style={{ height: "60px" }}>
+              <th
+                style={{ verticalAlign: "middle", backgroundColor: "#DDDDDD" }}
+              >
+                ปีการศึกษา
+              </th>
+              <th
+                style={{ verticalAlign: "middle", backgroundColor: "#DDDDDD" }}
+              >
+                ภาคเรียน
+              </th>
+              <th
+                style={{ verticalAlign: "middle", backgroundColor: "#DDDDDD" }}
+              >
                 วันเริ่มต้นและวันสิ้นสุดปีการศึกษา
               </th>
-              <th style={{ verticalAlign: "middle" }}>วันสอบกลางภาค</th>
-              <th style={{ verticalAlign: "middle" }}>วันสอบปลายภาค</th>
-              <th width="15%" style={{ verticalAlign: "middle" }}>
+              <th
+                style={{ verticalAlign: "middle", backgroundColor: "#DDDDDD" }}
+              >
+                วันสอบกลางภาค
+              </th>
+              <th
+                style={{ verticalAlign: "middle", backgroundColor: "#DDDDDD" }}
+              >
+                วันสอบปลายภาค
+              </th>
+              <th
+                width="15%"
+                style={{ verticalAlign: "middle", backgroundColor: "#DDDDDD" }}
+              >
                 จัดการ
               </th>
             </tr>

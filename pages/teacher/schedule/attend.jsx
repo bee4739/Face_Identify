@@ -775,18 +775,10 @@ export default function Teacher(props) {
               d_start <= d_now &&
               d_now <= d_end
             ) {
-              // setBtStatus(true);
               document.getElementById("checkname").disabled = false;
             } else {
               document.getElementById("checkname").disabled = true;
             }
-            // console.log("ssss", date_now.getHours());
-            // console.log("d", target.getHours());
-            // console.log("oooo", date_now.getMonth());
-            // console.log("f", date.getFullYear());
-            // console.log("oosoo", date_now.getFullYear());
-
-            // alert(btStatus + "." + date_now.getDate() + "." + date.getDate());
           }}
         >
           <Inject services={[Day, Week, WorkWeek, Month]} />

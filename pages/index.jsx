@@ -20,8 +20,26 @@ export default function Home(props) {
   }, []);
 
   return (
-    <div className="spinner-border text-primary" role="status">
-      <span className="sr-only">Loading...</span>
+    <div
+      className="spinner-border text-primary"
+      role="status"
+      style={{
+        backgroundColor: "blue",
+        position: "absolute",
+        top: "200px",
+        left: "200px",
+        right: "200px",
+        bottom: "200px"
+        // justifyContent: "center",
+        // alignItems: "center"
+      }}
+    >
+      <span
+        className="sr-only"
+        // style={{ flex: "1", alignItems: "center", justifyContent: "center" }}
+      >
+        Loading...
+      </span>
     </div>
   );
 }

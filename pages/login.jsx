@@ -14,6 +14,7 @@ import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
 import { useRouter } from "next/router";
 import Swal from "sweetalert2";
+import Footer from "../components/Footer";
 
 const useStyles = makeStyles(theme => ({
   paper: {

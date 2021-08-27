@@ -533,25 +533,45 @@ export default function Admin(props) {
       </div>
 
       <div className="col-sm-12  mt-4 align-middle">
-        <table className="table table-striped align-middle text-center">
+        <table className="table table-hover align-middle text-center">
           <thead>
-            <tr>
-              <th width="15%" style={{ verticalAlign: "middle" }}>
+            <tr style={{ height: "60px" }}>
+              <th
+                width="15%"
+                style={{ verticalAlign: "middle", backgroundColor: "#DDDDDD" }}
+              >
                 รหัสวิชา
               </th>
-              <th style={{ verticalAlign: "middle" }}>ชื่อวิชาภาษาไทย</th>
-              <th style={{ verticalAlign: "middle" }}>ชื่อวิชาภาษาอังกฤษ</th>
-              <th width="13%" style={{ verticalAlign: "middle" }}>
+              <th
+                style={{ verticalAlign: "middle", backgroundColor: "#DDDDDD" }}
+              >
+                ชื่อวิชาภาษาไทย
+              </th>
+              <th
+                style={{ verticalAlign: "middle", backgroundColor: "#DDDDDD" }}
+              >
+                ชื่อวิชาภาษาอังกฤษ
+              </th>
+              <th
+                width="13%"
+                style={{ verticalAlign: "middle", backgroundColor: "#DDDDDD" }}
+              >
                 ทฤษฎี
                 <br />
                 (จำนวนชั่วโมง)
               </th>
-              <th width="13%" style={{ verticalAlign: "middle" }}>
+              <th
+                width="13%"
+                style={{ verticalAlign: "middle", backgroundColor: "#DDDDDD" }}
+              >
                 ปฏิบัติ
                 <br />
                 (จำนวนชั่วโมง)
               </th>
-              <th width="15%" style={{ verticalAlign: "middle" }}>
+              <th
+                width="15%"
+                style={{ verticalAlign: "middle", backgroundColor: "#DDDDDD" }}
+              >
                 จัดการ
               </th>
             </tr>

@@ -10,6 +10,7 @@ import TextField from "@material-ui/core/TextField";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+import HistoryIcon from "@material-ui/icons/History";
 
 const useStyles = makeStyles(theme => ({
   form: {
@@ -282,16 +283,28 @@ export default function student(props) {
         <div className="col-sm-12  mt-4 align-middle">
           <center>
             <table
-              className="table table-striped align-middle text-center"
+              className="table table-hover align-middle text-center"
               style={{ width: "80%" }}
             >
               <thead>
-                <tr>
-                  <th>รหัสวิชา - ชื่อวิชา (กลุ่มเรียน)</th>
+                <tr style={{ height: "60px" }}>
+                  <th
+                    style={{
+                      verticalAlign: "middle",
+                      backgroundColor: "#DDDDDD"
+                    }}
+                  >
+                    รหัสวิชา - ชื่อวิชา (กลุ่มเรียน)
+                  </th>
+                  <th
+                    style={{
+                      verticalAlign: "middle",
+                      backgroundColor: "#DDDDDD"
+                    }}
+                  ></th>
                 </tr>
               </thead>
               <tbody>
-                {process.env.api_url}
                 {student.map((variable, index) => {
                   return (
                     <tr key={index} style={{ textAlign: "left" }}>
@@ -299,6 +312,18 @@ export default function student(props) {
                         {variable.Subject_ID}&nbsp;-&nbsp;
                         {variable.Subject_NameTH}&nbsp;&nbsp;(
                         {variable.Group_Study})
+                      </td>
+                      <td>
+                        <button
+                          type="button"
+                          class="btn btn-info"
+                          // style={{ backgroundColor: "#F7D9D9" }}
+                          data-toggle="modal"
+                          data-target="#history"
+                        >
+                          <HistoryIcon />
+                          {/* <HistoryIcon style={{ color: "#F25287" }} /> */}
+                        </button>
                       </td>
                     </tr>
                   );
@@ -308,6 +333,73 @@ export default function student(props) {
           </center>
         </div>
       </form>
+
+      <div
+        class="modal fade"
+        id="history"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">
+                ประวัติการเข้าเรียน
+              </h5>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">First</th>
+                    <th scope="col">Last</th>
+                    <th scope="col">Handle</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">1</th>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                    <td>@mdo</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">2</th>
+                    <td>Jacob</td>
+                    <td>Thornton</td>
+                    <td>@fat</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>Larry</td>
+                    <td>the Bird</td>
+                    <td>@twitter</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-dismiss="modal"
+              >
+                ปิด
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </StudentTheme>
   );
 }
