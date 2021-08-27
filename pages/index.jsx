@@ -21,25 +21,48 @@ export default function Home(props) {
 
   return (
     <div
-      className="spinner-border text-primary"
-      role="status"
-      style={{
-        backgroundColor: "blue",
-        position: "absolute",
-        top: "200px",
-        left: "200px",
-        right: "200px",
-        bottom: "200px"
-        // justifyContent: "center",
-        // alignItems: "center"
-      }}
+      style={
+        {
+          // position: "absolute",
+          // top: "300px",
+          // left: "1000px"
+          // justifyContent: "center",
+          // alignItems: "center"
+        }
+      }
     >
-      <span
-        className="sr-only"
-        // style={{ flex: "1", alignItems: "center", justifyContent: "center" }}
+      {/* <table
+        style={{
+          height: "100vh",
+          width: "100vw",
+          verticalAlign: "middle",
+          textAlign: "center",
+          backgroundColor: "#F9F3F3"
+        }}
       >
-        Loading...
-      </span>
+        <tr>
+          <td>
+            <button
+              className="btn"
+              type="button"
+              disabled
+              style={{
+                backgroundColor: "#F25287",
+                color: "#000000",
+                width: "150px",
+                height: "40px"
+              }}
+            >
+              <span
+                className="spinner-grow spinner-grow-sm"
+                role="status"
+                aria-hidden="true"
+              ></span>
+              กำลังโหลด...
+            </button>
+          </td>
+        </tr>
+      </table> */}
     </div>
   );
 }
