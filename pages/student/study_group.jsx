@@ -54,6 +54,7 @@ export default function student(props) {
     axios
       .post(`${props.env.api_url}/getStudent`, JSON.stringify(data))
       .then(value => {
+        console.log("aaaa", value.data.result);
         setStudent(value.data.result);
       })
       .catch(reason => {
@@ -151,6 +152,20 @@ export default function student(props) {
     });
     // window.location.reload();
     // alert("ลบข้อมูลสำเร็จ");
+  };
+
+  const [historyCheck, setHistoryCheck] = useState([]);
+  const getHistoryCheck = data => {
+    data = { ...data, User_ID: props.userLogin.User_ID };
+    axios
+      .post(`${props.env.api_url}/getHistoryCheck`, JSON.stringify(data))
+      .then(value => {
+        console.log("getHistoryCheck", value.data.result);
+        setHistoryCheck(value.data.result);
+      })
+      .catch(reason => {
+        console.log(reason);
+      });
   };
 
   React.useEffect(() => {
@@ -320,6 +335,9 @@ export default function student(props) {
                           // style={{ backgroundColor: "#F7D9D9" }}
                           data-toggle="modal"
                           data-target="#history"
+                          onClick={() => {
+                            getHistoryCheck({ Class_ID: variable.Class_ID });
+                          }}
                         >
                           <HistoryIcon />
                           {/* <HistoryIcon style={{ color: "#F25287" }} /> */}
@@ -357,34 +375,55 @@ export default function student(props) {
               </button>
             </div>
             <div class="modal-body">
-              <table class="table table-striped">
+              <table
+                class="table table-hover"
+                style={{
+                  verticalAlign: "middle",
+                  textAlign: "center"
+                }}
+              >
                 <thead>
                   <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">First</th>
-                    <th scope="col">Last</th>
-                    <th scope="col">Handle</th>
+                    <th
+                      style={{
+                        backgroundColor: "#DDDDDD"
+                      }}
+                    >
+                      ครั้งที่
+                    </th>
+                    <th
+                      style={{
+                        backgroundColor: "#DDDDDD"
+                      }}
+                    >
+                      วัน - เวลา
+                    </th>
+                    <th
+                      style={{
+                        backgroundColor: "#DDDDDD"
+                      }}
+                    >
+                      สถานะ
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>Larry</td>
-                    <td>the Bird</td>
-                    <td>@twitter</td>
-                  </tr>
+                  {historyCheck.map((variable, index) => {
+                    return (
+                      <tr key={index}>
+                        <td
+                          style={{
+                            verticalAlign: "middle",
+                            textAlign: "center"
+                          }}
+                        >
+                          {index + 1}
+                        </td>
+                        <td>{variable.Time}</td>
+                        <td>{variable.Status}</td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
