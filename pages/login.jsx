@@ -1,20 +1,12 @@
 import React from "react";
-import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
-import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import Link from "@material-ui/core/Link";
-import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
 import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
 import { useRouter } from "next/router";
 import Swal from "sweetalert2";
-import Footer from "../components/Footer";
+import Link from "next/link";
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -24,8 +16,9 @@ const useStyles = makeStyles(theme => ({
     alignItems: "center"
   },
   form: {
-    width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1)
+    // width: "100%", // Fix IE 11 issue.
+    // marginTop: theme.spacing(1)
+    textAlign: "center"
   },
   submit: {
     margin: theme.spacing(3, 0, 2)
@@ -53,7 +46,6 @@ export default function SignIn(props) {
           // router.replace("/");
           setTimeout(() => {
             router.replace("/");
-            // window.location.replace(`${props.env.basePath}/`);
           }, 1000);
         } else {
           Swal.fire({
@@ -70,62 +62,170 @@ export default function SignIn(props) {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <img
-          src="https://upload.wikimedia.org/wikipedia/th/e/e0/RMUTI_KORAT.png"
-          className="rounded mx-auto d-block w-25"
-          alt="logo"
-        ></img>
-        <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
-          <Controller
-            name="username"
-            control={control}
-            defaultValue=""
-            render={({ onChange, value }) => (
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                label="Username"
-                onChange={onChange}
-                value={value}
-                type="text"
-              />
-            )}
-          />
+    <div className="login_content">
+      <div className="_bgc_left"></div>
+      <div className="_bgc_right"></div>
+      <div className="_form_login">
+        <div>
+          <img
+            src="https://upload.wikimedia.org/wikipedia/th/e/e0/RMUTI_KORAT.png"
+            alt="logo"
+            style={{ width: "7.5rem" }}
+          ></img>
+          <div>
+            <br />
+            <h4>ระบบบันทึกการเข้าเรียนด้วยการตรวจจับใบหน้า</h4>
+            <br />
+          </div>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Controller
+              name="username"
+              control={control}
+              defaultValue=""
+              render={({ onChange, value }) => (
+                <TextField
+                  variant="outlined"
+                  margin="dense"
+                  required
+                  fullWidth
+                  label="ชื่อผู้ใช้งาน"
+                  onChange={onChange}
+                  value={value}
+                  type="text"
+                  size="small"
+                />
+              )}
+            />
 
-          <Controller
-            name="password"
-            control={control}
-            defaultValue=""
-            render={({ onChange, value }) => (
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                label="Password"
-                onChange={onChange}
-                value={value}
-                type="password"
-              />
-            )}
-          />
+            <Controller
+              name="password"
+              control={control}
+              defaultValue=""
+              render={({ onChange, value }) => (
+                <TextField
+                  variant="outlined"
+                  margin="dense"
+                  required
+                  fullWidth
+                  label="รหัสผ่าน"
+                  onChange={onChange}
+                  value={value}
+                  type="password"
+                  size="small"
+                />
+              )}
+            />
 
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
-            Sign In
-          </Button>
-        </form>
+            <Button
+              className={classes.submit}
+              type="submit"
+              fullWidth
+              variant="contained"
+              style={{
+                backgroundColor: "#F25287",
+                color: "#DDDDDD"
+              }}
+            >
+              เข้าสู่ระบบ
+            </Button>
+            <Link href="/register">
+              <Button
+                fullWidth
+                variant="contained"
+                style={{ backgroundColor: "#F7D9D9" }}
+              >
+                สมัครสมาชิก
+              </Button>
+              {/* <div style={{ fontSize: "0.8rem" }}>สมัครสมาชิก</div> */}
+            </Link>
+          </form>
+        </div>
       </div>
-    </Container>
+
+      {/* <table
+        className="table align-middle text-center"
+        style={{
+          height: "97vh"
+        }}
+      >
+        <tr>
+          <td
+            style={{
+              backgroundColor: "#FFC0CB",
+              verticalAlign: "middle"
+            }}
+          >
+            <h2>ระบบบันทึกการเข้าเรียนด้วยการตรวจจับใบหน้า</h2>
+          </td>
+          <td
+            style={{
+              backgroundColor: "#F9F3F3",
+              verticalAlign: "middle"
+            }}
+          >
+            <div>
+              <img
+                src="https://upload.wikimedia.org/wikipedia/th/e/e0/RMUTI_KORAT.png"
+                alt="logo"
+                style={{ width: "8rem" }}
+              ></img>
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <Controller
+                  name="username"
+                  control={control}
+                  defaultValue=""
+                  render={({ onChange, value }) => (
+                    <TextField
+                      variant="outlined"
+                      margin="dense"
+                      required
+                      fullWidth
+                      label="ชื่อผู้ใช้งาน"
+                      onChange={onChange}
+                      value={value}
+                      type="text"
+                      size="small"
+                    />
+                  )}
+                />
+
+                <Controller
+                  name="password"
+                  control={control}
+                  defaultValue=""
+                  render={({ onChange, value }) => (
+                    <TextField
+                      variant="outlined"
+                      margin="dense"
+                      required
+                      fullWidth
+                      label="รหัสผ่าน"
+                      onChange={onChange}
+                      value={value}
+                      type="password"
+                      size="small"
+                    />
+                  )}
+                />
+
+                <Button
+                  className={classes.submit}
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  style={{
+                    backgroundColor: "#F25287",
+                    color: "#DDDDDD"
+                  }}
+                >
+                  เข้าสู่ระบบ
+                </Button>
+              </form>
+            </div>
+          </td>
+        </tr>
+      </table>
+     */}
+    </div>
   );
 }

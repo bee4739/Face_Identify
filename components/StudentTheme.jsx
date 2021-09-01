@@ -60,7 +60,8 @@ const useStyles = makeStyles(theme => ({
     display: "none"
   },
   title: {
-    flexGrow: 1
+    flexGrow: 1,
+    fontSize: "1.5rem"
   },
   drawerPaper: {
     position: "relative",
@@ -86,7 +87,7 @@ const useStyles = makeStyles(theme => ({
   appBarSpacer: theme.mixins.toolbar,
   content: {
     flexGrow: 1,
-    height: "97vh",
+    height: "calc(100vh - 45px)",
     overflow: "auto",
     backgroundColor: "#F9F3F3"
   },
@@ -172,10 +173,10 @@ export default function StudentTheme(props) {
             noWrap
             className={classes.title}
           >
-            Face Recognition System for Personal Identification in Class Room
+            ระบบบันทึกการเข้าเรียนด้วยการตรวจจับใบหน้า
           </Typography>
           <Typography className={classes.userN}>
-            Hello! <br />
+            สวัสดี! <br />
             <AccountCircleIcon />
             &nbsp;
             {props.userLogin ? props.userLogin.Username : ""}

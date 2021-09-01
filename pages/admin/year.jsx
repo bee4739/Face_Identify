@@ -391,15 +391,15 @@ export default function Admin(props) {
                 </div>
               </div>
               <div className="modal-footer">
+                <button type="submit" className="btn btn-success">
+                  เพิ่ม
+                </button>
                 <button
                   type="close"
                   className="btn btn-danger"
                   data-dismiss="modal"
                 >
                   ยกเลิก
-                </button>
-                <button type="submit" className="btn btn-success">
-                  เพิ่ม
                 </button>
               </div>
             </div>
@@ -645,15 +645,15 @@ export default function Admin(props) {
                       </div>
                     </div>
                     <div className="modal-footer">
+                      <button type="submit" className="btn btn-warning">
+                        แก้ไข
+                      </button>
                       <button
                         type="close"
                         className="btn btn-danger"
                         data-dismiss="modal"
                       >
                         ยกเลิก
-                      </button>
-                      <button type="submit" className="btn btn-warning">
-                        แก้ไข
                       </button>
                     </div>
                   </div>
@@ -702,7 +702,6 @@ export default function Admin(props) {
             </tr>
           </thead>
           <tbody>
-            {process.env.api_url}
             {data.map((variable, index) => {
               return (
                 <tr key={variable.Year_ID}>

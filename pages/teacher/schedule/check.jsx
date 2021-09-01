@@ -9,7 +9,6 @@ import { useState, useEffect } from "react";
 import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
 import Swal from "sweetalert2";
-import Link from "next/link";
 
 const useStyles = makeStyles(theme => ({
   form: {
@@ -54,6 +53,26 @@ export default function check(props) {
       .then(value => {
         console.log("summarySub", value.data.result);
         setSummarySub(value.data.result);
+      })
+      .catch(reason => {
+        console.log(reason);
+      });
+  };
+
+  const [summary, setSummary] = useState([]);
+  const getSummary = data => {
+    const params = new URLSearchParams(window.location.search);
+    axios
+      .post(
+        `${props.env.api_url}/getSummary`,
+        JSON.stringify({
+          ...data,
+          Class_ID: params.get("Class_ID")
+        })
+      )
+      .then(value => {
+        console.log("summary", value.data.result);
+        setSummary(value.data.result);
       })
       .catch(reason => {
         console.log(reason);
@@ -114,6 +133,8 @@ export default function check(props) {
 
   useEffect(() => {
     getSummarySub();
+    getSummary();
+
     const gettime = data => {
       const params = new URLSearchParams(window.location.search);
       axios
@@ -302,7 +323,7 @@ export default function check(props) {
       checkstatus = "ปกติ";
     }
 
-    if (stdChecked.length > 0 && checkstatus !== "") {
+    if (stdChecked.length > 0) {
       axios
         .post(
           `${props.env.api_url}/checkName`,
@@ -399,6 +420,11 @@ export default function check(props) {
               checkName(username);
             } else {
               username = null;
+              const box = resizedDetections[0].detection.box;
+              const drawBox = new faceapi.draw.DrawBox(box, {
+                label: "unknown"
+              });
+              drawBox.draw(canvas);
             }
           }
         }
@@ -454,7 +480,7 @@ export default function check(props) {
   return (
     <TeacherTheme {...props}>
       <div>
-        <table class="table table-borderless">
+        <table class="table table-borderless" style={{ width: "100%" }}>
           <tr>
             <th style={{ minWidth: "300px" }}>
               <div
@@ -497,8 +523,8 @@ export default function check(props) {
                 ></div>
               </div>
             </th>
-            <td>
-              <div className="text-right mb-3">
+            <td style={{ width: "40%" }}>
+              {/* <div className="text-right mb-3">
                 <button
                   type="button"
                   className="btn btn-info btn-sm"
@@ -507,15 +533,33 @@ export default function check(props) {
                 >
                   &nbsp;สรุปผลเช็คชื่อ&nbsp;
                 </button>
-              </div>
+              </div> */}
 
               <form>
                 <table class="table table-sm table-hover">
                   <thead>
                     <tr>
-                      <th>ชื่อ - นามสกุล</th>
-                      <th>วัน / เวลา</th>
-                      <th>สถานะ</th>
+                      <th
+                        style={{
+                          width: "50%"
+                        }}
+                      >
+                        ชื่อ - นามสกุล
+                      </th>
+                      <th
+                        style={{
+                          width: "40%"
+                        }}
+                      >
+                        วัน / เวลา
+                      </th>
+                      <th
+                        style={{
+                          width: "10%"
+                        }}
+                      >
+                        สถานะ
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -523,9 +567,8 @@ export default function check(props) {
                       return (
                         <tr key={index}>
                           <td>
-                            {variable.Std_FirstName}
-                            &nbsp;&nbsp;
-                            {variable.Std_LastName}
+                            {variable.Std_Title}
+                            {variable.Std_FirstName} {variable.Std_LastName}
                           </td>
                           <td>
                             {(() => {
@@ -595,7 +638,10 @@ export default function check(props) {
                     <tbody>
                       {summarySub.map((variable, index) => {
                         return (
-                          <tr key={variable.Schedule_ID}>
+                          <tr
+                            key={variable.Schedule_ID}
+                            style={{ backgroundColor: "#F9F3F3" }}
+                          >
                             <td style={{ width: "5%" }}></td>
                             <td style={{ textAlign: "left" }}>
                               รหัสวิชา : {variable.Subject_ID}
@@ -621,35 +667,81 @@ export default function check(props) {
                         <th
                           style={{
                             verticalAlign: "middle",
-                            backgroundColor: "#DDDDDD"
+                            backgroundColor: "#DDDDDD",
+                            width: "5%"
                           }}
                         >
-                          ชื่อ-นามสกุล
+                          ลำดับ
                         </th>
                         <th
                           style={{
                             verticalAlign: "middle",
-                            backgroundColor: "#DDDDDD"
+                            backgroundColor: "#DDDDDD",
+                            width: "55%"
                           }}
                         >
-                          วันเวลา
+                          ชื่อ - นามสกุล
                         </th>
                         <th
                           style={{
                             verticalAlign: "middle",
-                            backgroundColor: "#DDDDDD"
+                            backgroundColor: "#DDDDDD",
+                            width: "35%"
+                          }}
+                        >
+                          วัน - เวลา
+                        </th>
+                        <th
+                          style={{
+                            verticalAlign: "middle",
+                            backgroundColor: "#DDDDDD",
+                            width: "5%"
                           }}
                         >
                           สถานะ
                         </th>
                       </tr>
                     </thead>
+
                     <tbody>
-                      <tr>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>1</td>
-                      </tr>
+                      {summary.map((variable, index) => {
+                        return (
+                          <tr>
+                            <td
+                              style={{
+                                verticalAlign: "middle"
+                              }}
+                            >
+                              {index + 1}
+                            </td>
+                            <td
+                              style={{
+                                verticalAlign: "middle",
+                                textAlign: "left"
+                              }}
+                            >
+                              {variable.Std_Title}
+                              {variable.Std_FirstName} {variable.Std_LastName}
+                            </td>
+                            <td
+                              style={{
+                                verticalAlign: "middle"
+                              }}
+                            >
+                              {variable.Time == null ? "-" : variable.Time}
+                            </td>
+                            <td
+                              style={{
+                                verticalAlign: "middle"
+                              }}
+                            >
+                              {variable.Status == null
+                                ? "ขาด"
+                                : variable.Status}
+                            </td>
+                          </tr>
+                        );
+                      })}
                     </tbody>
                   </table>
                 </center>
@@ -657,13 +749,10 @@ export default function check(props) {
               <div class="modal-footer">
                 <button
                   type="button"
-                  className="btn btn-danger"
+                  className="btn btn-secondary"
                   data-dismiss="modal"
                 >
-                  ยกเลิก
-                </button>
-                <button type="submit" className="btn btn-success mr-2">
-                  บันทึก
+                  ปิด
                 </button>
               </div>
             </div>

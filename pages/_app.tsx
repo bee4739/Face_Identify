@@ -42,18 +42,21 @@ function MyApp({ Component, pageProps }) {
     <React.Fragment>
       <ThemeProvider theme={ThemeConfig}>
         <CssBaseline />
-        <Component
-          {...pageProps}
-          env={env}
-          openNav={openNav}
-          setOpenNav={e => {
-            setOpenNav(e);
-          }}
-          userLogin={userLogin}
-          setUserLogin={data => {
-            setUserLogin(data);
-          }}
-        />{" "}
+        <div className="content_display">
+          <Component
+            {...pageProps}
+            env={env}
+            openNav={openNav}
+            setOpenNav={e => {
+              setOpenNav(e);
+            }}
+            userLogin={userLogin}
+            setUserLogin={data => {
+              setUserLogin(data);
+            }}
+          />
+        </div>
+
         <Footer />
       </ThemeProvider>
     </React.Fragment>

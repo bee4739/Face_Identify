@@ -10,6 +10,7 @@ import axios from "axios";
 import TextField from "@material-ui/core/TextField";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+import { DataGrid } from "@material-ui/data-grid";
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -182,7 +183,6 @@ export default function Admin(props) {
           เพิ่มรายวิชา
         </button>
       </div>
-
       <div
         className="modal fade"
         id="AddSub"
@@ -326,6 +326,9 @@ export default function Admin(props) {
                 </div>
               </div>
               <div className="modal-footer">
+                <button type="submit" className="btn btn-success">
+                  เพิ่ม
+                </button>
                 <button
                   type="button"
                   className="btn btn-danger"
@@ -333,15 +336,11 @@ export default function Admin(props) {
                 >
                   ยกเลิก
                 </button>
-                <button type="submit" className="btn btn-success">
-                  เพิ่ม
-                </button>
               </div>
             </div>
           </form>
         </div>
       </div>
-
       {/* ///////////////////////////////////////////////////////////////////////////////////////////// */}
       <div
         className="modal fade"
@@ -513,15 +512,15 @@ export default function Admin(props) {
                       </div>
                     </div>
                     <div className="modal-footer">
+                      <button type="submit" className="btn btn-warning">
+                        แก้ไข
+                      </button>
                       <button
                         type="close"
                         className="btn btn-danger"
                         data-dismiss="modal"
                       >
                         ยกเลิก
-                      </button>
-                      <button type="submit" className="btn btn-warning">
-                        แก้ไข
                       </button>
                     </div>
                   </div>
@@ -577,7 +576,6 @@ export default function Admin(props) {
             </tr>
           </thead>
           <tbody>
-            {process.env.api_url}
             {data.map((variable, index) => {
               return (
                 <tr key={variable.Subject_PK}>

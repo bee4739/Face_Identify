@@ -35,3 +35,69 @@ a {
 .swal2-container{
   z-index: 20000 !important;
 }
+
+.content_display{
+  height: calc(100vh - 45px);
+}
+
+.footer_content{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .footer_text{
+    width: 100vw;
+    text-align: center;
+  }
+}
+
+.login_content{
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  text-align: center;
+
+  ._bgc_left{
+    position: fixed;
+    height: 100vh;
+    left: 0px;
+    width: 50vw;
+    background-color: #F7D9D9;
+    z-index: -1;
+  }
+
+  ._bgc_right{
+    position: fixed;
+    height: 100vh;
+    right: 0px;
+    width: 50vw;
+    background-color: #DDDDDD;
+    z-index: -1;
+  }
+
+
+  ._form_login{
+    width:100%;
+    max-width: 500px;
+    // max-height: 520px;
+    max-height: 550px;
+    height: 100%;
+    background-color: #F9F3F3;
+    display: inline-block;
+    padding: 20px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  }
+}
+
+.sd_camera{
+  box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
+  
+}
+
+@media only screen and (min-width: 600px) and (min-height: 520px) {
+  .login_content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

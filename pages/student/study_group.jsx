@@ -67,6 +67,7 @@ export default function student(props) {
       ...data,
       User_ID: props.userLogin.User_ID,
       Std_ID: props.userLogin.Std_ID,
+      Title: props.userLogin.Title,
       FirstName: props.userLogin.FirstName,
       LastName: props.userLogin.LastName,
       Study_Group: `${data.Study_Group}`.split(",")[0],
@@ -280,15 +281,15 @@ export default function student(props) {
                 </div>
               </div>
               <div className="modal-footer">
+                <button type="submit" className="btn btn-success">
+                  เพิ่ม
+                </button>
                 <button
                   type="button"
                   className="btn btn-danger"
                   data-dismiss="modal"
                 >
                   ยกเลิก
-                </button>
-                <button type="submit" className="btn btn-success">
-                  เพิ่ม
                 </button>
               </div>
             </div>
@@ -323,7 +324,11 @@ export default function student(props) {
                 {student.map((variable, index) => {
                   return (
                     <tr key={index} style={{ textAlign: "left" }}>
-                      <td>
+                      <td
+                        style={{
+                          verticalAlign: "middle"
+                        }}
+                      >
                         {variable.Subject_ID}&nbsp;-&nbsp;
                         {variable.Subject_NameTH}&nbsp;&nbsp;(
                         {variable.Group_Study})

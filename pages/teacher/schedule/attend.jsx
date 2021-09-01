@@ -491,15 +491,15 @@ export default function Teacher(props) {
                 </div>
               </div>
               <div className="modal-footer">
+                <button type="submit" className="btn btn-success">
+                  เพิ่ม
+                </button>
                 <button
                   type="button"
                   className="btn btn-danger"
                   data-dismiss="modal"
                 >
                   ยกเลิก
-                </button>
-                <button type="submit" className="btn btn-success">
-                  เพิ่ม
                 </button>
               </div>
             </div>
@@ -658,13 +658,6 @@ export default function Teacher(props) {
               </div>
               <div className="modal-footer">
                 <button
-                  type="button"
-                  className="btn btn-danger"
-                  data-dismiss="modal"
-                >
-                  ยกเลิก
-                </button>
-                <button
                   type="submit"
                   className="btn btn-success"
                   // onClick={() => {
@@ -672,6 +665,13 @@ export default function Teacher(props) {
                   // }}
                 >
                   เพิ่ม
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-danger"
+                  data-dismiss="modal"
+                >
+                  ยกเลิก
                 </button>
               </div>
             </div>
@@ -714,8 +714,8 @@ export default function Teacher(props) {
             var start_time = new Date(hms + e.data.data4);
             var end_time = new Date(hms + e.data.data5);
 
-            console.log(start_time);
-            console.log(end_time);
+            console.log("start_time", start_time);
+            console.log("end_time", end_time);
             var d_now = -1.0;
             var d_start = -1.0;
             var d_end = -1.0;
@@ -762,9 +762,9 @@ export default function Teacher(props) {
               d_end = parseFloat(s_end).toFixed(2);
             }
 
-            console.log(d_now);
-            console.log(d_start);
-            console.log(d_end);
+            console.log("d_now", d_now);
+            console.log("d_start", d_start);
+            console.log("d_end", d_end);
             console.log(d_start <= d_now);
             console.log(d_now <= d_end);
 
@@ -1079,15 +1079,15 @@ export default function Teacher(props) {
                       </div>
                     </div>
                     <div className="modal-footer">
+                      <button type="submit" className="btn btn-warning">
+                        แก้ไข
+                      </button>
                       <button
                         type="button"
                         className="btn btn-danger"
                         data-dismiss="modal"
                       >
                         ยกเลิก
-                      </button>
-                      <button type="submit" className="btn btn-warning">
-                        แก้ไข
                       </button>
                     </div>
                   </div>

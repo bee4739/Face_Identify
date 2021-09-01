@@ -426,15 +426,15 @@ export default function Teacher(props) {
                 </div>
               </div>
               <div className="modal-footer">
+                <button type="submit" className="btn btn-success">
+                  เพิ่ม
+                </button>
                 <button
                   type="button"
                   className="btn btn-danger"
                   data-dismiss="modal"
                 >
                   ยกเลิก
-                </button>
-                <button type="submit" className="btn btn-success">
-                  เพิ่ม
                 </button>
               </div>
             </div>
@@ -604,15 +604,15 @@ export default function Teacher(props) {
                       </div>
                     </div>
                     <div className="modal-footer">
+                      <button type="submit" className="btn btn-warning">
+                        แก้ไข
+                      </button>
                       <button
                         type="button"
                         className="btn btn-danger"
                         data-dismiss="modal"
                       >
                         ยกเลิก
-                      </button>
-                      <button type="submit" className="btn btn-warning">
-                        แก้ไข
                       </button>
                     </div>
                   </div>
@@ -741,23 +741,25 @@ export default function Teacher(props) {
                 </div>
                 <div class="modal-body">
                   <center>
-                    <table class="table" style={{ width: "80%" }}>
+                    <table class="table table-hover" style={{ width: "100%" }}>
                       <thead>
                         <tr>
                           <th
-                            width="30%"
+                            width="40%"
                             style={{
                               textAlign: "center",
-                              verticalAlign: "middle"
+                              verticalAlign: "middle",
+                              backgroundColor: "#DDDDDD"
                             }}
                           >
                             รหัสนักศึกษา
                           </th>
                           <th
-                            width="40%"
+                            width="50%"
                             style={{
                               textAlign: "center",
-                              verticalAlign: "middle"
+                              verticalAlign: "middle",
+                              backgroundColor: "#DDDDDD"
                             }}
                           >
                             ชื่อ - นามสกุล
@@ -766,7 +768,8 @@ export default function Teacher(props) {
                             width="10%"
                             style={{
                               textAlign: "center",
-                              verticalAlign: "middle"
+                              verticalAlign: "middle",
+                              backgroundColor: "#DDDDDD"
                             }}
                           >
                             จัดการ
@@ -791,6 +794,7 @@ export default function Teacher(props) {
                                   verticalAlign: "middle"
                                 }}
                               >
+                                {variable.Std_Title}
                                 {variable.Std_FirstName}
                                 &nbsp;&nbsp;
                                 {variable.Std_LastName}
