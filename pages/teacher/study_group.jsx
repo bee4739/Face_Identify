@@ -85,7 +85,8 @@ export default function Teacher(props) {
             title: "เพิ่มข้อมูลไม่สำเร็จ!",
             text: "กรุณาตรวจสอบข้อมูลให้ถูกต้อง",
             icon: "error",
-            showConfirmButton: true
+            showConfirmButton: true,
+            confirmButtonText: `ตกลง`
           });
         }
       })
@@ -130,7 +131,8 @@ export default function Teacher(props) {
                 title: "แก้ไขไม่สำเร็จ!",
                 text: "กรุณาตรวจสอบข้อมูลให้ถูกต้อง",
                 icon: "error",
-                showConfirmButton: true
+                showConfirmButton: true,
+                confirmButtonText: `ตกลง`
               });
             }
           })
@@ -644,7 +646,7 @@ export default function Teacher(props) {
                 ปีการศึกษา / ภาคเรียน
               </th>
               <th
-                width="25%"
+                width="20%"
                 style={{ verticalAlign: "middle", backgroundColor: "#DDDDDD" }}
               >
                 จัดการ
@@ -745,7 +747,17 @@ export default function Teacher(props) {
                       <thead>
                         <tr>
                           <th
-                            width="40%"
+                            width="5%"
+                            style={{
+                              verticalAlign: "middle",
+                              backgroundColor: "#DDDDDD"
+                            }}
+                          >
+                            ลำดับ
+                          </th>
+
+                          <th
+                            width="30%"
                             style={{
                               textAlign: "center",
                               verticalAlign: "middle",
@@ -755,7 +767,7 @@ export default function Teacher(props) {
                             รหัสนักศึกษา
                           </th>
                           <th
-                            width="50%"
+                            width="55%"
                             style={{
                               textAlign: "center",
                               verticalAlign: "middle",
@@ -780,6 +792,14 @@ export default function Teacher(props) {
                         {nameStd.map((variable, index) => {
                           return (
                             <tr key={index}>
+                              <td
+                                style={{
+                                  textAlign: "center",
+                                  verticalAlign: "middle"
+                                }}
+                              >
+                                {index + 1}
+                              </td>
                               <td
                                 style={{
                                   textAlign: "center",

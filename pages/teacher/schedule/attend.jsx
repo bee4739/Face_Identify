@@ -146,7 +146,8 @@ export default function Teacher(props) {
             title: "เพิ่มข้อมูลไม่สำเร็จ!",
             text: "กรุณาตรวจสอบข้อมูลให้ถูกต้อง",
             icon: "error",
-            showConfirmButton: true
+            showConfirmButton: true,
+            confirmButtonText: "ตกลง"
           });
         }
       })
@@ -191,7 +192,8 @@ export default function Teacher(props) {
                 title: "แก้ไขไม่สำเร็จ!",
                 text: "กรุณาตรวจสอบข้อมูลให้ถูกต้อง",
                 icon: "error",
-                showConfirmButton: true
+                showConfirmButton: true,
+                confirmButtonText: "ตกลง"
               });
             }
           })
@@ -295,7 +297,8 @@ export default function Teacher(props) {
             title: "เพิ่มข้อมูลไม่สำเร็จ!",
             text: "กรุณาตรวจสอบข้อมูลให้ถูกต้อง",
             icon: "error",
-            showConfirmButton: true
+            showConfirmButton: true,
+            confirmButtonText: "ตกลง"
           });
         }
       })

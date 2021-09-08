@@ -81,7 +81,8 @@ export default function student(props) {
         title: "เพิ่มข้อมูลไม่สำเร็จ!",
         text: "รหัสผ่านกลุ่มเรียนไม่ถูกต้อง",
         icon: "error",
-        showConfirmButton: true
+        showConfirmButton: true,
+        confirmButtonText: "ตกลง"
       });
     } else {
       axios
@@ -107,7 +108,8 @@ export default function student(props) {
               title: "เพิ่มข้อมูลไม่สำเร็จ!",
               text: "กรุณาตรวจสอบข้อมูลให้ถูกต้อง",
               icon: "error",
-              showConfirmButton: true
+              showConfirmButton: true,
+              confirmButtonText: "ตกลง"
             });
           }
         })

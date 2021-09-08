@@ -9,6 +9,7 @@ import { useState, useEffect } from "react";
 import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
 import Swal from "sweetalert2";
+import Link from "next/link";
 
 const useStyles = makeStyles(theme => ({
   form: {
@@ -26,6 +27,7 @@ const useStyles = makeStyles(theme => ({
 async function delay(ms) {
   return await new Promise(resolve => setTimeout(resolve, ms));
 }
+
 export default function check(props) {
   const classes = useStyles();
   const router = useRouter();
@@ -41,6 +43,7 @@ export default function check(props) {
   const [summarySub, setSummarySub] = useState([]);
   const getSummarySub = data => {
     const params = new URLSearchParams(window.location.search);
+
     axios
       .post(
         `${props.env.api_url}/getSummarySub`,
@@ -62,6 +65,7 @@ export default function check(props) {
   const [summary, setSummary] = useState([]);
   const getSummary = data => {
     const params = new URLSearchParams(window.location.search);
+
     axios
       .post(
         `${props.env.api_url}/getSummary`,
@@ -73,6 +77,28 @@ export default function check(props) {
       .then(value => {
         console.log("summary", value.data.result);
         setSummary(value.data.result);
+      })
+      .catch(reason => {
+        console.log(reason);
+      });
+  };
+
+  const [timeCheck, setTimeCheck] = useState([]);
+  const getTimeCheck = data => {
+    const params = new URLSearchParams(window.location.search);
+
+    axios
+      .post(
+        `${props.env.api_url}/getTimeCheck`,
+        JSON.stringify({
+          ...data,
+          Class_ID: params.get("Class_ID"),
+          Schedule_ID: params.get("Schedule_ID")
+        })
+      )
+      .then(value => {
+        console.log("setTimeCheck", value.data.result);
+        setTimeCheck(value.data.result);
       })
       .catch(reason => {
         console.log(reason);
@@ -132,9 +158,6 @@ export default function check(props) {
   };
 
   useEffect(() => {
-    getSummarySub();
-    getSummary();
-
     const gettime = data => {
       const params = new URLSearchParams(window.location.search);
       axios
@@ -241,6 +264,8 @@ export default function check(props) {
     var n = Date.now();
     var date_now = new Date(n);
 
+    console.log("date_now", date_now);
+
     var hms =
       date_now.getFullYear.toString() +
       "-" +
@@ -248,6 +273,7 @@ export default function check(props) {
       "-" +
       date_now.getDate().toString() +
       " ";
+
     var start_time = new Date(hms + start_Time);
     var end_time = new Date(hms + end_Time);
     var late_time = new Date(hms + time);
@@ -337,13 +363,25 @@ export default function check(props) {
         .then(value => {
           console.log(value);
           if (value.data.rowCount > 0) {
+            Swal.fire({
+              title: "บันทึกการเข้าเรียนสำเร็จ!",
+              text: "",
+              icon: "success",
+              showConfirmButton: false,
+              timer: 1000
+            });
             setListStudent(value.data.result);
+            console.log("setListStudent", value.data.result);
           }
         })
         .catch(reason => {
           console.log(reason);
         });
     }
+
+    getSummarySub();
+    getSummary();
+    getTimeCheck();
   }, [stdChecked]);
 
   async function Webcam() {
@@ -523,39 +561,65 @@ export default function check(props) {
                 ></div>
               </div>
             </th>
-            <td style={{ width: "40%" }}>
-              {/* <div className="text-right mb-3">
+            <td style={{ width: "50%" }}>
+              {/* <Link href="/teacher/summaryCheck/"> </Link> */}
+              <div className="text-right mb-3">
                 <button
                   type="button"
                   className="btn btn-info btn-sm"
                   data-toggle="modal"
                   data-target="#summarycheck"
+                  //    onClick={() => {
+                  //   insertCompensate({ Schedule_ID: schedule.data7 });
+                  // }}
                 >
-                  &nbsp;สรุปผลเช็คชื่อ&nbsp;
+                  สรุปผลเช็คชื่อ
                 </button>
-              </div> */}
+              </div>
 
               <form>
-                <table class="table table-sm table-hover">
+                <table
+                  class="table table-sm table-hover"
+                  style={{ width: "100%" }}
+                >
                   <thead>
                     <tr>
                       <th
                         style={{
-                          width: "50%"
+                          width: "5%",
+                          textAlign: "center",
+                          verticalAlign: "middle",
+                          backgroundColor: "#DDDDDD"
+                        }}
+                      >
+                        ลำดับ
+                      </th>
+                      <th
+                        style={{
+                          width: "50%",
+                          textAlign: "center",
+                          verticalAlign: "middle",
+                          backgroundColor: "#DDDDDD"
                         }}
                       >
                         ชื่อ - นามสกุล
                       </th>
                       <th
                         style={{
-                          width: "40%"
+                          width: "40%",
+                          textAlign: "center",
+                          verticalAlign: "middle",
+                          backgroundColor: "#DDDDDD"
                         }}
                       >
                         วัน / เวลา
                       </th>
                       <th
                         style={{
-                          width: "10%"
+                          width: "5%",
+                          textAlign: "center",
+                          verticalAlign: "middle",
+                          backgroundColor: "#DDDDDD"
                         }}
                       >
                         สถานะ
@@ -566,26 +630,68 @@ export default function check(props) {
                     {nameStd.map((variable, index) => {
                       return (
                         <tr key={index}>
-                          <td>
+                          <td
+                            style={{
+                              textAlign: "center",
+                              verticalAlign: "middle"
+                            }}
+                          >
+                            {index + 1}
+                          </td>
+                          <td
+                            style={{
+                              verticalAlign: "middle"
+                            }}
+                          >
                             {variable.Std_Title}
                             {variable.Std_FirstName} {variable.Std_LastName}
                           </td>
-                          <td>
+                          <td
+                            style={{
+                              verticalAlign: "middle"
+                            }}
+                          >
                             {(() => {
                               let std = listStudent.filter(
                                 e => `${e.Username}` == `${variable.Username}`
                               );
-                              if (std.length > 0) return std[0]["Time"];
-                              else return "";
+                              if (std.length > 0) {
+                                return std[0]["Time"];
+                              } else {
+                                let tc = timeCheck.filter(
+                                  e => `${e.Username}` == `${variable.Username}`
+                                );
+                                if (tc.length > 0) return tc[0]["Time"];
+                                else return "";
+                              }
                             })()}
                           </td>
-                          <td>
-                            {stdChecked.indexOf(`${variable.Username}`) !=
+                          <td
+                            style={{
+                              textAlign: "center",
+                              verticalAlign: "middle"
+                            }}
+                          >
+                            {(() => {
+                              let std = listStudent.filter(
+                                e => `${e.Username}` == `${variable.Username}`
+                              );
+                              if (std.length > 0) {
+                                return <CheckIcon />;
+                              } else {
+                                let tc = timeCheck.filter(
+                                  e => `${e.Username}` == `${variable.Username}`
+                                );
+                                if (tc.length > 0) return <CheckIcon />;
+                                else return <ClearIcon />;
+                              }
+                            })()}
+                            {/* {stdChecked.indexOf(`${variable.Username}`) !=
                             -1 ? (
                               <CheckIcon />
                             ) : (
                               <ClearIcon />
-                            )}
+                            )} */}
                           </td>
                         </tr>
                       );
@@ -702,7 +808,6 @@ export default function check(props) {
                         </th>
                       </tr>
                     </thead>
-
                     <tbody>
                       {summary.map((variable, index) => {
                         return (
@@ -747,6 +852,9 @@ export default function check(props) {
                 </center>
               </div>
               <div class="modal-footer">
+                <button type="button" className="btn btn-success">
+                  บันทึก
+                </button>
                 <button
                   type="button"
                   className="btn btn-secondary"

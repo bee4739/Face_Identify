@@ -52,7 +52,8 @@ export default function SignIn(props) {
             title: "เข้าสู่ระบบไม่สำเร็จ!",
             text: "กรุณาตรวจสอบข้อมูล",
             icon: "error",
-            showConfirmButton: true
+            showConfirmButton: true,
+            confirmButtonText: "ตกลง"
           });
         }
       })
@@ -128,16 +129,6 @@ export default function SignIn(props) {
             >
               เข้าสู่ระบบ
             </Button>
-            <Link href="/register">
-              <Button
-                fullWidth
-                variant="contained"
-                style={{ backgroundColor: "#F7D9D9" }}
-              >
-                สมัครสมาชิก
-              </Button>
-              {/* <div style={{ fontSize: "0.8rem" }}>สมัครสมาชิก</div> */}
-            </Link>
           </form>
         </div>
       </div>
