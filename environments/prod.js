@@ -1,6 +1,6 @@
 module.exports = {
-  basePath: "/Face_Identify",
+  basePath: "",
   mode: "Production",
-  api_url: "http://localhost/Face_Identify/api/index.php",
-  imageStudentPath: "/Face_Identify/api/imageStudent",
+  api_url: "https://www.fpc.rmuti.ac.th/api/index.php",
+  imageStudentPath: "https://www.fpc.rmuti.ac.th/api/imageStudent"
 };

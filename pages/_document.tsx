@@ -29,8 +29,9 @@ class MyDocument extends Document {
 
   render() {
     return (
-      <Html>
+      <Html lang="th">
         <Head>
+          <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
           <title>Face Recognition System</title>
           <link
             rel="stylesheet"

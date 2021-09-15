@@ -66,12 +66,48 @@ export default function check(props) {
   const getSummary = data => {
     const params = new URLSearchParams(window.location.search);
 
+    var n = Date.now();
+    var date_now = new Date(n);
+    var dd = "";
+    if (date_now.getMonth() + 1 < 10 && date_now.getDate() < 10) {
+      dd =
+        date_now.getFullYear() +
+        "-0" +
+        (date_now.getMonth() + 1) +
+        "-0" +
+        date_now.getDate();
+    } else if (date_now.getMonth() + 1 < 10) {
+      dd =
+        date_now.getFullYear() +
+        "-0" +
+        (date_now.getMonth() + 1) +
+        "-" +
+        date_now.getDate();
+    } else if (date_now.getDate() < 10) {
+      dd =
+        date_now.getFullYear() +
+        "-" +
+        (date_now.getMonth() + 1) +
+        "-0" +
+        date_now.getDate();
+    } else {
+      dd =
+        date_now.getFullYear() +
+        "-" +
+        (date_now.getMonth() + 1) +
+        "-" +
+        date_now.getDate();
+    }
+    console.log("dd", dd);
+
     axios
       .post(
         `${props.env.api_url}/getSummary`,
         JSON.stringify({
           ...data,
-          Class_ID: params.get("Class_ID")
+          Class_ID: params.get("Class_ID"),
+          Schedule_ID: params.get("Schedule_ID"),
+          date: dd
         })
       )
       .then(value => {
@@ -251,6 +287,10 @@ export default function check(props) {
     })();
 
     gettime();
+
+    getSummarySub();
+    getSummary();
+    getTimeCheck();
   }, [end_Time]);
   // console.log(time);
 
@@ -378,10 +418,6 @@ export default function check(props) {
           console.log(reason);
         });
     }
-
-    getSummarySub();
-    getSummary();
-    getTimeCheck();
   }, [stdChecked]);
 
   async function Webcam() {
