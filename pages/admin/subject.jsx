@@ -10,7 +10,6 @@ import axios from "axios";
 import TextField from "@material-ui/core/TextField";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
-import { DataGrid } from "@material-ui/data-grid";
 
 const useStyles = makeStyles(theme => ({
   button: {

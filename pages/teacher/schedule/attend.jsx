@@ -25,7 +25,6 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import HowToRegIcon from "@material-ui/icons/HowToReg";
 import Link from "next/link";
-import { TimePicker } from "@material-ui/pickers";
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -55,6 +54,17 @@ export default function Teacher(props) {
   const classes = useStyles();
   const router = useRouter();
   const { control, handleSubmit, reset } = useForm();
+
+  const getSd = data => {
+    axios
+      .post(`${props.env.api_url}/getSd`, JSON.stringify(data))
+      .then(value => {
+        console.log("data", value.data.result);
+      })
+      .catch(reason => {
+        console.log(reason);
+      });
+  };
 
   const [sub, setSub] = useState([]);
   const [dayList, setDayList] = useState([]);
@@ -834,8 +844,10 @@ export default function Teacher(props) {
                           className="btn btn-success"
                           style={{ height: 40, width: 100 }}
                           onClick={() => {
-                            // var d = new Date();
-                            // alert(dateSelect.data4);
+                            getSd({
+                              Class_ID: dateSelect.data8,
+                              Schedule_ID: dateSelect.data7
+                            });
                           }}
                         >
                           <HowToRegIcon />
@@ -848,9 +860,6 @@ export default function Teacher(props) {
                         data-toggle="modal"
                         data-target="#compensate"
                         style={{ height: 40, width: 100 }}
-                        // onClick={() => {
-                        //   listNameStd({ Class_ID: variable.Class_ID });
-                        // }}
                         onClick={() => {
                           setSchedule(dateSelect);
                           // console.log("sc", dateSelect.data7);

@@ -68,6 +68,7 @@ export default function Teacher(props) {
   React.useEffect(() => {
     getYear();
     getSubject();
+    // getShowresulte();
   }, []);
 
   return (
@@ -100,10 +101,10 @@ export default function Teacher(props) {
                     <option value="" disabled="disabled">
                       กรุณาเลือกปีการศึกษา...
                     </option>
-                    {year.map((variable, index) => {
+                    {year.map((y, index) => {
                       return (
-                        <option key={index} value={variable.Year_ID}>
-                          {variable.Year} - {variable.Term}
+                        <option key={index} value={y.Year_ID}>
+                          {y.Year} - {y.Term}
                         </option>
                       );
                     })}
@@ -133,10 +134,10 @@ export default function Teacher(props) {
                     <option value="" disabled="disabled">
                       กรุณาเลือกวิชา...
                     </option>
-                    {subject.map((variable, index) => {
+                    {subject.map((s, index) => {
                       return (
-                        <option key={index} value={variable.Subject_PK}>
-                          {variable.Subject_ID} - {variable.Subject_NameTH}
+                        <option key={index} value={s.Subject_PK}>
+                          {s.Subject_ID} - {s.Subject_NameTH} ({s.Group_Study})
                         </option>
                       );
                     })}

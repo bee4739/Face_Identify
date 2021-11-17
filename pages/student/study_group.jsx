@@ -426,7 +426,11 @@ export default function student(props) {
                         >
                           {index + 1}
                         </td>
-                        <td>{variable.Time}</td>
+                        <td>
+                          {variable.Status == "ขาด" || variable.Status == "ลา"
+                            ? `${variable.Date}`
+                            : `${variable.Time}`}
+                        </td>
                         <td>{variable.Status}</td>
                       </tr>
                     );

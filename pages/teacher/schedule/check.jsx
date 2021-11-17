@@ -9,7 +9,8 @@ import { useState, useEffect } from "react";
 import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
 import Swal from "sweetalert2";
-import Link from "next/link";
+import SaveIcon from "@material-ui/icons/Save";
+import TextField from "@material-ui/core/TextField";
 
 const useStyles = makeStyles(theme => ({
   form: {
@@ -41,6 +42,8 @@ export default function check(props) {
   const [end_Time, setEnd_Time] = useState("");
 
   const [summarySub, setSummarySub] = useState([]);
+  const [lateSelected, setLateSetected] = useState({});
+
   const getSummarySub = data => {
     const params = new URLSearchParams(window.location.search);
 
@@ -117,6 +120,64 @@ export default function check(props) {
       .catch(reason => {
         console.log(reason);
       });
+  };
+
+  const [statusCh, setStatusCh] = useState({});
+
+  const onUpdateStatus = data => {
+    let countRound = data?.countRound ?? 0;
+
+    if (lateSelected?.[statusCh.listIndex] == undefined && countRound < 2) {
+      onUpdateStatus({ ...data, countRound: countRound });
+      return;
+    }
+
+    data = {
+      ...data,
+      Class_ID: statusCh.Class_ID,
+      Schedule_ID: statusCh.Schedule_ID,
+      Std_No: statusCh.Std_No,
+      Times: statusCh.time,
+      Date: statusCh.Date,
+      ddStatus: lateSelected[statusCh.listIndex]
+    };
+
+    axios
+      .post(`${props.env.api_url}/updateStatus`, JSON.stringify(data))
+      .then(value => {
+        if (value.data.isQuery == true) {
+          console.log(value.data);
+          Swal.fire({
+            title: "บันทึกการมาเรียนสำเร็จ!",
+            text: "",
+            icon: "success",
+            showConfirmButton: false,
+            timer: 1000
+          });
+          document.getElementById(
+            `saveStatus${statusCh.listIndex}`
+          ).disabled = true;
+
+          // setTimeout(() => {
+          //   window.location.reload();
+          // }, 1000);
+          // setTimeout(window.location.reload(), 5000);
+        } else {
+          Swal.fire({
+            title: "แก้ไขไม่สำเร็จ!",
+            text: "กรุณาตรวจสอบข้อมูลให้ถูกต้อง",
+            icon: "error",
+            showConfirmButton: true,
+            confirmButtonText: "ตกลง"
+          });
+          console.log("สถานะ", value.data);
+        }
+      })
+      .catch(reason => {
+        console.log(reason);
+      });
+
+    // window.location.reload();
   };
 
   const [timeCheck, setTimeCheck] = useState([]);
@@ -289,7 +350,7 @@ export default function check(props) {
     gettime();
 
     getSummarySub();
-    getSummary();
+
     getTimeCheck();
   }, [end_Time]);
   // console.log(time);
@@ -412,6 +473,7 @@ export default function check(props) {
             });
             setListStudent(value.data.result);
             console.log("setListStudent", value.data.result);
+            getSummary();
           }
         })
         .catch(reason => {
@@ -747,159 +809,159 @@ export default function check(props) {
           aria-hidden="true"
         >
           <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">
-                  สรุปผลเช็คชื่อ
-                </h5>
-                <button
-                  type="button"
-                  class="close"
-                  data-dismiss="modal"
-                  aria-label="Close"
-                >
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <center>
-                  <table
-                    className="table table-striped align-middle text-center"
-                    style={{ width: "100%" }}
+            <form onSubmit={handleSubmit(onUpdateStatus)}>
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">
+                    สรุปผลเช็คชื่อ
+                  </h5>
+                  <button
+                    type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close"
                   >
-                    <thead>
-                      <tr>
-                        <th
-                          style={{ width: "5%", backgroundColor: "#F7D9D9" }}
-                        ></th>
-                        <th style={{ backgroundColor: "#F7D9D9" }}>
-                          ข้อมูลรายวิชา
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {summarySub.map((variable, index) => {
-                        return (
-                          <tr
-                            key={variable.Schedule_ID}
-                            style={{ backgroundColor: "#F9F3F3" }}
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <center>
+                    <table
+                      className="table table-hover align-middle text-center"
+                      style={{ width: "100%" }}
+                    >
+                      <thead className="">
+                        <tr>
+                          <th
+                            style={{
+                              verticalAlign: "middle",
+                              backgroundColor: "#DDDDDD",
+                              width: "5%"
+                            }}
                           >
-                            <td style={{ width: "5%" }}></td>
-                            <td style={{ textAlign: "left" }}>
-                              รหัสวิชา : {variable.Subject_ID}
-                              <br />
-                              ชื่อวิชา : {variable.Subject_NameTH}
-                              <br />
-                              กลุ่มเรียน : {variable.Group_Study}
-                              <br />
-                              ประเภทวิชา : {variable.Subject_Type}
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-
-                  <table
-                    className="table table-hover align-middle text-center"
-                    style={{ width: "100%" }}
+                            ลำดับ
+                          </th>
+                          <th
+                            style={{
+                              verticalAlign: "middle",
+                              backgroundColor: "#DDDDDD",
+                              width: "55%"
+                            }}
+                          >
+                            ชื่อ - นามสกุล
+                          </th>
+                          <th
+                            style={{
+                              verticalAlign: "middle",
+                              backgroundColor: "#DDDDDD",
+                              width: "35%"
+                            }}
+                          >
+                            วัน - เวลา
+                          </th>
+                          <th
+                            style={{
+                              verticalAlign: "middle",
+                              backgroundColor: "#DDDDDD",
+                              width: "5%"
+                            }}
+                          >
+                            สถานะ
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {summary.map((variable, index) => {
+                          return (
+                            <tr>
+                              <td
+                                style={{
+                                  verticalAlign: "middle"
+                                }}
+                              >
+                                {index + 1}
+                              </td>
+                              <td
+                                style={{
+                                  verticalAlign: "middle",
+                                  textAlign: "left"
+                                }}
+                              >
+                                {variable.Std_Title}
+                                {variable.Std_FirstName} {variable.Std_LastName}
+                              </td>
+                              <td
+                                style={{
+                                  verticalAlign: "middle"
+                                }}
+                              >
+                                <div>
+                                  {/* <Controller
+                                    name="ddStatus"
+                                    defaultValue=""
+                                    control={control}
+                                    variant="outlined"
+                                    size="small"
+                                    render={({ onChange, value }) => (
+                                      
+                                    )}
+                                  /> */}
+                                  <select
+                                    className="form-control"
+                                    onChange={e => {
+                                      // console.log(e.target.value);
+                                      setLateSetected(prve => {
+                                        let tmp = prve;
+                                        tmp[`${index}`] = e.target.value;
+                                        return tmp;
+                                      });
+                                    }}
+                                    defaultValue={
+                                      lateSelected?.[`${index}`] ?? ""
+                                    }
+                                  >
+                                    <option value="ขาด">ขาด</option>
+                                    <option value="ลา">ลา</option>
+                                  </select>
+                                </div>
+                              </td>
+                              <td>
+                                <button
+                                  id={`saveStatus${index}`}
+                                  type="submit"
+                                  className="btn btn-success"
+                                  style={{
+                                    padding: "2px 2px"
+                                  }}
+                                  onClick={() => {
+                                    setStatusCh({
+                                      ...variable,
+                                      listIndex: index
+                                    });
+                                    console.log(variable);
+                                  }}
+                                >
+                                  <SaveIcon />
+                                </button>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </center>
+                </div>
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    data-dismiss="modal"
                   >
-                    <thead className="">
-                      <tr>
-                        <th
-                          style={{
-                            verticalAlign: "middle",
-                            backgroundColor: "#DDDDDD",
-                            width: "5%"
-                          }}
-                        >
-                          ลำดับ
-                        </th>
-                        <th
-                          style={{
-                            verticalAlign: "middle",
-                            backgroundColor: "#DDDDDD",
-                            width: "55%"
-                          }}
-                        >
-                          ชื่อ - นามสกุล
-                        </th>
-                        <th
-                          style={{
-                            verticalAlign: "middle",
-                            backgroundColor: "#DDDDDD",
-                            width: "35%"
-                          }}
-                        >
-                          วัน - เวลา
-                        </th>
-                        <th
-                          style={{
-                            verticalAlign: "middle",
-                            backgroundColor: "#DDDDDD",
-                            width: "5%"
-                          }}
-                        >
-                          สถานะ
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {summary.map((variable, index) => {
-                        return (
-                          <tr>
-                            <td
-                              style={{
-                                verticalAlign: "middle"
-                              }}
-                            >
-                              {index + 1}
-                            </td>
-                            <td
-                              style={{
-                                verticalAlign: "middle",
-                                textAlign: "left"
-                              }}
-                            >
-                              {variable.Std_Title}
-                              {variable.Std_FirstName} {variable.Std_LastName}
-                            </td>
-                            <td
-                              style={{
-                                verticalAlign: "middle"
-                              }}
-                            >
-                              {variable.Time == null ? "-" : variable.Time}
-                            </td>
-                            <td
-                              style={{
-                                verticalAlign: "middle"
-                              }}
-                            >
-                              {variable.Status == null
-                                ? "ขาด"
-                                : variable.Status}
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </center>
+                    ปิด
+                  </button>
+                </div>
               </div>
-              <div class="modal-footer">
-                <button type="button" className="btn btn-success">
-                  บันทึก
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  data-dismiss="modal"
-                >
-                  ปิด
-                </button>
-              </div>
-            </div>
+            </form>
           </div>
         </div>
       </div>
