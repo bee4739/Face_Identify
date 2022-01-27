@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 // import '../node_modules/boostrap/dist/css/boostrap.min.css';
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
+import TextField from "@material-ui/core/TextField";
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -22,8 +23,39 @@ export default function Teacher(props) {
   const classes = useStyles();
   const router = useRouter();
   const { control, handleSubmit, handleChange } = useForm();
+
   const [ddyear, setddYear] = useState("");
   const [ddsubject, setddSubject] = useState("");
+  // const [scoreTotal, setScoreTotal] = useState({});
+  const [scoreSum, setScoreSum] = useState({});
+
+  const [scoreLate, setScoreLate] = useState({});
+
+  const [rsDate, setrsDate] = useState([]);
+  const getrsDate = data => {
+    axios
+      .post(`${props.env.api_url}/rsDate`, JSON.stringify(data))
+      .then(value => {
+        setrsDate(value.data.result);
+        console.log("ssss", value.data.result);
+      })
+      .catch(reason => {
+        console.log(reason);
+      });
+  };
+
+  const [rsStatus, setrsStatus] = useState([]);
+  const getrsStatus = data => {
+    axios
+      .post(`${props.env.api_url}/rsStatus`, JSON.stringify(data))
+      .then(value => {
+        setrsStatus(value.data.result);
+        console.log("ssss", value.data.result);
+      })
+      .catch(reason => {
+        console.log(reason);
+      });
+  };
 
   const [year, setYear] = useState([]);
   const getYear = data => {
@@ -68,7 +100,6 @@ export default function Teacher(props) {
   React.useEffect(() => {
     getYear();
     getSubject();
-    // getShowresulte();
   }, []);
 
   return (
@@ -83,76 +114,86 @@ export default function Teacher(props) {
               <label>ปีการศึกษา : </label>
             </div>
             <div className="col-sm-6 mt-2 mb-2 align-middle text-left">
-              <Controller
-                name="Year_ID"
-                defaultValue=""
-                control={control}
-                variant="outlined"
-                // onChange={setddYear(value)}
-                render={({ onChange, value }) => (
-                  <select
-                    className="form-control"
-                    onChange={onChange}
-                    //onSelect={() => {
-                    //  setddYear(value);
-                    //}}
-                    value={value}
-                  >
-                    <option value="" disabled="disabled">
-                      กรุณาเลือกปีการศึกษา...
+              <select
+                className="form-control"
+                onChange={e => {
+                  setddYear(e.target.value);
+                }}
+                value={ddyear}
+              >
+                <option value="" disabled="disabled">
+                  กรุณาเลือกปีการศึกษา...
+                </option>
+                {year.map((y, index) => {
+                  return (
+                    <option key={index} value={y.Year_ID}>
+                      {y.Year} - {y.Term}
                     </option>
-                    {year.map((y, index) => {
-                      return (
-                        <option key={index} value={y.Year_ID}>
-                          {y.Year} - {y.Term}
-                        </option>
-                      );
-                    })}
-                  </select>
-                )}
-              />
+                  );
+                })}
+              </select>
             </div>
             <div className="col-sm-5 mt-2 align-middle text-right">
               <label>วิชา : </label>
             </div>
             <div className="col-sm-6 mt-2 mb-2 align-middle text-left">
-              <Controller
-                name="Subject_ID"
-                defaultValue=""
-                control={control}
-                variant="outlined"
-                //onChange={setddSubject(value)}
-                render={({ onChange, value }) => (
-                  <select
-                    className="form-control"
-                    onChange={onChange}
-                    //onSelect={() => {
-                    //  setddSubject(value);
-                    //}}
-                    value={value}
-                  >
-                    <option value="" disabled="disabled">
-                      กรุณาเลือกวิชา...
-                    </option>
-                    {subject.map((s, index) => {
-                      return (
-                        <option key={index} value={s.Subject_PK}>
-                          {s.Subject_ID} - {s.Subject_NameTH} ({s.Group_Study})
-                        </option>
-                      );
-                    })}
-                  </select>
-                )}
-              />
+              <select
+                className="form-control"
+                onChange={e => {
+                  setddSubject(e.target.value);
+                }}
+                defaultValue={ddsubject}
+              >
+                <option value="" disabled="disabled">
+                  กรุณาเลือกวิชา...
+                </option>
+                {subject
+                  .filter(e => e.Year_ID == ddyear)
+                  .map((s, index) => {
+                    return (
+                      <option key={index} value={s.Class_ID}>
+                        {s.Subject_ID} - {s.Subject_NameTH} ({s.Group_Study})
+                      </option>
+                    );
+                  })}
+              </select>
             </div>
+            {/* <div className="col-sm-5 mt-2 align-middle text-right">
+              <label>กำหนดคะแนนมาสาย : </label>
+            </div>
+            <div className="col-sm-6 mt-2 mb-2 align-middle text-left">
+              <select
+                className="form-control"
+                onChange={e => {
+                  setScoreLate(e.target.value);
+                }}
+                defaultValue={scoreLate}
+              >
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+              </select>
+            </div> */}
           </div>
         </div>
+
         <div className={classes.button}>
           <button
-            type="submit"
+            type="button"
             className="btn btn-success ml-2 mr-2 mb-4 mt-4 "
-            data-toggle="modal"
-            data-target="#AddSub"
+            onClick={() => {
+              getrsStatus({ dds: ddsubject });
+              getrsDate({ dds: ddsubject });
+              getShowresulte({ dds: ddsubject });
+            }}
           >
             ตกลง
           </button>
@@ -160,36 +201,105 @@ export default function Teacher(props) {
       </form>
 
       <div className="col-sm-12  mt-4 align-middle">
-        <table className="table table-striped align-middle text-center" id="ex">
+        <table className="table table-hover align-middle text-center" id="ex">
           <thead>
             <tr style={{ height: "60px" }}>
+              <th
+                style={{
+                  verticalAlign: "middle",
+                  backgroundColor: "#DDDDDD"
+                }}
+              >
+                ที่
+              </th>
+              <th
+                style={{ verticalAlign: "middle", backgroundColor: "#DDDDDD" }}
+              >
+                รหัสนักศึกษา
+              </th>
               <th
                 style={{ verticalAlign: "middle", backgroundColor: "#DDDDDD" }}
               >
                 ชื่อ-นามสกุล
               </th>
+              {rsDate.map((variable, index) => {
+                return (
+                  <th
+                    style={{
+                      verticalAlign: "middle",
+                      backgroundColor: "#DDDDDD"
+                    }}
+                  >
+                    {variable.Date}
+                  </th>
+                );
+              })}
               <th
-                style={{ verticalAlign: "middle", backgroundColor: "#DDDDDD" }}
+                style={{
+                  verticalAlign: "middle",
+                  backgroundColor: "#DDDDDD"
+                }}
               >
-                วันที่
-              </th>
-              <th
-                style={{ verticalAlign: "middle", backgroundColor: "#DDDDDD" }}
-              >
-                สถานะ
+                รวม
               </th>
             </tr>
           </thead>
           <tbody>
             {showresulte.map((variable, index) => {
+              let tmpStd = {};
+              tmpStd[index] = [];
+
+              let tmpcount = {};
+              tmpcount[index] = [];
+
               return (
                 <tr key={index}>
+                  <td>{index + 1}</td>
+                  <td>{variable.Std_ID}</td>
                   <td>
                     {variable.Std_Title}
                     {variable.Std_FirstName} {variable.Std_LastName}
                   </td>
-                  <td>{variable.Date}</td>
-                  <td>{variable.Status}</td>
+                  {rsStatus.map((v, i) => {
+                    if (i === rsStatus.length - 1) {
+                      console.log(
+                        `Sum : `,
+                        tmpStd[index]?.reduce((a, b) => a + b, 0)
+                      );
+                      console.log("i", tmpcount[index].length);
+                    }
+
+                    if (variable.Std_No == v.Std_No) {
+                      tmpStd[index].push(
+                        v.Status == "ขาด"
+                          ? 0
+                          : v.Status == "ลา"
+                          ? 5
+                          : v.Status == "สาย"
+                          ? 7
+                          : 10
+                      );
+
+                      tmpcount[index].push(i);
+
+                      return (
+                        <td>
+                          {v.Status == "ขาด"
+                            ? 0
+                            : v.Status == "ลา"
+                            ? 5
+                            : v.Status == "สาย"
+                            ? 7
+                            : 10}
+                        </td>
+                      );
+                    }
+                  })}
+                  <td>
+                    {(tmpStd[index]?.reduce((a, b) => a + b, 0) * 100) /
+                      (tmpcount[index].length * 10) /
+                      10}
+                  </td>
                 </tr>
               );
             })}
@@ -200,7 +310,7 @@ export default function Teacher(props) {
         <ReactHTMLTableToExcel
           className="btn btn-info mt-4"
           table="ex"
-          filename="Emp"
+          filename="รายชื่อนักศึกษา"
           sheet="Sheet"
           buttonText="Export"
         />

@@ -10,6 +10,7 @@ import axios from "axios";
 import TextField from "@material-ui/core/TextField";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+// import { DataGrid } from "@mui/x-data-grid";
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -21,10 +22,18 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const columns = [];
+
+const rows = [];
+
 export default function Admin(props) {
   const classes = useStyles();
   const router = useRouter();
-  const { control, handleSubmit } = useForm();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors }
+  } = useForm();
 
   const onSubmit = data => {
     axios
@@ -217,6 +226,12 @@ export default function Admin(props) {
                       name="Subject_ID"
                       control={control}
                       defaultValue=""
+                      rules={{
+                        pattern: {
+                          value: /^[0-9-]*$/,
+                          message: "กรอกเฉพาะตัวเลข '0-9' และ '-' เท่านั้น"
+                        }
+                      }}
                       render={({ onChange, value }) => (
                         <TextField
                           variant="outlined"
@@ -231,7 +246,15 @@ export default function Admin(props) {
                         />
                       )}
                     />
+                    <div style={{ fontSize: "12px" }}>
+                      {errors.Subject_ID && (
+                        <span className="text-danger" role="alert">
+                          {errors.Subject_ID.message}
+                        </span>
+                      )}
+                    </div>
                   </div>
+
                   <div className="col-sm-4 mb-2 mt-3 align-middle text-right">
                     <label>ชื่อวิชาภาษาไทย : </label>
                   </div>
@@ -279,48 +302,68 @@ export default function Admin(props) {
                     />
                   </div>
                   <div className="col-sm-4 mb-2 mt-3 align-middle text-right">
-                    <label>วิชาทฤษฎี : </label>
+                    <label>จำนวนชั่วโมงวิชาทฤษฎี : </label>
                   </div>
-                  <div className="col-sm-7 mb-2 align-middle text-left">
+                  <div className="col-sm-7 mt-3 mb-2 align-middle text-left">
                     <Controller
                       name="Subject_Theory"
-                      control={control}
                       defaultValue=""
+                      control={control}
+                      variant="outlined"
                       render={({ onChange, value }) => (
-                        <TextField
-                          variant="outlined"
-                          size="small"
-                          margin="normal"
-                          required
-                          fullWidth
-                          label="จำนวนชั่วโมงวิชาทฤษฎี"
+                        <select
+                          className="form-control"
+                          id="addTerm"
                           onChange={onChange}
                           value={value}
-                          type="text"
-                        />
+                        >
+                          <option value="" disabled="disabled">
+                            จำนวนชั่วโมงวิชาทฤษฎี...
+                          </option>
+                          <option>0</option>
+                          <option>1</option>
+                          <option>2</option>
+                          <option>3</option>
+                          <option>4</option>
+                          <option>5</option>
+                          <option>6</option>
+                          <option>7</option>
+                          <option>8</option>
+                          <option>9</option>
+                        </select>
                       )}
                     />
                   </div>
                   <div className="col-sm-4 mb-2 mt-3 align-middle text-right">
-                    <label>วิชาปฏิบัติ : </label>
+                    <label>จำนวนชั่วโมงวิชาปฏิบัติ : </label>
                   </div>
-                  <div className="col-sm-7 mb-2 align-middle text-left">
+                  <div className="col-sm-7 mt-3 mb-2 align-middle text-left">
                     <Controller
                       name="Subject_Practice"
-                      control={control}
                       defaultValue=""
+                      control={control}
+                      variant="outlined"
                       render={({ onChange, value }) => (
-                        <TextField
-                          variant="outlined"
-                          size="small"
-                          margin="normal"
-                          required
-                          fullWidth
-                          label="จำนวนชั่วโมงวิชาปฏิบัติ"
+                        <select
+                          className="form-control"
+                          id="addTerm"
                           onChange={onChange}
                           value={value}
-                          type="text"
-                        />
+                        >
+                          <option value="" disabled="disabled">
+                            จำนวนชั่วโมงวิชาปฏิบัติ...
+                          </option>
+                          <option>0</option>
+                          <option>1</option>
+                          <option>2</option>
+                          <option>3</option>
+                          <option>4</option>
+                          <option>5</option>
+                          <option>6</option>
+                          <option>7</option>
+                          <option>8</option>
+                          <option>9</option>
+                        </select>
                       )}
                     />
                   </div>
@@ -375,7 +418,7 @@ export default function Admin(props) {
                     <div className="modal-body">
                       <div className="row">
                         <div className="col-sm-5 mt-3 align-middle text-right">
-                          <label>เพิ่มรายวิชา : </label>
+                          <label>รหัสวิชา : </label>
                         </div>
                         <div className="col-sm-6 mb-2 align-middle text-left">
                           <Controller
@@ -386,6 +429,13 @@ export default function Admin(props) {
                                 ? varY.Subject_ID
                                 : ""
                             }
+                            rules={{
+                              pattern: {
+                                value: /^[0-9-]*$/,
+                                message:
+                                  "กรอกเฉพาะตัวเลข '0-9' และ '-' เท่านั้น"
+                              }
+                            }}
                             render={({ onChange, value }) => (
                               <TextField
                                 variant="outlined"
@@ -400,6 +450,17 @@ export default function Admin(props) {
                               />
                             )}
                           />
+                          <div>
+                            {errors.Subject_IDE && (
+                              <span
+                                className="text-danger"
+                                role="alert"
+                                style={{ fontSize: "12px" }}
+                              >
+                                {errors.Subject_IDE.message}
+                              </span>
+                            )}
+                          </div>
                         </div>
 
                         <div className="col-sm-5 mt-2 align-middle text-right">
@@ -531,9 +592,8 @@ export default function Admin(props) {
           })()}
         </div>
       </div>
-
       <div className="col-sm-12  mt-4 align-middle">
-        <table className="table table-hover align-middle text-center">
+        <table id="ss" className="table table-hover align-middle text-center">
           <thead>
             <tr style={{ height: "60px" }}>
               <th
@@ -617,6 +677,16 @@ export default function Admin(props) {
           </tbody>
         </table>
       </div>
+      {/* datatable */}
+      {/* <div style={{ height: 400, width: "100%" }}>
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          pageSize={5}
+          rowsPerPageOptions={[5]}
+          checkboxSelection
+        />
+      </div> */}
     </AdminTheme>
   );
 }

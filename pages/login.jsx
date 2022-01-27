@@ -130,6 +130,20 @@ export default function SignIn(props) {
               เข้าสู่ระบบ
             </Button>
           </form>
+          <Link href="sso?sso">
+            <Button
+              // className={classes.submit}
+              type="button"
+              fullWidth
+              variant="contained"
+              style={{
+                backgroundColor: "#DDDDDD",
+                color: "#F25287"
+              }}
+            >
+              เข้าสู่ระบบด้วยบัญชีอินเทอร์เน็ตมหาวิทยาลัย
+            </Button>
+          </Link>
         </div>
       </div>
 
