@@ -130,7 +130,7 @@ export default function SignIn(props) {
               เข้าสู่ระบบ
             </Button>
           </form>
-          <Link href="sso?sso">
+          {/* <Link href="sso?sso">
             <Button
               // className={classes.submit}
               type="button"
@@ -142,6 +142,35 @@ export default function SignIn(props) {
               }}
             >
               เข้าสู่ระบบด้วยบัญชีอินเทอร์เน็ตมหาวิทยาลัย
+            </Button>
+          </Link> */}
+          <Link href="/register_student">
+            <Button
+              type="button"
+              fullWidth
+              variant="contained"
+              style={{
+                backgroundColor: "#DDDDDD",
+                color: "#F25287",
+                width: "45%",
+                marginRight: "10px"
+              }}
+            >
+              สมัครสมาชิกสำหรับนักศึกษา
+            </Button>
+          </Link>
+          <Link href="/register_teacher">
+            <Button
+              type="button"
+              fullWidth
+              variant="contained"
+              style={{
+                backgroundColor: "#DDDDDD",
+                color: "#F25287",
+                width: "45%"
+              }}
+            >
+              สมัครสมาชิกสำหรับอาจารย์
             </Button>
           </Link>
         </div>

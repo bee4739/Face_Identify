@@ -10,6 +10,7 @@ import TextField from "@material-ui/core/TextField";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+import { Year } from "@syncfusion/ej2-schedule";
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -24,41 +25,46 @@ const useStyles = makeStyles(theme => ({
 export default function Admin(props) {
   const classes = useStyles();
   const router = useRouter();
-  const { control, handleSubmit, watch } = useForm({
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    watch
+  } = useForm({
     reValidateMode: "onBlur",
     mode: "onSubmit"
   });
 
   const onSubmit = data => {
-    //console.log("วันเริ่มต้น", getValues("Start_SchYear"));
-    // axios
-    //   .post(`${props.env.api_url}/insertYear`, JSON.stringify(data))
-    //   .then(value => {
-    //     if (value.data.isQuery == true) {
-    //       console.log("ddd", value.data);
-    //       Swal.fire({
-    //         title: "เพิ่มข้อมูลสำเร็จ!",
-    //         text: "",
-    //         icon: "success",
-    //         showConfirmButton: false,
-    //         timer: 1000
-    //       });
-    //       setTimeout(() => {
-    //         window.location.reload();
-    //       }, 1000);
-    //     } else {
-    //       Swal.fire({
-    //         title: "เพิ่มข้อมูลไม่สำเร็จ!",
-    //         text: "กรุณาตรวจสอบข้อมูลให้ถูกต้อง",
-    //         icon: "error",
-    //         showConfirmButton: true,
-    //         confirmButtonText: "ตกลง"
-    //       });
-    //     }
-    //   })
-    //   .catch(reason => {
-    //     console.log(reason);
-    //   });
+    console.log("วันเริ่มต้น", getValues("Start_SchYear"));
+    axios
+      .post(`${props.env.api_url}/insertYear`, JSON.stringify(data))
+      .then(value => {
+        if (value.data.isQuery == true) {
+          console.log("ddd", value.data);
+          Swal.fire({
+            title: "เพิ่มข้อมูลสำเร็จ!",
+            text: "",
+            icon: "success",
+            showConfirmButton: false,
+            timer: 1000
+          });
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        } else {
+          Swal.fire({
+            title: "เพิ่มข้อมูลไม่สำเร็จ!",
+            text: "กรุณาตรวจสอบข้อมูลให้ถูกต้อง",
+            icon: "error",
+            showConfirmButton: true,
+            confirmButtonText: "ตกลง"
+          });
+        }
+      })
+      .catch(reason => {
+        console.log(reason);
+      });
     // alert("เพิ่มข้อมูลสำเร็จ");
   };
 
@@ -87,6 +93,7 @@ export default function Admin(props) {
                 showConfirmButton: false,
                 timer: 1000
               });
+
               setTimeout(() => {
                 window.location.reload();
               }, 1000);
@@ -99,6 +106,8 @@ export default function Admin(props) {
                 showConfirmButton: true,
                 confirmButtonText: "ตกลง"
               });
+              console.log(value.data.isQuery);
+              console.log(value.data);
             }
           })
           .catch(reason => {
@@ -220,22 +229,36 @@ export default function Admin(props) {
                     <Controller
                       name="Year"
                       defaultValue=""
+                      rules={{
+                        pattern: {
+                          value: /^[0-9-]*$/,
+                          message: "กรอกเฉพาะตัวเลข '0-9' เท่านั้น"
+                        }
+                      }}
                       control={control}
                       render={({ onChange, value }) => (
                         <TextField
                           variant="outlined"
                           size="small"
                           margin="normal"
-                          required
                           fullWidth
                           label="ปีการศึกษา"
                           onChange={onChange}
                           value={value}
                           type="text"
+                          required
                         />
                       )}
                     />
+                    <div style={{ fontSize: "12px" }}>
+                      {errors.Year && (
+                        <span className="text-danger" role="alert">
+                          {errors.Year.message}
+                        </span>
+                      )}
+                    </div>
                   </div>
+
                   <div className="col-sm-5 mt-2 align-middle text-right">
                     <label>ภาคเรียน : </label>
                   </div>
@@ -453,6 +476,12 @@ export default function Admin(props) {
                         <div className="col-sm-6 mb-2 align-middle text-left">
                           <Controller
                             name="YearE"
+                            rules={{
+                              pattern: {
+                                value: /^[0-9-]*$/,
+                                message: "กรอกเฉพาะตัวเลข '0-9' เท่านั้น"
+                              }
+                            }}
                             control={control}
                             defaultValue={
                               Object.keys(varY).length > 0 ? varY.Year : ""
@@ -471,6 +500,13 @@ export default function Admin(props) {
                               />
                             )}
                           />
+                          <div style={{ fontSize: "12px" }}>
+                            {errors.YearE && (
+                              <span className="text-danger" role="alert">
+                                {errors.YearE.message}
+                              </span>
+                            )}
+                          </div>
                         </div>
                         <div className="col-sm-5 mt-2 align-middle text-right">
                           <label>ภาคเรียน : </label>
@@ -673,37 +709,39 @@ export default function Admin(props) {
         </div>
       </div>
 
-      <div className="col-sm-12  mt-4 align-middle">
-        <div className="card">
-          <div className="card-body">
-            <table className="table table-hover align-middle text-center">
-              <thead>
-                <tr style={{ height: "60px" }}>
-                  <th
-                    style={{
-                      verticalAlign: "middle",
-                      backgroundColor: "#DDDDDD"
-                    }}
-                  >
-                    ปีการศึกษา
-                  </th>
-                  <th
-                    style={{
-                      verticalAlign: "middle",
-                      backgroundColor: "#DDDDDD"
-                    }}
-                  >
-                    ภาคเรียน
-                  </th>
-                  <th
-                    style={{
-                      verticalAlign: "middle",
-                      backgroundColor: "#DDDDDD"
-                    }}
-                  >
-                    วันเริ่มต้นและวันสิ้นสุดปีการศึกษา
-                  </th>
-                  {/* <th
+      <center>
+        <div className="mt-4 align-middle">
+          <table
+            className="table table-hover align-middle text-center"
+            style={{ width: "80%" }}
+          >
+            <thead>
+              <tr style={{ height: "60px" }}>
+                <th
+                  style={{
+                    verticalAlign: "middle",
+                    backgroundColor: "#DDDDDD"
+                  }}
+                >
+                  ปีการศึกษา
+                </th>
+                <th
+                  style={{
+                    verticalAlign: "middle",
+                    backgroundColor: "#DDDDDD"
+                  }}
+                >
+                  ภาคเรียน
+                </th>
+                <th
+                  style={{
+                    verticalAlign: "middle",
+                    backgroundColor: "#DDDDDD"
+                  }}
+                >
+                  วันเริ่มต้นและวันสิ้นสุดปีการศึกษา
+                </th>
+                {/* <th
                 style={{ verticalAlign: "middle", backgroundColor: "#DDDDDD" }}
               >
                 วันสอบกลางภาค
@@ -713,28 +751,28 @@ export default function Admin(props) {
               >
                 วันสอบปลายภาค
               </th> */}
-                  <th
-                    width="15%"
-                    style={{
-                      verticalAlign: "middle",
-                      backgroundColor: "#DDDDDD"
-                    }}
-                  >
-                    จัดการ
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.map((variable, index) => {
-                  return (
-                    <tr key={variable.Year_ID}>
-                      <td>{variable.Year}</td>
-                      <td>{variable.Term}</td>
-                      <td>
-                        {variable.Start_SchYear}
-                        &nbsp;&nbsp;-&nbsp;&nbsp;{variable.End_SchYear}
-                      </td>
-                      {/* <td>
+                <th
+                  width="15%"
+                  style={{
+                    verticalAlign: "middle",
+                    backgroundColor: "#DDDDDD"
+                  }}
+                >
+                  จัดการ
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.map((variable, index) => {
+                return (
+                  <tr key={variable.Year_ID}>
+                    <td>{variable.Year}</td>
+                    <td>{variable.Term}</td>
+                    <td>
+                      {variable.Start_SchYear}
+                      &nbsp;&nbsp;-&nbsp;&nbsp;{variable.End_SchYear}
+                    </td>
+                    {/* <td>
                     {variable.Start_Midterm}
                     &nbsp;&nbsp;-&nbsp;&nbsp;
                     {variable.End_Midterm}
@@ -743,36 +781,35 @@ export default function Admin(props) {
                     {variable.Start_Final}
                     &nbsp;&nbsp;-&nbsp;&nbsp;{variable.End_Final}
                   </td> */}
-                      <td>
-                        <button
-                          type="button"
-                          className="btn btn-warning mr-2"
-                          data-toggle="modal"
-                          data-target="#Edit"
-                          onClick={() => {
-                            setvarY(variable);
-                          }}
-                        >
-                          <EditIcon />
-                        </button>
-                        <button
-                          type="button"
-                          className="btn btn-danger"
-                          onClick={() => {
-                            onDel({ year: variable.Year_ID });
-                          }}
-                        >
-                          <DeleteIcon />
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+                    <td>
+                      <button
+                        type="button"
+                        className="btn btn-warning mr-2"
+                        data-toggle="modal"
+                        data-target="#Edit"
+                        onClick={() => {
+                          setvarY(variable);
+                        }}
+                      >
+                        <EditIcon />
+                      </button>
+                      <button
+                        type="button"
+                        className="btn btn-danger"
+                        onClick={() => {
+                          onDel({ year: variable.Year_ID });
+                        }}
+                      >
+                        <DeleteIcon />
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
-      </div>
+      </center>
     </AdminTheme>
   );
 }

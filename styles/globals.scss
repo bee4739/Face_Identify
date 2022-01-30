@@ -80,9 +80,21 @@ a {
     width:100%;
     max-width: 500px;
     // max-height: 520px;
-    max-height: 550px;
+    max-height: 560px;
     height: 100%;
     background-color: #F9F3F3;
+    display: inline-block;
+    padding: 20px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  }
+
+  ._form_regis{
+    width:100%;
+    max-width: 500px;
+    // max-height: 520px;
+    max-height: 570px;
+    height: 100%;
+    background-color: #FFFFFF;
     display: inline-block;
     padding: 20px;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;

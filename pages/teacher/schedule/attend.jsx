@@ -788,8 +788,13 @@ export default function Teacher(props) {
               d_start <= d_now &&
               d_now <= d_end
             ) {
+              document.getElementById("checkname").style.backgroundColor =
+                "#28A745";
               document.getElementById("checkname").disabled = false;
             } else {
+              document.getElementById("checkname").style.backgroundColor =
+                "gray";
+              document.getElementById("checkname").style.border = "gray";
               document.getElementById("checkname").disabled = true;
             }
           }}

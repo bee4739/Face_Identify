@@ -33,8 +33,6 @@ export default function Teacher(props) {
     // router.replace("/teacher/study_group");
   }, []);
 
-  const [data, setData] = useState([]);
-
   const onSubmit = data => {
     axios
       .post(`${props.env.api_url}/insertregister`, JSON.stringify(data))

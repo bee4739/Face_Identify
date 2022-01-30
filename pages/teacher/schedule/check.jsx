@@ -11,6 +11,7 @@ import ClearIcon from "@material-ui/icons/Clear";
 import Swal from "sweetalert2";
 import SaveIcon from "@material-ui/icons/Save";
 import TextField from "@material-ui/core/TextField";
+import Link from "next/link";
 
 const useStyles = makeStyles(theme => ({
   form: {
@@ -667,11 +668,34 @@ export default function check(props) {
                   className="btn btn-info btn-sm"
                   data-toggle="modal"
                   data-target="#summarycheck"
-                  //    onClick={() => {
-                  //   insertCompensate({ Schedule_ID: schedule.data7 });
-                  // }}
                 >
-                  สรุปผลเช็คชื่อ
+                  สรุปผลการเข้าเรียน
+                </button>
+              </div>
+
+              <div className="text-right mb-3">
+                <button
+                  type="button"
+                  className="btn btn-danger btn-sm"
+                  onClick={() => {
+                    Swal.fire({
+                      title: "ต้องการสิ้นสุดการบันทึกการเข้าเรียน?",
+                      showDenyButton: false,
+                      showCancelButton: true,
+                      confirmButtonText: "ตกลง",
+                      cancelButtonText: `ยกเลิก`
+                    }).then(result => {
+                      /* Read more about isConfirmed, isDenied below */
+                      if (result.isConfirmed) {
+                        router.replace("/teacher/study_group");
+                        setTimeout(() => {
+                          window.location.reload();
+                        }, 1000);
+                      }
+                    });
+                  }}
+                >
+                  สิ้นสุดการบันทึกการเข้าเรียน
                 </button>
               </div>
 
