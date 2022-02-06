@@ -152,8 +152,8 @@ export default function SignIn(props) {
               style={{
                 backgroundColor: "#DDDDDD",
                 color: "#F25287",
-                width: "45%",
-                marginRight: "10px"
+                width: "49%",
+                marginRight: "2%"
               }}
             >
               สมัครสมาชิกสำหรับนักศึกษา
@@ -167,7 +167,7 @@ export default function SignIn(props) {
               style={{
                 backgroundColor: "#DDDDDD",
                 color: "#F25287",
-                width: "45%"
+                width: "49%"
               }}
             >
               สมัครสมาชิกสำหรับอาจารย์

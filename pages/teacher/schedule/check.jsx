@@ -337,6 +337,32 @@ export default function check(props) {
         }).then(() => {
           setTime(lateTime);
           Webcam();
+          /* รอกล้องทำงาน */
+          let timerInterval;
+          Swal.fire({
+            title: "กรุณารอสักครู่",
+            html: "ระบบจะทำงานในอีก <b></b> วินาที.",
+            timer: 60000,
+            heightAuto: false,
+            customClass: "swal-height",
+            icon: "warning",
+            timerProgressBar: true,
+            didOpen: () => {
+              Swal.showLoading();
+              const b = Swal.getHtmlContainer().querySelector("b");
+              timerInterval = setInterval(() => {
+                b.textContent = parseInt(Swal.getTimerLeft() / 1000);
+              }, 100);
+            },
+            willClose: () => {
+              clearInterval(timerInterval);
+            }
+          }).then(result => {
+            /* Read more about handling dismissals below */
+            if (result.dismiss === Swal.DismissReason.timer) {
+              console.log("I was closed by the timer");
+            }
+          });
         });
       }
 
@@ -448,7 +474,7 @@ export default function check(props) {
     if (d_late <= d_now && d_now <= d_end) {
       checkstatus = "สาย";
     } else {
-      checkstatus = "ปกติ";
+      checkstatus = "มา";
     }
 
     if (stdChecked.length > 0) {
@@ -555,6 +581,7 @@ export default function check(props) {
               });
               drawBox.draw(canvas);
               checkName(username);
+              // document.getElementById("wait-cam").label = "พร้อมใช้งาน";
             } else {
               username = null;
               const box = resizedDetections[0].detection.box;
@@ -562,8 +589,13 @@ export default function check(props) {
                 label: "unknown"
               });
               drawBox.draw(canvas);
+              // document.getElementById("wait-cam").label = "พร้อมใช้งาน";
             }
           }
+          // else {
+          //   document.getElementById("wait-cam").innerHTML =
+          //     "Your tip has been submitted!";
+          // }
         }
       }, 100);
     });
@@ -648,6 +680,13 @@ export default function check(props) {
                     autoPlay
                     muted
                   />
+                  {/* <br />
+                  <br />
+                  <TextField
+                    disabled
+                    id="wait-cam"
+                    label="กรุณารอสักครู่ . . . "
+                  /> */}
                 </div>
                 <div
                   id={`canvasCreate`}
@@ -944,8 +983,12 @@ export default function check(props) {
                                       lateSelected?.[`${index}`] ?? ""
                                     }
                                   >
-                                    <option value="ขาด">ขาด</option>
+                                    <option value="" disabled="disabled">
+                                      สถานะ...
+                                    </option>
+                                    <option value="มา">มา</option>
                                     <option value="ลา">ลา</option>
+                                    <option value="ขาด">ขาด</option>
                                   </select>
                                 </div>
                               </td>

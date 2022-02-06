@@ -151,6 +151,7 @@ export default function student(props) {
             showConfirmButton: false,
             timer: 1000
           });
+          // router.replace("information");
           setTimeout(() => {
             window.location.reload();
           }, 1000);
@@ -190,6 +191,7 @@ export default function student(props) {
                 showConfirmButton: false,
                 timer: 1000
               });
+              // router.replace("information");
               setTimeout(() => {
                 window.location.reload();
               }, 1000);

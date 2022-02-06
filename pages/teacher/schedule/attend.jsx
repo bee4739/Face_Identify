@@ -69,9 +69,13 @@ export default function Teacher(props) {
   const [sub, setSub] = useState([]);
   const [dayList, setDayList] = useState([]);
   const [dateSelect, setDateSelect] = useState(null);
-  const getDay = () => {
+  const getDay = data => {
+    data = {
+      ...data,
+      User_ID: props.userLogin.User_ID
+    };
     axios
-      .post(`${props.env.api_url}/getDay`)
+      .post(`${props.env.api_url}/getDay`, JSON.stringify(data))
       .then(value => {
         if (value.data.rowCount > 0) {
           let backup = [];
@@ -124,6 +128,10 @@ export default function Teacher(props) {
   };
 
   const getSubject = data => {
+    data = {
+      ...data,
+      User_ID: props.userLogin.User_ID
+    };
     axios
       .post(`${props.env.api_url}/dropdownSubSchedule`, JSON.stringify(data))
       .then(value => {
@@ -136,8 +144,10 @@ export default function Teacher(props) {
   };
 
   const onSubmit = data => {
+    data = { ...data, User_ID: props.userLogin.User_ID };
+
     axios
-      .post(`${props.env.api_url}/insertScheduleAttend`, JSON.stringify(data))
+      .post(`${props.env.api_url}/addScheduleAB`, JSON.stringify(data))
       .then(value => {
         if (value.data.isQuery == true) {
           console.log(value.data);
@@ -159,11 +169,13 @@ export default function Teacher(props) {
             showConfirmButton: true,
             confirmButtonText: "ตกลง"
           });
+          console.log(value.data);
         }
       })
       .catch(reason => {
         console.log(reason);
       });
+
     // window.location.reload();
     // alert("เพิ่มข้อมูลสำเร็จ");
   };
@@ -483,6 +495,7 @@ export default function Teacher(props) {
                         name="Subject_Type"
                         defaultValue=""
                         control={control}
+                        required
                         variant="outlined"
                         render={({ onChange, value }) => (
                           <select
@@ -859,7 +872,7 @@ export default function Teacher(props) {
                           &nbsp;เช็คชื่อ
                         </button>
                       </Link>
-                      <button
+                      {/* <button
                         type="button"
                         className="mt-2 btn btn-info"
                         data-toggle="modal"
@@ -871,7 +884,7 @@ export default function Teacher(props) {
                         }}
                       >
                         สอนชดเชย
-                      </button>
+                      </button> */}
                     </td>
                     <td style={{ verticalAlign: "middle", width: 120 }}>
                       <button

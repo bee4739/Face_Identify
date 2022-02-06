@@ -20,6 +20,8 @@ import ImageIcon from "@material-ui/icons/Image";
 import GroupIcon from "@material-ui/icons/Group";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import Swal from "sweetalert2";
+import AccountBoxIcon from "@material-ui/icons/AccountBox";
+import PermContactCalendarIcon from "@material-ui/icons/PermContactCalendar";
 
 const drawerWidth = 240;
 
@@ -220,6 +222,15 @@ export default function StudentTheme(props) {
                 <ListItemText primary="อัพโหลดรูปภาพ" />
               </ListItem>
             </Link>
+
+            {/* <Link href="/student/std_profile">
+              <ListItem button>
+                <ListItemIcon>
+                  <PermContactCalendarIcon />
+                </ListItemIcon>
+                <ListItemText primary="ข้อมูลส่วนตัว" />
+              </ListItem>
+            </Link> */}
 
             <ListItem button onClick={logout}>
               <ListItemIcon>

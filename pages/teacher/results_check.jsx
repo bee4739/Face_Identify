@@ -78,6 +78,11 @@ export default function Teacher(props) {
 
   const [subject, setSubject] = useState([]);
   const getSubject = data => {
+    data = {
+      ...data,
+      User_ID: props.userLogin.User_ID
+    };
+
     axios
       .post(`${props.env.api_url}/resultchecksubject`, JSON.stringify(data))
       .then(value => {
@@ -230,6 +235,7 @@ export default function Teacher(props) {
                 <option value="" disabled="disabled">
                   กรุณาเลือกวิชา...
                 </option>
+
                 {subject
                   .filter(e => e.Year_ID == ddyear)
                   .map((s, index) => {
@@ -263,17 +269,29 @@ export default function Teacher(props) {
       <div style={{ fontSize: "12px", color: "red", textAlign: "right" }}>
         * คะแนน 10 = มา, 7 = สาย, 5 = ลา, 0 = ขาด
       </div>
-      <div className="col-sm-12  mt-4 align-middle">
+      <div
+        className="col-sm-12  mt-4 align-middle"
+        style={{
+          overflowY: "scroll",
+          height: "270px",
+          overflowX: "scroll"
+        }}
+      >
         <table
           className="table table-responsive-md table-hover align-middle text-center"
           id="ex"
+          style={{
+            width: "100%"
+          }}
+
           // style={{ visibility: "hidden" }}
         >
           <thead>
             <tr style={{ height: "60px" }}>
               <th
                 style={{
-                  verticalAlign: "middle"
+                  verticalAlign: "middle",
+                  width: "5%"
                   // backgroundColor: "#FFFFFF"
                 }}
               >
@@ -281,7 +299,8 @@ export default function Teacher(props) {
               </th>
               <th
                 style={{
-                  verticalAlign: "middle"
+                  verticalAlign: "middle",
+                  width: "15%"
                   //  backgroundColor: "#FFFFFF"
                 }}
               >
@@ -289,7 +308,8 @@ export default function Teacher(props) {
               </th>
               <th
                 style={{
-                  verticalAlign: "middle"
+                  verticalAlign: "middle",
+                  width: "40%"
                   // backgroundColor: "#FFFFFF"
                 }}
               >
@@ -299,7 +319,8 @@ export default function Teacher(props) {
                 return (
                   <th
                     style={{
-                      verticalAlign: "middle"
+                      verticalAlign: "middle",
+                      width: "20%"
                       // backgroundColor: "#FFFFFF"
                     }}
                   >
@@ -309,7 +330,8 @@ export default function Teacher(props) {
               })}
               <th
                 style={{
-                  verticalAlign: "middle"
+                  verticalAlign: "middle",
+                  width: "5%"
                   // backgroundColor: "#FFFFFF"
                 }}
               >
@@ -317,7 +339,8 @@ export default function Teacher(props) {
               </th>
               <th
                 style={{
-                  verticalAlign: "middle"
+                  verticalAlign: "middle",
+                  width: "5%"
                   // backgroundColor: "#FFFFFF"
                 }}
               ></th>
@@ -336,6 +359,7 @@ export default function Teacher(props) {
                   <td
                     style={{
                       verticalAlign: "middle"
+                      // height: "60px"
                       // backgroundColor: "#FFFFFF"
                     }}
                   >
@@ -344,6 +368,7 @@ export default function Teacher(props) {
                   <td
                     style={{
                       verticalAlign: "middle"
+                      // height: "60px"
                       // backgroundColor: "#FFFFFF"
                     }}
                   >
@@ -351,7 +376,9 @@ export default function Teacher(props) {
                   </td>
                   <td
                     style={{
-                      verticalAlign: "middle"
+                      verticalAlign: "middle",
+                      textAlign: "left"
+                      // height: "60px"
                       // backgroundColor: "#FFFFFF"
                     }}
                   >
@@ -384,6 +411,7 @@ export default function Teacher(props) {
                         <td
                           style={{
                             verticalAlign: "middle"
+                            // height: "60px"
                             // backgroundColor: "#FFFFFF"
                           }}
                         >
@@ -401,16 +429,20 @@ export default function Teacher(props) {
                   <td
                     style={{
                       verticalAlign: "middle"
+                      // height: "60px"
                       // backgroundColor: "#FFFFFF"
                     }}
                   >
-                    {(tmpStd[index]?.reduce((a, b) => a + b, 0) * 100) /
-                      (tmpcount[index].length * 10) /
-                      10}
+                    {parseInt(
+                      (tmpStd[index]?.reduce((a, b) => a + b, 0) * 100) /
+                        (tmpcount[index].length * 10) /
+                        10
+                    )}
                   </td>
                   <td
                     style={{
                       verticalAlign: "middle"
+                      // height: "60px"
                       // backgroundColor: "#FFFFFF"
                     }}
                   >
@@ -512,6 +544,7 @@ export default function Teacher(props) {
                         name="Status"
                         defaultValue=""
                         control={control}
+                        required
                         variant="outlined"
                         render={({ onChange, value }) => (
                           // <select options={{options}} />
@@ -524,9 +557,9 @@ export default function Teacher(props) {
                             <option value="" disabled="disabled">
                               กรุณาเลือกสถานะ...
                             </option>
-                            <option>ปกติ</option>
-                            <option>ลา</option>
+                            <option>มา</option>
                             <option>สาย</option>
+                            <option>ลา</option>
                             <option>ขาด</option>
                           </select>
                         )}

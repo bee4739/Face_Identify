@@ -24,36 +24,72 @@ const useStyles = makeStyles(theme => ({
 export default function RegisterStudent(props) {
   const classes = useStyles();
   const router = useRouter();
-  const { control, handleSubmit } = useForm();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors }
+  } = useForm();
 
   const onSubmit = data => {
-    axios
-      .post(`${props.env.api_url}/registerStudent`, JSON.stringify(data))
-      .then(value => {
-        if (value.data.isQuery == true) {
-          console.log("ddd", value.data);
+    if (`${data.User_Password}` !== `${data.User_Password_a}`) {
+      Swal.fire({
+        title: "สมัครสมาชิกไม่สำเร็จ!",
+        text: "รหัสผ่านไม่ถูกต้อง",
+        icon: "error",
+        showConfirmButton: true,
+        confirmButtonText: "ตกลง"
+      });
+    } else {
+      Swal.fire({
+        title: "สมัครสมาชิก?",
+        text: "กรุณาตรวจสอบข้อมูลให้ถูกต้อง",
+        showDenyButton: true,
+        showCancelButton: true,
+        confirmButtonText: `ตกลง`,
+        denyButtonText: `ตรวจสอบ`,
+        cancelButtonText: `ยกเลิก`
+      }).then(result => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+          axios
+            .post(`${props.env.api_url}/registerStudent`, JSON.stringify(data))
+            .then(value => {
+              if (value.data.isQuery == true) {
+                console.log("ddd", value.data);
+                Swal.fire({
+                  title: "สมัครสมาชิกสำเร็จ!",
+                  text: "",
+                  icon: "success",
+                  showConfirmButton: false,
+                  timer: 1000
+                });
+                setTimeout(() => {
+                  router.replace("/");
+                }, 1000);
+              } else {
+                Swal.fire({
+                  title: "สมัครสมาชิกไม่สำเร็จ!",
+                  text: "กรุณาตรวจสอบข้อมูลให้ถูกต้อง",
+                  icon: "error",
+                  showConfirmButton: true
+                });
+                console.log("ddd", value.data);
+              }
+            })
+            .catch(reason => {
+              console.log(reason);
+            });
+        } else if (result.isDenied) {
           Swal.fire({
-            title: "สมัครสมาชิกสำเร็จ!",
+            title: "ตรวจสอบความถูกต้อง",
             text: "",
-            icon: "success",
+            icon: "info",
             showConfirmButton: false,
             timer: 1000
           });
-          setTimeout(() => {
-            router.replace("/");
-          }, 1000);
-        } else {
-          Swal.fire({
-            title: "สมัครสมาชิกไม่สำเร็จ!",
-            text: "กรุณาตรวจสอบข้อมูลให้ถูกต้อง",
-            icon: "error",
-            showConfirmButton: true
-          });
         }
-      })
-      .catch(reason => {
-        console.log(reason);
       });
+    }
   };
   return (
     <div className="login_content">
@@ -70,6 +106,12 @@ export default function RegisterStudent(props) {
                 name="Username"
                 control={control}
                 defaultValue=""
+                rules={{
+                  pattern: {
+                    value: /^[a-z.]*$/,
+                    message: "กรอกเฉพาะ 'a-z' และ '.' เท่านั้น"
+                  }
+                }}
                 render={({ onChange, value }) => (
                   <TextField
                     variant="outlined"
@@ -86,12 +128,25 @@ export default function RegisterStudent(props) {
                   />
                 )}
               />
+              <div style={{ fontSize: "12px" }}>
+                {errors.Username && (
+                  <span className="text-danger" role="alert">
+                    {errors.Username.message}
+                  </span>
+                )}
+              </div>
             </div>
             <div className="col-sm-6 align-middle text-left">
               <Controller
                 name="Std_ID"
                 control={control}
                 defaultValue=""
+                rules={{
+                  pattern: {
+                    value: /^[0-9-]*$/,
+                    message: "กรอกเฉพาะตัวเลข '0-9' และ '-' เท่านั้น"
+                  }
+                }}
                 render={({ onChange, value }) => (
                   <TextField
                     variant="outlined"
@@ -106,6 +161,13 @@ export default function RegisterStudent(props) {
                   />
                 )}
               />
+              <div style={{ fontSize: "12px" }}>
+                {errors.Std_ID && (
+                  <span className="text-danger" role="alert">
+                    {errors.Std_ID.message}
+                  </span>
+                )}
+              </div>
             </div>
             <div className="col-sm-12 mt-3 align-middle text-center">
               <Controller
@@ -118,12 +180,14 @@ export default function RegisterStudent(props) {
                     className="form-control"
                     onChange={onChange}
                     value={value}
+                    style={{ backgroundColor: "#F9F3F3" }}
+                    required
                   >
                     <option value="" disabled="disabled">
-                      คำนำหน้าชื่อภาษาไทย
+                      คำนำหน้าชื่อ
                     </option>
-                    <option>นาย</option>
-                    <option>นางสาว</option>
+                    <option>นาย/Mr.</option>
+                    <option>นางสาว/Miss.</option>
                   </select>
                 )}
               />
@@ -133,6 +197,12 @@ export default function RegisterStudent(props) {
                 name="FirstName"
                 control={control}
                 defaultValue=""
+                rules={{
+                  pattern: {
+                    value: /^[ก-ฮะ-๋]*$/,
+                    message: "กรอกเฉพาะภาษาไทยเท่านั้น"
+                  }
+                }}
                 render={({ onChange, value }) => (
                   <TextField
                     variant="outlined"
@@ -147,12 +217,25 @@ export default function RegisterStudent(props) {
                   />
                 )}
               />
+              <div style={{ fontSize: "12px" }}>
+                {errors.FirstName && (
+                  <span className="text-danger" role="alert">
+                    {errors.FirstName.message}
+                  </span>
+                )}
+              </div>
             </div>
             <div className="col-sm-6 mt-2 align-middle text-center">
               <Controller
                 name="LastName"
                 control={control}
                 defaultValue=""
+                rules={{
+                  pattern: {
+                    value: /^[ก-ฮะ-๋]*$/,
+                    message: "กรอกเฉพาะภาษาไทยเท่านั้น"
+                  }
+                }}
                 render={({ onChange, value }) => (
                   <TextField
                     variant="outlined"
@@ -167,8 +250,15 @@ export default function RegisterStudent(props) {
                   />
                 )}
               />
+              <div style={{ fontSize: "12px" }}>
+                {errors.LastName && (
+                  <span className="text-danger" role="alert">
+                    {errors.LastName.message}
+                  </span>
+                )}
+              </div>
             </div>
-            <div className="col-sm-12 mt-3 align-middle text-center">
+            {/* <div className="col-sm-12 mt-3 align-middle text-center">
               <Controller
                 name="Title_Eng"
                 defaultValue=""
@@ -189,12 +279,18 @@ export default function RegisterStudent(props) {
                   </select>
                 )}
               />
-            </div>
+            </div> */}
             <div className="col-sm-6 mt-2 align-middle text-center">
               <Controller
                 name="FirstName_Eng"
                 control={control}
                 defaultValue=""
+                rules={{
+                  pattern: {
+                    value: /^[a-zA-Z]*$/,
+                    message: "กรอกเฉพาะภาษาอังกฤษเท่านั้น"
+                  }
+                }}
                 render={({ onChange, value }) => (
                   <TextField
                     variant="outlined"
@@ -209,12 +305,25 @@ export default function RegisterStudent(props) {
                   />
                 )}
               />
+              <div style={{ fontSize: "12px" }}>
+                {errors.FirstName_Eng && (
+                  <span className="text-danger" role="alert">
+                    {errors.FirstName_Eng.message}
+                  </span>
+                )}
+              </div>
             </div>
             <div className="col-sm-6 mt-2 align-middle text-center">
               <Controller
                 name="LastName_Eng"
                 control={control}
                 defaultValue=""
+                rules={{
+                  pattern: {
+                    value: /^[a-zA-Z]*$/,
+                    message: "กรอกเฉพาะภาษาอังกฤษเท่านั้น"
+                  }
+                }}
                 render={({ onChange, value }) => (
                   <TextField
                     variant="outlined"
@@ -229,6 +338,13 @@ export default function RegisterStudent(props) {
                   />
                 )}
               />
+              <div style={{ fontSize: "12px" }}>
+                {errors.LastName_Eng && (
+                  <span className="text-danger" role="alert">
+                    {errors.LastName_Eng.message}
+                  </span>
+                )}
+              </div>
             </div>
             <div className="col-sm-12 mt-1 align-middle text-center">
               <Controller
@@ -250,7 +366,27 @@ export default function RegisterStudent(props) {
                 )}
               />
             </div>
-            <div className="col-sm-12 mt-4 align-middle text-center">
+            <div className="col-sm-12 mt-1 align-middle text-center">
+              <Controller
+                name="User_Password_a"
+                control={control}
+                defaultValue=""
+                render={({ onChange, value }) => (
+                  <TextField
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    label="ยืนยันรหัสผ่าน"
+                    onChange={onChange}
+                    value={value}
+                    type="password"
+                    size="small"
+                  />
+                )}
+              />
+            </div>
+            <div className="col-sm-12 mt-3 align-middle text-center">
               <Button
                 className="mb-2"
                 type="submit"

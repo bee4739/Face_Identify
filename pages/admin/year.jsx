@@ -36,7 +36,7 @@ export default function Admin(props) {
   });
 
   const onSubmit = data => {
-    console.log("วันเริ่มต้น", getValues("Start_SchYear"));
+    // console.log("วันเริ่มต้น", getValues("Start_SchYear"));
     axios
       .post(`${props.env.api_url}/insertYear`, JSON.stringify(data))
       .then(value => {
