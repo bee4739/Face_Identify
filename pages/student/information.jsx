@@ -142,7 +142,7 @@ export default function student(props) {
     axios
       .post(`${props.env.api_url}/createImage`, JSON.stringify(data))
       .then(value => {
-        console.log(value.data);
+        // console.log(value.data);
         if (value.data.success) {
           Swal.fire({
             title: "บันทึกรูปสำเร็จ",
@@ -155,6 +155,14 @@ export default function student(props) {
           setTimeout(() => {
             window.location.reload();
           }, 1000);
+        } else {
+          Swal.fire({
+            title: "ถ่ายรูปครบแล้ว",
+            text: "",
+            icon: "warning",
+            showConfirmButton: false,
+            timer: 3000
+          });
         }
       })
       .catch(reason => {
@@ -175,14 +183,14 @@ export default function student(props) {
       cancelButtonText: "ยกเลิก"
     }).then(result => {
       if (result.isConfirmed) {
-        console.log("hello");
+        // console.log("hello");
         axios
           .post(
             `${props.env.api_url}/delImageinformation`,
             JSON.stringify(data)
           )
           .then(value => {
-            console.log(value.data);
+            // console.log(value.data);
             if (value.data.success) {
               Swal.fire({
                 title: "ลบสำเร็จ!",
@@ -236,6 +244,28 @@ export default function student(props) {
         </div>
       </div>
 
+      <div>
+        <span
+          style={{
+            fontSize: "12px",
+            color: "black"
+            // textAlign: "right"
+          }}
+        >
+          * กรุณาถ่ายรูป หน้าตรง เอียงซ้าย เอียงขวา ก้มหน้า เงยหน้า เล็กน้อย
+        </span>
+        &nbsp;&nbsp;
+        <span
+          style={{
+            fontSize: "12px",
+            color: "red"
+            // textAlign: "right"
+          }}
+        >
+          (เมื่อทำการถ่ายรูปหรือลบรูปให้ทำการกดปุ่ม Shift + F5
+          เพื่อทำการรีเฟรชหน้าเว็บ)
+        </span>
+      </div>
       <div className={classes.tableImg}>
         <table className="table">
           <tbody>
@@ -285,6 +315,8 @@ export default function student(props) {
                             padding: "3px 5px",
                             display: "none"
                           }}
+                          data-placement="bottom"
+                          title="ลบรูปภาพ"
                         >
                           <i className="fas fa-trash-alt"></i>
                         </button>

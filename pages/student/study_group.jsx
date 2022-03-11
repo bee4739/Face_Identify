@@ -41,7 +41,7 @@ export default function student(props) {
       .post(`${props.env.api_url}/getStudyGroupStudent`, JSON.stringify(data))
       .then(value => {
         setStudyGroupStudent(value.data.result);
-        console.log("ssss", value.data.result);
+        // console.log("ssss", value.data.result);
       })
       .catch(reason => {
         console.log(reason);
@@ -54,7 +54,7 @@ export default function student(props) {
     axios
       .post(`${props.env.api_url}/getStudent`, JSON.stringify(data))
       .then(value => {
-        console.log("aaaa", value.data.result);
+        // console.log("aaaa", value.data.result);
         setStudent(value.data.result);
       })
       .catch(reason => {
@@ -74,7 +74,7 @@ export default function student(props) {
       passwordDefault: `${data.Study_Group}`.split(",")[1]
     };
 
-    console.log(data);
+    // console.log(data);
 
     if (`${data.passwordDefault}` !== `${data.Pass_Group}`) {
       Swal.fire({
@@ -92,7 +92,7 @@ export default function student(props) {
         )
         .then(value => {
           if (value.data.isQuery == true) {
-            console.log("oooo", value.data);
+            // console.log("oooo", value.data);
             Swal.fire({
               title: "เพิ่มข้อมูลสำเร็จ!",
               text: "",
@@ -163,7 +163,7 @@ export default function student(props) {
     axios
       .post(`${props.env.api_url}/getHistoryCheck`, JSON.stringify(data))
       .then(value => {
-        console.log("getHistoryCheck", value.data.result);
+        // console.log("getHistoryCheck", value.data.result);
         setHistoryCheck(value.data.result);
       })
       .catch(reason => {
@@ -228,6 +228,7 @@ export default function student(props) {
                         <select
                           className="form-control"
                           id="addSubject"
+                          required
                           onChange={e => {
                             // let tmpEvent = {
                             //   ...e,
@@ -275,7 +276,7 @@ export default function student(props) {
                           label="รหัสเข้ากลุ่มเรียน"
                           onChange={onChange}
                           value={value}
-                          type="password"
+                          type="text"
                         />
                       )}
                     />
@@ -342,6 +343,8 @@ export default function student(props) {
                           // style={{ backgroundColor: "#F7D9D9" }}
                           data-toggle="modal"
                           data-target="#history"
+                          data-placement="bottom"
+                          title="ประวัติการเข้าเรียน"
                           onClick={() => {
                             getHistoryCheck({ Class_ID: variable.Class_ID });
                           }}

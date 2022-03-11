@@ -38,48 +38,5 @@ export default function Teacher(props) {
 
   React.useEffect(() => {}, []);
 
-  return (
-    <TeacherTheme {...props}>
-      <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
-        <div className="row">
-          <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
-            ปีการศึกษา :
-          </div>
-          <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
-            <div className={classes.d}>
-              <select class="form-control form-control-sm">
-                <option>เลือกปีการศึกษา</option>
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-              </select>
-            </div>
-          </div>
-          <div className="col-sm-4 mb-2 mt-2 align-middle text-right">
-            ภาคเรียน :
-          </div>
-          <div className="col-sm-6 mb-2 mt-2 align-middle text-left">
-            <div className={classes.d}>
-              <select class="form-control form-control-sm">
-                <option>เลือกภาคเรียน</option>
-                <option>ภาคเรียนที่ 1</option>
-                <option>ภาคเรียนที่ 2</option>
-                <option>ภาคเรียนฤดูร้อน</option>
-              </select>
-            </div>
-          </div>
-        </div>
-        <div className={classes.button}>
-          <button
-            type="button"
-            className="btn btn-success ml-2 mr-2 mb-4 mt-4 "
-            data-toggle="modal"
-            data-target="#AddSub"
-          >
-            ตกลง
-          </button>
-        </div>
-      </form>
-    </TeacherTheme>
-  );
+  return <TeacherTheme {...props}></TeacherTheme>;
 }

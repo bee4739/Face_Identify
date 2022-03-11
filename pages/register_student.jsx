@@ -55,7 +55,7 @@ export default function RegisterStudent(props) {
             .post(`${props.env.api_url}/registerStudent`, JSON.stringify(data))
             .then(value => {
               if (value.data.isQuery == true) {
-                console.log("ddd", value.data);
+                // console.log("ddd", value.data);
                 Swal.fire({
                   title: "สมัครสมาชิกสำเร็จ!",
                   text: "",
@@ -73,7 +73,7 @@ export default function RegisterStudent(props) {
                   icon: "error",
                   showConfirmButton: true
                 });
-                console.log("ddd", value.data);
+                // console.log("ddd", value.data);
               }
             })
             .catch(reason => {
@@ -199,7 +199,7 @@ export default function RegisterStudent(props) {
                 defaultValue=""
                 rules={{
                   pattern: {
-                    value: /^[ก-ฮะ-๋]*$/,
+                    value: /^[ก-ฮะ-๋์]*$/,
                     message: "กรอกเฉพาะภาษาไทยเท่านั้น"
                   }
                 }}
@@ -232,7 +232,7 @@ export default function RegisterStudent(props) {
                 defaultValue=""
                 rules={{
                   pattern: {
-                    value: /^[ก-ฮะ-๋]*$/,
+                    value: /^[ก-ฮะ-๋์]*$/,
                     message: "กรอกเฉพาะภาษาไทยเท่านั้น"
                   }
                 }}

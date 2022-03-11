@@ -55,7 +55,7 @@ export default function RegisterTeacher(props) {
             .post(`${props.env.api_url}/registerTeacher`, JSON.stringify(data))
             .then(value => {
               if (value.data.isQuery == true) {
-                console.log("ddd", value.data);
+                // console.log("ddd", value.data);
                 Swal.fire({
                   title: "สมัครสมาชิกสำเร็จ!",
                   text: "",
@@ -73,7 +73,7 @@ export default function RegisterTeacher(props) {
                   icon: "error",
                   showConfirmButton: true
                 });
-                console.log("ddd", value.data);
+                // console.log("ddd", value.data);
               }
             })
             .catch(reason => {
@@ -149,7 +149,6 @@ export default function RegisterTeacher(props) {
                     onChange={onChange}
                     value={value}
                     style={{ backgroundColor: "#F9F3F3" }}
-                    required
                   >
                     <option value="" disabled="disabled">
                       คำนำหน้าชื่อ
@@ -167,7 +166,7 @@ export default function RegisterTeacher(props) {
                 defaultValue=""
                 rules={{
                   pattern: {
-                    value: /^[ก-ฮะ-๋]*$/,
+                    value: /^[ก-ฮะ-๋์]*$/,
                     message: "กรอกเฉพาะภาษาไทยเท่านั้น"
                   }
                 }}
@@ -200,7 +199,7 @@ export default function RegisterTeacher(props) {
                 defaultValue=""
                 rules={{
                   pattern: {
-                    value: /^[ก-ฮะ-๋]*$/,
+                    value: /^[ก-ฮะ-๋์]*$/,
                     message: "กรอกเฉพาะภาษาไทยเท่านั้น"
                   }
                 }}

@@ -7,8 +7,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import EditIcon from "@material-ui/icons/Edit";
-import TextField from "@material-ui/core/TextField";
 import Swal from "sweetalert2";
+import HistoryIcon from "@material-ui/icons/History";
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -43,7 +43,7 @@ export default function Teacher(props) {
       .post(`${props.env.api_url}/rsDate`, JSON.stringify(data))
       .then(value => {
         setrsDate(value.data.result);
-        console.log("ssss", value.data.result);
+        // console.log("ssss", value.data.result);
       })
       .catch(reason => {
         console.log(reason);
@@ -56,7 +56,7 @@ export default function Teacher(props) {
       .post(`${props.env.api_url}/rsStatus`, JSON.stringify(data))
       .then(value => {
         setrsStatus(value.data.result);
-        console.log("ssss", value.data.result);
+        // console.log("ssss", value.data.result);
       })
       .catch(reason => {
         console.log(reason);
@@ -69,7 +69,7 @@ export default function Teacher(props) {
       .post(`${props.env.api_url}/resultcheck`, JSON.stringify(data))
       .then(value => {
         setYear(value.data.result);
-        console.log("ssss", value.data.result);
+        // console.log("ssss", value.data.result);
       })
       .catch(reason => {
         console.log(reason);
@@ -87,7 +87,7 @@ export default function Teacher(props) {
       .post(`${props.env.api_url}/resultchecksubject`, JSON.stringify(data))
       .then(value => {
         setSubject(value.data.result);
-        console.log("ssss", value.data.result);
+        // console.log("ssss", value.data.result);
       })
       .catch(reason => {
         console.log(reason);
@@ -101,7 +101,7 @@ export default function Teacher(props) {
       .post(`${props.env.api_url}/showresultcheck`, JSON.stringify(data))
       .then(value => {
         setShowresulte(value.data.result);
-        console.log("ssss", value.data.result);
+        // console.log("ssss", value.data.result);
       })
       .catch(reason => {
         console.log(reason);
@@ -115,7 +115,7 @@ export default function Teacher(props) {
       .post(`${props.env.api_url}/showEdit`, JSON.stringify(data))
       .then(value => {
         setShowEdit(value.data.result);
-        console.log("ssss", value.data.result);
+        // console.log("ssss", value.data.result);
       })
       .catch(reason => {
         console.log(reason);
@@ -144,7 +144,7 @@ export default function Teacher(props) {
           .post(`${props.env.api_url}/updateCheck`, JSON.stringify(data))
           .then(value => {
             if (value.data.isQuery == true) {
-              console.log(value.data);
+              // console.log(value.data);
               Swal.fire({
                 title: "แก้ไขสำเร็จ!",
                 text: "",
@@ -165,8 +165,8 @@ export default function Teacher(props) {
                 showConfirmButton: true,
                 confirmButtonText: "ตกลง"
               });
-              console.log(value.data.isQuery);
-              console.log(value.data);
+              // console.log(value.data.isQuery);
+              // console.log(value.data);
             }
           })
           .catch(reason => {
@@ -186,6 +186,20 @@ export default function Teacher(props) {
       }
     });
     // window.location.reload();
+  };
+
+  const [historyCheck, setHistoryCheck] = useState([]);
+  const getHistoryCheck = data => {
+    // data = { ...data, User_ID: props.userLogin.User_ID };
+    axios
+      .post(`${props.env.api_url}/getHistoryCheck`, JSON.stringify(data))
+      .then(value => {
+        // console.log("getHistoryCheck", value.data.result);
+        setHistoryCheck(value.data.result);
+      })
+      .catch(reason => {
+        console.log(reason);
+      });
   };
 
   React.useEffect(() => {
@@ -208,6 +222,7 @@ export default function Teacher(props) {
                   setddYear(e.target.value);
                 }}
                 value={ddyear}
+                required
               >
                 <option value="" disabled="disabled">
                   กรุณาเลือกปีการศึกษา...
@@ -226,6 +241,7 @@ export default function Teacher(props) {
             </div>
             <div className="col-sm-6 mt-2 mb-2 align-middle text-left">
               <select
+                required
                 className="form-control"
                 onChange={e => {
                   setddSubject(e.target.value);
@@ -344,6 +360,13 @@ export default function Teacher(props) {
                   // backgroundColor: "#FFFFFF"
                 }}
               ></th>
+              <th
+                style={{
+                  verticalAlign: "middle",
+                  width: "5%"
+                  // backgroundColor: "#FFFFFF"
+                }}
+              ></th>
             </tr>
           </thead>
           <tbody>
@@ -387,11 +410,11 @@ export default function Teacher(props) {
                   </td>
                   {rsStatus.map((v, i) => {
                     if (i === rsStatus.length - 1) {
-                      console.log(
-                        `Sum : `,
-                        tmpStd[index]?.reduce((a, b) => a + b, 0)
-                      );
-                      console.log("i", tmpcount[index].length);
+                      // console.log(
+                      //   `Sum : `,
+                      //   tmpStd[index]?.reduce((a, b) => a + b, 0)
+                      // );
+                      // console.log("i", tmpcount[index].length);
                     }
 
                     if (variable.Std_No == v.Std_No) {
@@ -448,13 +471,40 @@ export default function Teacher(props) {
                   >
                     <button
                       type="button"
+                      class="btn btn-info"
+                      data-toggle="modal"
+                      data-target="#history"
+                      data-placement="bottom"
+                      title="ประวัติการเข้าเรียน"
+                      style={{
+                        padding: "1px 1px"
+                      }}
+                      onClick={() => {
+                        getHistoryCheck({
+                          Class_ID: variable.Class_ID,
+                          User_ID: variable.Std_No
+                        });
+                      }}
+                    >
+                      <HistoryIcon />
+                    </button>
+                  </td>
+                  <td
+                    style={{
+                      verticalAlign: "middle"
+                      // height: "60px"
+                      // backgroundColor: "#FFFFFF"
+                    }}
+                  >
+                    <button
+                      type="button"
                       className="btn btn-warning mr-2"
                       data-toggle="modal"
                       data-target="#editCheck"
                       data-placement="bottom"
-                      title="แก้ไข"
+                      title="แก้ไขข้อมูลการมาเรียน"
                       style={{
-                        padding: "2px 2px"
+                        padding: "1px 1px"
                       }}
                       onClick={() => {
                         getShowEdit({
@@ -515,6 +565,7 @@ export default function Teacher(props) {
                             // onChange={onChange}
                             onChange={onChange}
                             value={value}
+                            required
                           >
                             <option value="" disabled="disabled">
                               กรุณาเลือกวันที่...
@@ -544,7 +595,6 @@ export default function Teacher(props) {
                         name="Status"
                         defaultValue=""
                         control={control}
-                        required
                         variant="outlined"
                         render={({ onChange, value }) => (
                           // <select options={{options}} />
@@ -553,6 +603,7 @@ export default function Teacher(props) {
                             // onChange={onChange}
                             onChange={onChange}
                             value={value}
+                            required
                           >
                             <option value="" disabled="disabled">
                               กรุณาเลือกสถานะ...
@@ -584,6 +635,99 @@ export default function Teacher(props) {
           </div>
         </div>
       </div>
+
+      <div
+        class="modal fade"
+        id="history"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">
+                ประวัติการเข้าเรียน
+              </h5>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <table
+                class="table table-hover"
+                style={{
+                  verticalAlign: "middle",
+                  textAlign: "center"
+                }}
+              >
+                <thead>
+                  <tr>
+                    <th
+                      style={{
+                        backgroundColor: "#DDDDDD"
+                      }}
+                    >
+                      ครั้งที่
+                    </th>
+                    <th
+                      style={{
+                        backgroundColor: "#DDDDDD"
+                      }}
+                    >
+                      วัน - เวลา
+                    </th>
+                    <th
+                      style={{
+                        backgroundColor: "#DDDDDD"
+                      }}
+                    >
+                      สถานะ
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {historyCheck.map((variable, index) => {
+                    return (
+                      <tr key={index}>
+                        <td
+                          style={{
+                            verticalAlign: "middle",
+                            textAlign: "center"
+                          }}
+                        >
+                          {index + 1}
+                        </td>
+                        <td>
+                          {variable.Status == "ขาด" || variable.Status == "ลา"
+                            ? `${variable.Date}`
+                            : `${variable.Time}`}
+                        </td>
+                        <td>{variable.Status}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-dismiss="modal"
+              >
+                ปิด
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div
         className={classes.button}
         // style={{ visibility: "hidden" }}
@@ -594,7 +738,7 @@ export default function Teacher(props) {
           table="ex"
           filename="รายชื่อนักศึกษา"
           sheet="Sheet"
-          buttonText="Export"
+          buttonText="Export Excel"
         />
       </div>
     </TeacherTheme>

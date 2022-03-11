@@ -36,12 +36,11 @@ export default function Admin(props) {
   });
 
   const onSubmit = data => {
-    // console.log("วันเริ่มต้น", getValues("Start_SchYear"));
     axios
       .post(`${props.env.api_url}/insertYear`, JSON.stringify(data))
       .then(value => {
         if (value.data.isQuery == true) {
-          console.log("ddd", value.data);
+          // console.log("ddd", value.data);
           Swal.fire({
             title: "เพิ่มข้อมูลสำเร็จ!",
             text: "",
@@ -85,7 +84,7 @@ export default function Admin(props) {
           .post(`${props.env.api_url}/editYear`, JSON.stringify(data))
           .then(value => {
             if (value.data.isQuery == true) {
-              console.log(value.data);
+              // console.log(value.data);
               Swal.fire({
                 title: "แก้ไขสำเร็จ!",
                 text: "",
@@ -106,8 +105,8 @@ export default function Admin(props) {
                 showConfirmButton: true,
                 confirmButtonText: "ตกลง"
               });
-              console.log(value.data.isQuery);
-              console.log(value.data);
+              // console.log(value.data.isQuery);
+              // console.log(value.data);
             }
           })
           .catch(reason => {
@@ -144,7 +143,7 @@ export default function Admin(props) {
         axios
           .post(`${props.env.api_url}/delYear`, JSON.stringify(data))
           .then(value => {
-            console.log(value.data);
+            // console.log(value.data);
             Swal.fire({
               title: "ลบสำเร็จ!",
               text: "",
@@ -171,7 +170,7 @@ export default function Admin(props) {
     axios
       .post(`${props.env.api_url}/getYear`, JSON.stringify(data))
       .then(value => {
-        console.log("data", value.data.result);
+        // console.log("data", value.data.result);
         setData(value.data.result);
       })
       .catch(reason => {
@@ -274,6 +273,7 @@ export default function Admin(props) {
                           id="addTerm"
                           onChange={onChange}
                           value={value}
+                          required
                         >
                           <option value="" disabled="disabled">
                             กรุณาเลือกภาคการเรียน...
@@ -525,6 +525,7 @@ export default function Admin(props) {
                                 id="addTerm"
                                 onChange={onChange}
                                 value={value}
+                                required
                               >
                                 <option>ภาคเรียนที่ 1</option>
                                 <option>ภาคเรียนที่ 2</option>
@@ -766,9 +767,25 @@ export default function Admin(props) {
               {data.map((variable, index) => {
                 return (
                   <tr key={variable.Year_ID}>
-                    <td>{variable.Year}</td>
-                    <td>{variable.Term}</td>
-                    <td>
+                    <td
+                      style={{
+                        verticalAlign: "middle"
+                      }}
+                    >
+                      {variable.Year}
+                    </td>
+                    <td
+                      style={{
+                        verticalAlign: "middle"
+                      }}
+                    >
+                      {variable.Term}
+                    </td>
+                    <td
+                      style={{
+                        verticalAlign: "middle"
+                      }}
+                    >
                       {variable.Start_SchYear}
                       &nbsp;&nbsp;-&nbsp;&nbsp;{variable.End_SchYear}
                     </td>
@@ -790,6 +807,8 @@ export default function Admin(props) {
                         onClick={() => {
                           setvarY(variable);
                         }}
+                        data-placement="bottom"
+                        title="แก้ไขข้อมูลปีการศึกษา"
                       >
                         <EditIcon />
                       </button>
@@ -799,6 +818,8 @@ export default function Admin(props) {
                         onClick={() => {
                           onDel({ year: variable.Year_ID });
                         }}
+                        data-placement="bottom"
+                        title="ลบข้อมูลปีการศึกษา"
                       >
                         <DeleteIcon />
                       </button>

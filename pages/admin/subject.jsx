@@ -40,7 +40,7 @@ export default function Admin(props) {
       .post(`${props.env.api_url}/insertSubject`, JSON.stringify(data))
       .then(value => {
         if (value.data.isQuery == true) {
-          console.log(value.data);
+          // console.log(value.data);
           Swal.fire({
             title: "เพิ่มข้อมูลสำเร็จ!",
             text: "",
@@ -85,7 +85,7 @@ export default function Admin(props) {
           .post(`${props.env.api_url}/editSubject`, JSON.stringify(data))
           .then(value => {
             if (value.data.isQuery == true) {
-              console.log(value.data);
+              // console.log(value.data);
               Swal.fire({
                 title: "แก้ไขสำเร็จ!",
                 text: "",
@@ -141,7 +141,7 @@ export default function Admin(props) {
         axios
           .post(`${props.env.api_url}/delSubject`, JSON.stringify(data))
           .then(value => {
-            console.log(value.data);
+            // console.log(value.data);
             Swal.fire({
               title: "ลบสำเร็จ!",
               text: "",
@@ -168,7 +168,7 @@ export default function Admin(props) {
     axios
       .post(`${props.env.api_url}/getSubject`, JSON.stringify(data))
       .then(value => {
-        console.log(value.data);
+        // console.log(value.data);
         setData(value.data.result);
       })
       .catch(reason => {
@@ -263,6 +263,12 @@ export default function Admin(props) {
                       name="Subject_NameTH"
                       control={control}
                       defaultValue=""
+                      rules={{
+                        pattern: {
+                          value: /^[ก-ฮะ-๋์]*$/,
+                          message: "กรอกเฉพาะภาษาไทยเท่านั้น"
+                        }
+                      }}
                       render={({ onChange, value }) => (
                         <TextField
                           variant="outlined"
@@ -277,6 +283,13 @@ export default function Admin(props) {
                         />
                       )}
                     />
+                    <div style={{ fontSize: "12px" }}>
+                      {errors.Subject_NameTH && (
+                        <span className="text-danger" role="alert">
+                          {errors.Subject_NameTH.message}
+                        </span>
+                      )}
+                    </div>
                   </div>
                   <div className="col-sm-4 mb-2 mt-3 align-middle text-right">
                     <label>ชื่อวิชาภาษาอังกฤษ : </label>
@@ -286,6 +299,12 @@ export default function Admin(props) {
                       name="Subject_NameEN"
                       control={control}
                       defaultValue=""
+                      rules={{
+                        pattern: {
+                          value: /^[a-zA-Z]*$/,
+                          message: "กรอกเฉพาะภาษาอังกฤษเท่านั้น"
+                        }
+                      }}
                       render={({ onChange, value }) => (
                         <TextField
                           variant="outlined"
@@ -300,6 +319,13 @@ export default function Admin(props) {
                         />
                       )}
                     />
+                    <div style={{ fontSize: "12px" }}>
+                      {errors.Subject_NameEN && (
+                        <span className="text-danger" role="alert">
+                          {errors.Subject_NameEN.message}
+                        </span>
+                      )}
+                    </div>
                   </div>
                   <div className="col-sm-4 mb-2 mt-3 align-middle text-right">
                     <label>จำนวนชั่วโมงวิชาทฤษฎี : </label>
@@ -316,6 +342,7 @@ export default function Admin(props) {
                           id="addTerm"
                           onChange={onChange}
                           value={value}
+                          required
                         >
                           <option value="" disabled="disabled">
                             จำนวนชั่วโมงวิชาทฤษฎี...
@@ -349,6 +376,7 @@ export default function Admin(props) {
                           id="addTerm"
                           onChange={onChange}
                           value={value}
+                          required
                         >
                           <option value="" disabled="disabled">
                             จำนวนชั่วโมงวิชาปฏิบัติ...
@@ -417,10 +445,10 @@ export default function Admin(props) {
                     </div>
                     <div className="modal-body">
                       <div className="row">
-                        <div className="col-sm-5 mt-3 align-middle text-right">
+                        <div className="col-sm-4 mb-2 mt-3 align-middle text-right">
                           <label>รหัสวิชา : </label>
                         </div>
-                        <div className="col-sm-6 mb-2 align-middle text-left">
+                        <div className="col-sm-7 mb-2 align-middle text-left">
                           <Controller
                             name="Subject_IDE"
                             control={control}
@@ -463,10 +491,10 @@ export default function Admin(props) {
                           </div>
                         </div>
 
-                        <div className="col-sm-5 mt-2 align-middle text-right">
+                        <div className="col-sm-4 mb-2 mt-3 align-middle text-right">
                           <label>ชื่อวิชาภาษาไทย : </label>
                         </div>
-                        <div className="col-sm-6 mb-2 align-middle text-left">
+                        <div className="col-sm-7 mb-2 align-middle text-left">
                           <Controller
                             name="Subject_NameTHE"
                             control={control}
@@ -475,6 +503,12 @@ export default function Admin(props) {
                                 ? varY.Subject_NameTH
                                 : ""
                             }
+                            rules={{
+                              pattern: {
+                                value: /^[ก-ฮะ-๋์]*$/,
+                                message: "กรอกเฉพาะภาษาไทยเท่านั้น"
+                              }
+                            }}
                             render={({ onChange, value }) => (
                               <TextField
                                 variant="outlined"
@@ -489,11 +523,18 @@ export default function Admin(props) {
                               />
                             )}
                           />
+                          <div style={{ fontSize: "12px" }}>
+                            {errors.Subject_NameTHE && (
+                              <span className="text-danger" role="alert">
+                                {errors.Subject_NameTHE.message}
+                              </span>
+                            )}
+                          </div>
                         </div>
-                        <div className="col-sm-5 mt-3 align-middle text-right">
+                        <div className="col-sm-4 mb-2 mt-3 align-middle text-right">
                           <label>ชื่อวิชาภาษาอังกฤษ : </label>
                         </div>
-                        <div className="col-sm-6 mb-2 align-middle text-left">
+                        <div className="col-sm-7 mb-2 align-middle text-left">
                           <Controller
                             name="Subject_NameENE"
                             control={control}
@@ -502,6 +543,12 @@ export default function Admin(props) {
                                 ? varY.Subject_NameEN
                                 : ""
                             }
+                            rules={{
+                              pattern: {
+                                value: /^[a-zA-Z]*$/,
+                                message: "กรอกเฉพาะภาษาอังกฤษเท่านั้น"
+                              }
+                            }}
                             render={({ onChange, value }) => (
                               <TextField
                                 variant="outlined"
@@ -516,11 +563,18 @@ export default function Admin(props) {
                               />
                             )}
                           />
+                          <div style={{ fontSize: "12px" }}>
+                            {errors.Subject_NameENE && (
+                              <span className="text-danger" role="alert">
+                                {errors.Subject_NameENE.message}
+                              </span>
+                            )}
+                          </div>
                         </div>
-                        <div className="col-sm-5 mt-3 align-middle text-right">
-                          <label>วิชาทฤษฎี : </label>
+                        <div className="col-sm-4 mb-2 mt-3 align-middle text-right">
+                          <label>จำนวนชั่วโมงวิชาทฤษฎี : </label>
                         </div>
-                        <div className="col-sm-6 mb-2 align-middle text-left">
+                        <div className="col-sm-7 mt-3 mb-2 align-middle text-left">
                           <Controller
                             name="Subject_TheoryE"
                             control={control}
@@ -530,24 +584,34 @@ export default function Admin(props) {
                                 : ""
                             }
                             render={({ onChange, value }) => (
-                              <TextField
-                                variant="outlined"
-                                size="small"
-                                margin="normal"
-                                required
-                                fullWidth
-                                label="วิชาทฤษฎี"
-                                value={value}
+                              <select
+                                className="form-control"
+                                id=""
                                 onChange={onChange}
-                                type="text"
-                              />
+                                value={value}
+                                required
+                              >
+                                <option value="" disabled="disabled">
+                                  จำนวนชั่วโมงวิชาทฤษฎี...
+                                </option>
+                                <option>0</option>
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                                <option>6</option>
+                                <option>7</option>
+                                <option>8</option>
+                                <option>9</option>
+                              </select>
                             )}
                           />
                         </div>
-                        <div className="col-sm-5 mt-3 align-middle text-right">
-                          <label>วิชาปฏิบัติ : </label>
+                        <div className="col-sm-4 mb-2 mt-3 align-middle text-right">
+                          <label>จำนวนชั่วโมงวิชาปฏิบัติ : </label>
                         </div>
-                        <div className="col-sm-6 mb-2 align-middle text-left">
+                        <div className="col-sm-7 mt-3 mb-2 align-middle text-left">
                           <Controller
                             name="Subject_PracticeE"
                             control={control}
@@ -557,17 +621,27 @@ export default function Admin(props) {
                                 : ""
                             }
                             render={({ onChange, value }) => (
-                              <TextField
-                                variant="outlined"
-                                size="small"
-                                margin="normal"
-                                required
-                                fullWidth
-                                label="วิชาปฏิบัติ"
-                                value={value}
+                              <select
+                                className="form-control"
+                                id=""
                                 onChange={onChange}
-                                type="text"
-                              />
+                                value={value}
+                                required
+                              >
+                                <option value="" disabled="disabled">
+                                  จำนวนชั่วโมงวิชาปฏิบัติ...
+                                </option>
+                                <option>0</option>
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                                <option>6</option>
+                                <option>7</option>
+                                <option>8</option>
+                                <option>9</option>
+                              </select>
                             )}
                           />
                         </div>
@@ -640,15 +714,21 @@ export default function Admin(props) {
             {data.map((variable, index) => {
               return (
                 <tr key={variable.Subject_PK}>
-                  <td style={{ textAlign: "left" }}>{variable.Subject_ID}</td>
-                  <td style={{ textAlign: "left" }}>
+                  <td style={{ textAlign: "left", verticalAlign: "middle" }}>
+                    {variable.Subject_ID}
+                  </td>
+                  <td style={{ textAlign: "left", verticalAlign: "middle" }}>
                     {variable.Subject_NameTH}
                   </td>
-                  <td style={{ textAlign: "left" }}>
+                  <td style={{ textAlign: "left", verticalAlign: "middle" }}>
                     {variable.Subject_NameEN}
                   </td>
-                  <td>{variable.Subject_Theory}</td>
-                  <td>{variable.Subject_Practice}</td>
+                  <td style={{ verticalAlign: "middle" }}>
+                    {variable.Subject_Theory}
+                  </td>
+                  <td style={{ verticalAlign: "middle" }}>
+                    {variable.Subject_Practice}
+                  </td>
                   <td>
                     <button
                       type="button"
@@ -658,6 +738,8 @@ export default function Admin(props) {
                       onClick={() => {
                         setvarY(variable);
                       }}
+                      data-placement="bottom"
+                      title="แก้ไขข้อมูลรายวิชา"
                     >
                       <EditIcon />
                     </button>
@@ -667,6 +749,8 @@ export default function Admin(props) {
                       onClick={() => {
                         onDel({ subject: variable.Subject_PK });
                       }}
+                      data-placement="bottom"
+                      title="ลบข้อมูลรายวิชา"
                     >
                       <DeleteIcon />
                     </button>

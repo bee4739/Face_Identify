@@ -47,7 +47,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function Teacher(props) {
-  console.log(props.userLogin);
+  // console.log(props.userLogin);
 
   const [btStatus, setBtStatus] = useState(true);
 
@@ -59,7 +59,7 @@ export default function Teacher(props) {
     axios
       .post(`${props.env.api_url}/getSd`, JSON.stringify(data))
       .then(value => {
-        console.log("data", value.data.result);
+        // console.log("data", value.data.result);
       })
       .catch(reason => {
         console.log(reason);
@@ -136,7 +136,7 @@ export default function Teacher(props) {
       .post(`${props.env.api_url}/dropdownSubSchedule`, JSON.stringify(data))
       .then(value => {
         setSub(value.data.result);
-        console.log("ssss", value.data.result);
+        // console.log("ssss", value.data.result);
       })
       .catch(reason => {
         console.log(reason);
@@ -150,7 +150,7 @@ export default function Teacher(props) {
       .post(`${props.env.api_url}/addScheduleAB`, JSON.stringify(data))
       .then(value => {
         if (value.data.isQuery == true) {
-          console.log(value.data);
+          // console.log(value.data);
           Swal.fire({
             title: "เพิ่มข้อมูลสำเร็จ!",
             text: "",
@@ -169,7 +169,7 @@ export default function Teacher(props) {
             showConfirmButton: true,
             confirmButtonText: "ตกลง"
           });
-          console.log(value.data);
+          // console.log(value.data);
         }
       })
       .catch(reason => {
@@ -198,7 +198,7 @@ export default function Teacher(props) {
           .post(`${props.env.api_url}/editScheduleAttend`, JSON.stringify(data))
           .then(value => {
             if (value.data.isQuery == true) {
-              console.log(value.data);
+              // console.log(value.data);
               Swal.fire({
                 title: "แก้ไขสำเร็จ!",
                 text: "",
@@ -254,17 +254,27 @@ export default function Teacher(props) {
         axios
           .post(`${props.env.api_url}/delScheduleAttend`, JSON.stringify(data))
           .then(value => {
-            console.log(value.data);
-            Swal.fire({
-              title: "ลบสำเร็จ!",
-              text: "",
-              icon: "success",
-              showConfirmButton: false,
-              timer: 1000
-            });
-            setTimeout(() => {
-              window.location.reload();
-            }, 1000);
+            // console.log(value.data);
+            if (value.data.isQuery == true) {
+              Swal.fire({
+                title: "ลบสำเร็จ!",
+                text: "",
+                icon: "success",
+                showConfirmButton: false,
+                timer: 1000
+              });
+              setTimeout(() => {
+                window.location.reload();
+              }, 1000);
+            } else {
+              Swal.fire({
+                title: "ลบไม่สำเร็จ!",
+                text: "เนื่องจากมีข้อมูลการเช็คชื่อ",
+                icon: "warning",
+                showConfirmButton: true,
+                confirmButtonText: "ตกลง"
+              });
+            }
           })
           .catch(reason => {
             console.log(reason);
@@ -302,7 +312,7 @@ export default function Teacher(props) {
       .post(`${props.env.api_url}/insertCompensate`, JSON.stringify(data))
       .then(value => {
         if (value.data.isQuery == true) {
-          console.log("scheduleS", value.data);
+          // console.log("scheduleS", value.data);
           Swal.fire({
             title: "เพิ่มข้อมูลสำเร็จ!",
             text: "",
@@ -314,7 +324,7 @@ export default function Teacher(props) {
             window.location.reload();
           }, 1000);
         } else {
-          console.log("scheduleF", value.data);
+          // console.log("scheduleF", value.data);
           Swal.fire({
             title: "เพิ่มข้อมูลไม่สำเร็จ!",
             text: "กรุณาตรวจสอบข้อมูลให้ถูกต้อง",
@@ -392,6 +402,7 @@ export default function Teacher(props) {
                           id="addSub"
                           onChange={onChange}
                           value={value}
+                          required
                         >
                           <option value="" disabled="disabled">
                             กรุณาเลือกกลุ่มเรียน...
@@ -426,6 +437,7 @@ export default function Teacher(props) {
                           id="addDay"
                           onChange={onChange}
                           value={value}
+                          required
                         >
                           <option value="" disabled="disabled">
                             กรุณาเลือกวัน...
@@ -495,7 +507,6 @@ export default function Teacher(props) {
                         name="Subject_Type"
                         defaultValue=""
                         control={control}
-                        required
                         variant="outlined"
                         render={({ onChange, value }) => (
                           <select
@@ -503,6 +514,7 @@ export default function Teacher(props) {
                             id="addSubType"
                             onChange={onChange}
                             value={value}
+                            required
                           >
                             <option value="" disabled="disabled">
                               กรุณาเลือกประเภทวิชา...
@@ -719,7 +731,7 @@ export default function Teacher(props) {
           showQuickInfo={false}
           select={e => {
             setDateSelect(e.data);
-            console.log("e", e.data);
+            // console.log("e", e.data);
             // console.log(Date.parse("Thu Sep 02 2021"));
             var timestamp = Date.parse(e.data.StartTime);
             var date = new Date(timestamp);
@@ -740,8 +752,8 @@ export default function Teacher(props) {
             var start_time = new Date(hms + e.data.data4);
             var end_time = new Date(hms + e.data.data5);
 
-            console.log("start_time", start_time);
-            console.log("end_time", end_time);
+            // console.log("start_time", start_time);
+            // console.log("end_time", end_time);
             var d_now = -1.0;
             var d_start = -1.0;
             var d_end = -1.0;
@@ -788,11 +800,11 @@ export default function Teacher(props) {
               d_end = parseFloat(s_end).toFixed(2);
             }
 
-            console.log("d_now", d_now);
-            console.log("d_start", d_start);
-            console.log("d_end", d_end);
-            console.log(d_start <= d_now);
-            console.log(d_now <= d_end);
+            // console.log("d_now", d_now);
+            // console.log("d_start", d_start);
+            // console.log("d_end", d_end);
+            // console.log(d_start <= d_now);
+            // console.log(d_now <= d_end);
 
             if (
               date.getDate() == date_now.getDate() &&
@@ -895,7 +907,7 @@ export default function Teacher(props) {
                         style={{ height: 40, width: 100 }}
                         onClick={() => {
                           setDef(dateSelect);
-                          console.log("test", dateSelect);
+                          // console.log("test", dateSelect);
                           reset({
                             Class_IDE: dateSelect.data8
                           });
@@ -975,6 +987,7 @@ export default function Teacher(props) {
                                 id="addSub"
                                 onChange={onChange}
                                 value={value}
+                                required
                               >
                                 <option value="" disabled="disabled">
                                   กรุณาเลือกกลุ่มเรียน...
@@ -1014,6 +1027,7 @@ export default function Teacher(props) {
                                 id="addTerm"
                                 onChange={onChange}
                                 value={value}
+                                required
                               >
                                 <option value="" disabled="disabled">
                                   กรุณาเลือกวันที่...
@@ -1095,6 +1109,7 @@ export default function Teacher(props) {
                                   id="addSubType"
                                   onChange={onChange}
                                   value={value}
+                                  required
                                 >
                                   <option value="" disabled="disabled">
                                     กรุณาเลือกประเภทวิชา...

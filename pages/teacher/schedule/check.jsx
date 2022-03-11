@@ -58,7 +58,7 @@ export default function check(props) {
         })
       )
       .then(value => {
-        console.log("summarySub", value.data.result);
+        // console.log("summarySub", value.data.result);
         setSummarySub(value.data.result);
       })
       .catch(reason => {
@@ -102,7 +102,7 @@ export default function check(props) {
         "-" +
         date_now.getDate();
     }
-    console.log("dd", dd);
+    // console.log("dd", dd);
 
     axios
       .post(
@@ -115,7 +115,7 @@ export default function check(props) {
         })
       )
       .then(value => {
-        console.log("summary", value.data.result);
+        // console.log("summary", value.data.result);
         setSummary(value.data.result);
       })
       .catch(reason => {
@@ -147,7 +147,7 @@ export default function check(props) {
       .post(`${props.env.api_url}/updateStatus`, JSON.stringify(data))
       .then(value => {
         if (value.data.isQuery == true) {
-          console.log(value.data);
+          // console.log(value.data);
           Swal.fire({
             title: "บันทึกการมาเรียนสำเร็จ!",
             text: "",
@@ -171,7 +171,7 @@ export default function check(props) {
             showConfirmButton: true,
             confirmButtonText: "ตกลง"
           });
-          console.log("สถานะ", value.data);
+          // console.log("สถานะ", value.data);
         }
       })
       .catch(reason => {
@@ -195,7 +195,7 @@ export default function check(props) {
         })
       )
       .then(value => {
-        console.log("setTimeCheck", value.data.result);
+        // console.log("setTimeCheck", value.data.result);
         setTimeCheck(value.data.result);
       })
       .catch(reason => {
@@ -268,7 +268,7 @@ export default function check(props) {
           })
         )
         .then(value => {
-          console.log("getTime", value.data.result);
+          // console.log("getTime", value.data.result);
           // setDatatime(value.data.result);
           [a] = value.data.result;
 
@@ -306,9 +306,9 @@ export default function check(props) {
       var currentTimes = hhmms(date_now);
       var endTimes = hhmms(endTime);
 
-      console.log(hhmms(date_now));
-      console.log(hhmms(selectTime));
-      console.log(endTimes);
+      // console.log(hhmms(date_now));
+      // console.log(hhmms(selectTime));
+      // console.log(endTimes);
 
       if (selectTimes < currentTimes) {
         Swal.fire({
@@ -341,8 +341,8 @@ export default function check(props) {
           let timerInterval;
           Swal.fire({
             title: "กรุณารอสักครู่",
-            html: "ระบบจะทำงานในอีก <b></b> วินาที.",
-            timer: 60000,
+            // html: "ระบบจะทำงานในอีก <b></b> วินาที.",
+            timer: 40000,
             heightAuto: false,
             customClass: "swal-height",
             icon: "warning",
@@ -351,7 +351,7 @@ export default function check(props) {
               Swal.showLoading();
               const b = Swal.getHtmlContainer().querySelector("b");
               timerInterval = setInterval(() => {
-                b.textContent = parseInt(Swal.getTimerLeft() / 1000);
+                // b.textContent = parseInt(Swal.getTimerLeft() / 1000);
               }, 100);
             },
             willClose: () => {
@@ -386,13 +386,13 @@ export default function check(props) {
     // API Check name
     const params = new URLSearchParams(window.location.search);
     let data = { username: `${JSON.stringify(stdChecked)}` };
-    console.log(start_Time);
+    // console.log(start_Time);
 
     //if status
     var n = Date.now();
     var date_now = new Date(n);
 
-    console.log("date_now", date_now);
+    // console.log("date_now", date_now);
 
     var hms =
       date_now.getFullYear.toString() +
@@ -406,8 +406,8 @@ export default function check(props) {
     var end_time = new Date(hms + end_Time);
     var late_time = new Date(hms + time);
 
-    console.log("start_time", start_time);
-    console.log("end_time", end_time);
+    // console.log("start_time", start_time);
+    // console.log("end_time", end_time);
     var d_now = -1.0;
     var d_start = -1.0;
     var d_end = -1.0;
@@ -465,10 +465,10 @@ export default function check(props) {
       d_late = parseFloat(s_late).toFixed(2);
     }
 
-    console.log("now", d_now);
-    console.log("start", d_start);
-    console.log("end", d_end);
-    console.log("late", d_late);
+    // console.log("now", d_now);
+    // console.log("start", d_start);
+    // console.log("end", d_end);
+    // console.log("late", d_late);
 
     var checkstatus = "";
     if (d_late <= d_now && d_now <= d_end) {
@@ -489,7 +489,7 @@ export default function check(props) {
           })
         )
         .then(value => {
-          console.log(value);
+          // console.log(value);
           if (value.data.rowCount > 0) {
             Swal.fire({
               title: "บันทึกการเข้าเรียนสำเร็จ!",
@@ -499,7 +499,7 @@ export default function check(props) {
               timer: 1000
             });
             setListStudent(value.data.result);
-            console.log("setListStudent", value.data.result);
+            // console.log("setListStudent", value.data.result);
             getSummary();
           }
         })
@@ -984,11 +984,10 @@ export default function check(props) {
                                     }
                                   >
                                     <option value="" disabled="disabled">
-                                      สถานะ...
+                                      ขาด
                                     </option>
-                                    <option value="มา">มา</option>
+                                    <option value="สาย">สาย</option>
                                     <option value="ลา">ลา</option>
-                                    <option value="ขาด">ขาด</option>
                                   </select>
                                 </div>
                               </td>
@@ -1005,7 +1004,7 @@ export default function check(props) {
                                       ...variable,
                                       listIndex: index
                                     });
-                                    console.log(variable);
+                                    // console.log(variable);
                                   }}
                                 >
                                   <SaveIcon />

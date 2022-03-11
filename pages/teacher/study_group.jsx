@@ -34,7 +34,12 @@ export default function Teacher(props) {
 
   const router = useRouter();
 
-  const { control, handleSubmit, reset } = useForm();
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors }
+  } = useForm();
 
   const [subject, setSubject] = useState([]);
   const getSubject = data => {
@@ -42,7 +47,7 @@ export default function Teacher(props) {
       .post(`${props.env.api_url}/dropdownSubject`, JSON.stringify(data))
       .then(value => {
         setSubject(value.data.result);
-        console.log("ssss", value.data.result);
+        // console.log("ssss", value.data.result);
       })
       .catch(reason => {
         console.log(reason);
@@ -55,7 +60,7 @@ export default function Teacher(props) {
       .post(`${props.env.api_url}/dropdownYear`, JSON.stringify(data))
       .then(value => {
         setYear(value.data.result);
-        console.log("yyyy", value.data.result);
+        // console.log("yyyy", value.data.result);
       })
       .catch(reason => {
         console.log(reason);
@@ -64,12 +69,12 @@ export default function Teacher(props) {
 
   const onSubmit = data => {
     data = { ...data, User_ID: props.userLogin.User_ID };
-    console.log(data);
+    // console.log(data);
     axios
       .post(`${props.env.api_url}/insertStudyGroup`, JSON.stringify(data))
       .then(value => {
         if (value.data.isQuery == true) {
-          console.log("oooo", value.data);
+          // console.log("oooo", value.data);
           Swal.fire({
             title: "เพิ่มข้อมูลสำเร็จ!",
             text: "",
@@ -115,7 +120,7 @@ export default function Teacher(props) {
           .post(`${props.env.api_url}/editStudyGroup`, JSON.stringify(data))
           .then(value => {
             if (value.data.isQuery == true) {
-              console.log(value.data);
+              // console.log(value.data);
               Swal.fire({
                 title: "แก้ไขสำเร็จ!",
                 text: "",
@@ -171,17 +176,27 @@ export default function Teacher(props) {
         axios
           .post(`${props.env.api_url}/delStudyGroup`, JSON.stringify(data))
           .then(value => {
-            console.log(value.data);
-            Swal.fire({
-              title: "ลบสำเร็จ!",
-              text: "",
-              icon: "success",
-              showConfirmButton: false,
-              timer: 1000
-            });
-            setTimeout(() => {
-              window.location.reload();
-            }, 1000);
+            // console.log(value.data.isQuery);
+            if (value.data.isQuery == true) {
+              Swal.fire({
+                title: "ลบสำเร็จ!",
+                text: "",
+                icon: "success",
+                showConfirmButton: false,
+                timer: 1000
+              });
+              setTimeout(() => {
+                window.location.reload();
+              }, 1000);
+            } else {
+              Swal.fire({
+                title: "ลบไม่สำเร็จ!",
+                text: "เนื่องจากมีข้อมูลการเช็คชื่อ",
+                icon: "warning",
+                showConfirmButton: true,
+                confirmButtonText: "ตกลง"
+              });
+            }
           })
           .catch(reason => {
             console.log(reason);
@@ -198,7 +213,7 @@ export default function Teacher(props) {
     axios
       .post(`${props.env.api_url}/getStudyGroup`, JSON.stringify(data))
       .then(value => {
-        console.log("data", value.data.result);
+        // console.log("data", value.data.result);
         setStudyGroup(value.data.result);
       })
       .catch(reason => {
@@ -208,13 +223,13 @@ export default function Teacher(props) {
 
   const [nameStd, setNameStd] = useState([]);
   const listNameStd = data => {
-    console.log(data);
+    // console.log(data);
     axios
       .post(`${props.env.api_url}/getNameStd`, JSON.stringify(data))
       .then(value => {
-        console.log(value.data);
+        // console.log(value.data);
         setNameStd(value.data.result);
-        console.log("zzzz", value.data.result);
+        // console.log("zzzz", value.data.result);
       })
       .catch(reason => {
         console.log(reason);
@@ -236,16 +251,27 @@ export default function Teacher(props) {
         axios
           .post(`${props.env.api_url}/delNameStd`, JSON.stringify(data))
           .then(value => {
-            console.log(value.data);
-            Swal.fire({
-              title: "ลบสำเร็จ!",
-              text: "",
-              icon: "success",
-              showConfirmButton: false
-            });
-            setTimeout(() => {
-              window.location.reload();
-            }, 1000);
+            // console.log(value.data);
+            if (value.data.isQuery == true) {
+              Swal.fire({
+                title: "ลบสำเร็จ!",
+                text: "",
+                icon: "success",
+                showConfirmButton: false,
+                timer: 1000
+              });
+              setTimeout(() => {
+                window.location.reload();
+              }, 1000);
+            } else {
+              Swal.fire({
+                title: "ลบไม่สำเร็จ!",
+                text: "เนื่องจากมีข้อมูลการเช็คชื่อ",
+                icon: "warning",
+                showConfirmButton: true,
+                confirmButtonText: "ตกลง"
+              });
+            }
           })
           .catch(reason => {
             console.log(reason);
@@ -318,6 +344,7 @@ export default function Teacher(props) {
                           // onChange={onChange}
                           onChange={onChange}
                           value={value}
+                          required
                         >
                           <option value="" disabled="disabled">
                             กรุณาเลือกรายวิชา...
@@ -348,6 +375,12 @@ export default function Teacher(props) {
                     <Controller
                       name="Group_Study"
                       defaultValue=""
+                      rules={{
+                        pattern: {
+                          value: /^[a-zA-Z0-9.]*$/,
+                          message: "กรอกเฉพาะ 'a-z' '0-9' และ '.' เท่านั้น"
+                        }
+                      }}
                       control={control}
                       render={({ onChange, value }) => (
                         <TextField
@@ -364,6 +397,13 @@ export default function Teacher(props) {
                         />
                       )}
                     />
+                    <div style={{ fontSize: "12px" }}>
+                      {errors.Group_Study && (
+                        <span className="text-danger" role="alert">
+                          {errors.Group_Study.message}
+                        </span>
+                      )}
+                    </div>
                   </div>
                   <div className="col-sm-5 mt-2 align-middle text-right">
                     <label>ปีการศึกษา : </label>
@@ -380,6 +420,7 @@ export default function Teacher(props) {
                           id="addTerm"
                           onChange={onChange}
                           value={value}
+                          required
                         >
                           <option value="" disabled="disabled">
                             กรุณาเลือกปีการศึกษา...
@@ -420,7 +461,7 @@ export default function Teacher(props) {
                           label="รหัสกลุ่มเรียน"
                           onChange={onChange}
                           value={value}
-                          type="password"
+                          type="text"
                         />
                       )}
                     />
@@ -497,6 +538,7 @@ export default function Teacher(props) {
                                 // onChange={onChange}
                                 onChange={onChange}
                                 value={value}
+                                required
                               >
                                 {subject.map((variable, index) => {
                                   return (
@@ -559,6 +601,7 @@ export default function Teacher(props) {
                                 className="form-control"
                                 onChange={onChange}
                                 value={value}
+                                required
                               >
                                 {year.map((variable, index) => {
                                   return (
@@ -691,12 +734,14 @@ export default function Teacher(props) {
                       data-target="#EditSub"
                       onClick={() => {
                         setDef(variable);
-                        console.log(variable);
+                        // console.log(variable);
                         reset({
                           Subject_IDE: variable.Subject_PK,
                           TermE: variable.Year_ID
                         });
                       }}
+                      data-placement="bottom"
+                      title="แก้ไขข้อมูลกลุ่มเรียน"
                     >
                       <EditIcon />
                     </button>
@@ -706,6 +751,8 @@ export default function Teacher(props) {
                       onClick={() => {
                         onDel({ Class_ID: variable.Class_ID });
                       }}
+                      data-placement="bottom"
+                      title="ลบข้อมูลกลุ่มเรียน"
                     >
                       <DeleteIcon />
                     </button>
